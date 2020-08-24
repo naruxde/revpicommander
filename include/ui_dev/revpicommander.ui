@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <author>Sven Sager</author>
+ <class>win_revpicommander</class>
+ <widget class="QMainWindow" name="win_revpicommander">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>318</width>
+    <height>273</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>RevPi Python PLC Commander</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="ressources.qrc">
+    <normaloff>:/main/ico/revpipycontrol.ico</normaloff>:/main/ico/revpipycontrol.ico</iconset>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QGridLayout" name="gl">
+    <item row="0" column="0">
+     <widget class="QLineEdit" name="txt_connection">
+      <property name="focusPolicy">
+       <enum>Qt::NoFocus</enum>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="0">
+     <widget class="QPushButton" name="btn_plc_start">
+      <property name="text">
+       <string>PLC &amp;start</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="0">
+     <widget class="QPushButton" name="btn_plc_stop">
+      <property name="text">
+       <string>PLC s&amp;top</string>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="0">
+     <widget class="QPushButton" name="btn_plc_restart">
+      <property name="text">
+       <string>PLC restart</string>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="0">
+     <widget class="QPushButton" name="btn_plc_logs">
+      <property name="text">
+       <string>PLC &amp;logs</string>
+      </property>
+     </widget>
+    </item>
+    <item row="5" column="0">
+     <widget class="QLineEdit" name="txt_status">
+      <property name="focusPolicy">
+       <enum>Qt::NoFocus</enum>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+    <item row="6" column="0">
+     <widget class="QPushButton" name="btn_plc_debug">
+      <property name="minimumSize">
+       <size>
+        <width>300</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="text">
+       <string>PLC watch &amp;mode</string>
+      </property>
+      <property name="checkable">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>318</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="men_file">
+    <property name="title">
+     <string>&amp;File</string>
+    </property>
+    <addaction name="act_connections"/>
+    <addaction name="act_search"/>
+    <addaction name="separator"/>
+    <addaction name="act_simulator"/>
+    <addaction name="separator"/>
+    <addaction name="act_quit"/>
+   </widget>
+   <widget class="QMenu" name="men_help">
+    <property name="title">
+     <string>&amp;Help</string>
+    </property>
+    <addaction name="act_webpage"/>
+    <addaction name="separator"/>
+    <addaction name="act_info"/>
+   </widget>
+   <widget class="QMenu" name="men_plc">
+    <property name="title">
+     <string>&amp;PLC</string>
+    </property>
+    <addaction name="act_logs"/>
+    <addaction name="act_options"/>
+    <addaction name="act_program"/>
+    <addaction name="act_developer"/>
+    <addaction name="separator"/>
+    <addaction name="act_pictory"/>
+    <addaction name="act_reset"/>
+    <addaction name="separator"/>
+    <addaction name="act_disconnect"/>
+   </widget>
+   <widget class="QMenu" name="men_connections">
+    <property name="title">
+     <string>&amp;Connections</string>
+    </property>
+   </widget>
+   <addaction name="men_file"/>
+   <addaction name="men_plc"/>
+   <addaction name="men_connections"/>
+   <addaction name="men_help"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar">
+   <property name="sizeGripEnabled">
+    <bool>false</bool>
+   </property>
+  </widget>
+  <action name="act_connections">
+   <property name="text">
+    <string>&amp;Connections...</string>
+   </property>
+  </action>
+  <action name="act_search">
+   <property name="text">
+    <string>&amp;Search Revolution Pi...</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+F</string>
+   </property>
+  </action>
+  <action name="act_quit">
+   <property name="text">
+    <string>&amp;Quit</string>
+   </property>
+  </action>
+  <action name="act_webpage">
+   <property name="text">
+    <string>Visit &amp;webpage...</string>
+   </property>
+  </action>
+  <action name="act_info">
+   <property name="text">
+    <string>&amp;Info...</string>
+   </property>
+  </action>
+  <action name="act_logs">
+   <property name="text">
+    <string>PLC &amp;logs...</string>
+   </property>
+   <property name="shortcut">
+    <string>F3</string>
+   </property>
+  </action>
+  <action name="act_options">
+   <property name="text">
+    <string>PLC &amp;options...</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
+   </property>
+  </action>
+  <action name="act_program">
+   <property name="text">
+    <string>PLC progra&amp;m...</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+P</string>
+   </property>
+  </action>
+  <action name="act_developer">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>PLC de&amp;veloper...</string>
+   </property>
+   <property name="shortcut">
+    <string>F9</string>
+   </property>
+  </action>
+  <action name="act_pictory">
+   <property name="text">
+    <string>piCtory configuraiton...</string>
+   </property>
+  </action>
+  <action name="act_disconnect">
+   <property name="text">
+    <string>&amp;Disconnect</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+X</string>
+   </property>
+  </action>
+  <action name="act_reset">
+   <property name="text">
+    <string>Reset driver...</string>
+   </property>
+  </action>
+  <action name="act_simulator">
+   <property name="text">
+    <string>Start local si&amp;mulator...</string>
+   </property>
+  </action>
+ </widget>
+ <tabstops>
+  <tabstop>btn_plc_start</tabstop>
+  <tabstop>btn_plc_stop</tabstop>
+  <tabstop>btn_plc_restart</tabstop>
+  <tabstop>btn_plc_logs</tabstop>
+  <tabstop>btn_plc_debug</tabstop>
+ </tabstops>
+ <resources>
+  <include location="ressources.qrc"/>
+ </resources>
+ <connections>
+  <connection>
+   <sender>act_quit</sender>
+   <signal>triggered()</signal>
+   <receiver>win_revpicommander</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>159</x>
+     <y>136</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

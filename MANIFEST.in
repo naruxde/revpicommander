@@ -1,0 +1,8 @@
+include MANIFEST.in
+include stdeb.cfg
+recursive-include data *
+recursive-include include *.py
+recursive-include lib *.py
+recursive-include revpicommander *.py *.qm
+global-exclude *.pyc
+include LICENSE.txt

@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>diag_program</class>
+ <widget class="QDialog" name="diag_program">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>488</width>
+    <height>500</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>PLC program</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QGroupBox" name="gb_plc">
+     <property name="title">
+      <string>PLC program</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout">
+      <item row="3" column="1">
+       <widget class="QRadioButton" name="rbn_pythonversion_2">
+        <property name="text">
+         <string>Python 2</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1" colspan="2">
+       <widget class="QLineEdit" name="txt_plcarguments"/>
+      </item>
+      <item row="3" column="2">
+       <widget class="QRadioButton" name="rbn_pythonversion_3">
+        <property name="text">
+         <string>Python 3</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0" colspan="3">
+       <widget class="QLabel" name="lbl_plcprogram">
+        <property name="text">
+         <string>Python PLC start program:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0" colspan="3">
+       <widget class="QCheckBox" name="cbx_plcworkdir_set_uid">
+        <property name="text">
+         <string>Set write permissions for plc program to workdirectory</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0" colspan="3">
+       <widget class="QComboBox" name="cbb_plcprogram"/>
+      </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="lbl_pythonversion">
+        <property name="text">
+         <string>Python version:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="lbl_plcarguments">
+        <property name="text">
+         <string>Program arguments:</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="cb_transfair">
+     <property name="title">
+      <string>Transfair PLC program</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_2">
+      <item row="0" column="1">
+       <widget class="QComboBox" name="cbb_format">
+        <item>
+         <property name="text">
+          <string>Files</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Folder</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>ZIP archive</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>TGZ archive</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="QPushButton" name="btn_program_upload">
+        <property name="text">
+         <string>Upload</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QPushButton" name="btn_program_download">
+        <property name="text">
+         <string>Download</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="lbl_format">
+        <property name="text">
+         <string>Transfair format:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0" colspan="2">
+       <widget class="QCheckBox" name="cbx_pictory">
+        <property name="text">
+         <string>Including piCtory configuration</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0" colspan="2">
+       <widget class="QCheckBox" name="cbx_clear">
+        <property name="text">
+         <string>Remove all files on Revolution Pi before upload</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="gb_control">
+     <property name="title">
+      <string>Control files</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_3">
+      <item row="1" column="1">
+       <widget class="QPushButton" name="btn_procimg_download">
+        <property name="text">
+         <string>Download</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QPushButton" name="btn_pictory_download">
+        <property name="text">
+         <string>Download</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2">
+       <widget class="QPushButton" name="btn_pictory_upload">
+        <property name="text">
+         <string>Upload</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="lbl_pictory">
+        <property name="text">
+         <string>piCtory configuraiton</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="lbl_procimg">
+        <property name="text">
+         <string>Process image from piControl0</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QDialogButtonBox" name="btn_box">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <tabstops>
+  <tabstop>cbb_plcprogram</tabstop>
+  <tabstop>txt_plcarguments</tabstop>
+  <tabstop>rbn_pythonversion_2</tabstop>
+  <tabstop>rbn_pythonversion_3</tabstop>
+  <tabstop>cbx_plcworkdir_set_uid</tabstop>
+  <tabstop>cbb_format</tabstop>
+  <tabstop>cbx_pictory</tabstop>
+  <tabstop>cbx_clear</tabstop>
+  <tabstop>btn_program_download</tabstop>
+  <tabstop>btn_program_upload</tabstop>
+  <tabstop>btn_pictory_download</tabstop>
+  <tabstop>btn_pictory_upload</tabstop>
+  <tabstop>btn_procimg_download</tabstop>
+ </tabstops>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>btn_box</sender>
+   <signal>accepted()</signal>
+   <receiver>diag_program</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>257</x>
+     <y>490</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>157</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>btn_box</sender>
+   <signal>rejected()</signal>
+   <receiver>diag_program</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>325</x>
+     <y>490</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>286</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

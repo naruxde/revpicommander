@@ -1,0 +1,20 @@
+<RCC>
+  <qresource prefix="main">
+    <file>ico/cpu.ico</file>
+    <file>ico/folder.ico</file>
+    <file>ico/revpipycontrol.ico</file>
+  </qresource>
+  <qresource prefix="file">
+    <file>ico/file-else.ico</file>
+    <file>ico/file-python.ico</file>
+  </qresource>
+  <qresource prefix="action">
+    <file>ico/folder-open.ico</file>
+    <file>ico/refresh.ico</file>
+    <file>ico/reload.ico</file>
+    <file>ico/arrow-down.ico</file>
+    <file>ico/arrow-up.ico</file>
+    <file>ico/edit-add.ico</file>
+    <file>ico/edit-delete.ico</file>
+  </qresource>
+</RCC>
