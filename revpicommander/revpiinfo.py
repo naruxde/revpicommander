@@ -13,7 +13,7 @@ from ui.revpiinfo_ui import Ui_diag_revpiinfo
 class RevPiInfo(QtWidgets.QDialog, Ui_diag_revpiinfo):
     """Version information window."""
 
-    def __init__(self, parent, version: str):
+    def __init__(self, version: str, parent=None):
         super(RevPiInfo, self).__init__(parent)
         self.setupUi(self)
 

@@ -15,7 +15,7 @@ from ui.aclmanager_ui import Ui_diag_aclmanager
 class AclManager(QtWidgets.QDialog, Ui_diag_aclmanager):
     """ACL manager."""
 
-    def __init__(self, parent):
+    def __init__(self, parent=None):
         super(AclManager, self).__init__(parent)
         self.setupUi(self)
         self.setFixedSize(self.size())

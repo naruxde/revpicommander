@@ -29,6 +29,9 @@ class DebugIos(QtWidgets.QMainWindow, Ui_win_debugios):
         self.setWindowTitle("{0} - {1}".format(position, name))
         self.gb_io.setTitle(self.gb_io.title().format(name))
 
+        self.__qwa = {}
+        """Quick widget access."""
+
         self.position = position
         self.name = name
         self.inputs = inputs.copy()
@@ -72,6 +75,7 @@ class DebugIos(QtWidgets.QMainWindow, Ui_win_debugios):
             name = val.objectName()
             if name not in lst_names:
                 # Remove old io from layout
+                del self.__qwa[name]
                 layout.removeRow(layout.getWidgetPosition(val)[0])
 
         counter = -1
@@ -147,6 +151,7 @@ class DebugIos(QtWidgets.QMainWindow, Ui_win_debugios):
                 val.valueChanged.connect(self._change_sbx_dvalue)
 
         val.setObjectName(name)
+        self.__qwa[name] = val
         return val
 
     @QtCore.pyqtSlot(int)
@@ -267,7 +272,8 @@ class DebugIos(QtWidgets.QMainWindow, Ui_win_debugios):
         :param io_name: Name of IO
         :return: (actual value, last value) <class 'tuple'>
         """
-        child = self.findChild(self.search_class, io_name)
+        # child = self.findChild(self.search_class, io_name)
+        child = self.__qwa[io_name]
         actual_value = child.value()
         last_value = child.value() if child.property("last_value") is None else child.property("last_value")
         if child.property("frm"):
@@ -285,7 +291,8 @@ class DebugIos(QtWidgets.QMainWindow, Ui_win_debugios):
         :param io_name: Name of IO
         :param value: Process value as <class 'bool'> or <class 'bytes'>
         """
-        child = self.findChild(self.search_class, io_name)
+        # child = self.findChild(self.search_class, io_name)
+        child = self.__qwa[io_name]
         if child.property("frm"):
             value = struct.unpack(child.property("frm"), value)[0]
         elif type(value) == bytearray:
@@ -300,7 +307,8 @@ class DebugIos(QtWidgets.QMainWindow, Ui_win_debugios):
         :param io_name: Name of IO
         :param value: New value as bytes or bool for widget
         """
-        child = self.findChild(self.search_class, io_name)
+        # child = self.findChild(self.search_class, io_name)
+        child = self.__qwa[io_name]
         if child.property("frm"):
             value = struct.unpack(child.property("frm"), value)[0]
         elif type(value) == bytearray:

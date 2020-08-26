@@ -104,7 +104,7 @@ class DataThread(QtCore.QThread):
 class RevPiLogfile(QtWidgets.QMainWindow, Ui_win_revpilogfile):
     """Log file viewer for daemon and plc program log."""
 
-    def __init__(self, parent):
+    def __init__(self, parent=None):
         u"""Init RevPiLogfile-Class."""
         super(RevPiLogfile, self).__init__(parent)
         self.setupUi(self)
