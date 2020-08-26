@@ -14,7 +14,7 @@ from ui.mqttmanager_ui import Ui_diag_mqtt
 class MqttManager(QtWidgets.QDialog, Ui_diag_mqtt):
     """MQTT settings for option window."""
 
-    def __init__(self, parent):
+    def __init__(self, parent=None):
         super(MqttManager, self).__init__(parent)
         self.setupUi(self)
         self.setFixedSize(self.size())

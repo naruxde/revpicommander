@@ -52,7 +52,7 @@ class RevPiCommander(QtWidgets.QMainWindow, Ui_win_revpicommander):
         # Load sub windows
         self.diag_connections = RevPiPlcList(self)
         self.diag_search = AvahiSearch(self)
-        self.diag_info = RevPiInfo(self, __version__)
+        self.diag_info = RevPiInfo(__version__, self)
         self.diag_options = RevPiOption(self)
         self.diag_program = RevPiProgram(self)
         self.win_log = revpilogfile.RevPiLogfile(self)

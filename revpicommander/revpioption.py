@@ -16,7 +16,7 @@ from ui.revpioption_ui import Ui_diag_options
 class RevPiOption(QtWidgets.QDialog, Ui_diag_options):
     """Set options of RevPiPyLoad."""
 
-    def __init__(self, parent):
+    def __init__(self, parent=None):
         super(RevPiOption, self).__init__(parent)
         self.setupUi(self)
         self.setFixedSize(self.size())
