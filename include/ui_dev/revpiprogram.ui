@@ -81,16 +81,6 @@
        <widget class="QComboBox" name="cbb_format">
         <item>
          <property name="text">
-          <string>Files</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Folder</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
           <string>ZIP archive</string>
          </property>
         </item>

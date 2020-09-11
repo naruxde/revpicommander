@@ -17,7 +17,7 @@ import proginit as pi
 import revpilogfile
 from avahisearch import AvahiSearch
 from debugcontrol import DebugControl
-from revpidevelop import RevPiDevelop
+from revpifiles import RevPiFiles
 from revpiinfo import RevPiInfo
 from revpioption import RevPiOption
 from revpiplclist import RevPiPlcList
@@ -35,8 +35,6 @@ class RevPiCommander(QtWidgets.QMainWindow, Ui_win_revpicommander):
 
         self.wid_debugcontrol = None  # type: DebugControl
         """Holds the widget of DebugControl."""
-        self.wid_develop = None  # type: RevPiDevelop
-        """Holds the widget of RevPiDevelop."""
         self.simulating = False
         """True, if simulation is running."""
         self.dict_men_connections_subfolder = {}
@@ -55,6 +53,7 @@ class RevPiCommander(QtWidgets.QMainWindow, Ui_win_revpicommander):
         self.diag_info = RevPiInfo(__version__, self)
         self.diag_options = RevPiOption(self)
         self.diag_program = RevPiProgram(self)
+        self.win_files = RevPiFiles(self)
         self.win_log = revpilogfile.RevPiLogfile(self)
 
         self.btn_plc_logs.pressed.connect(self.on_act_logs_triggered)
@@ -121,6 +120,8 @@ class RevPiCommander(QtWidgets.QMainWindow, Ui_win_revpicommander):
         self.diag_info.reject()
         self.diag_options.reject()
         self.diag_program.reject()
+        self.win_files.close()
+        self.win_files.deleteLater()
 
         self.centralwidget.adjustSize()
         self.adjustSize()
@@ -136,6 +137,7 @@ class RevPiCommander(QtWidgets.QMainWindow, Ui_win_revpicommander):
             helper.cm.address,
             helper.cm.port
         ))
+        self.win_files = RevPiFiles(self)
 
     @QtCore.pyqtSlot(str, str)
     def on_cm_status_changed(self, text: str, color: str):
@@ -313,33 +315,13 @@ class RevPiCommander(QtWidgets.QMainWindow, Ui_win_revpicommander):
     @QtCore.pyqtSlot(bool)
     def on_act_developer_toggled(self, state: bool):
         """Extent developer mode to main window."""
-        if not (state or self.wid_develop is None):
-            # Remove widget
-            self.gl.removeWidget(self.wid_develop)
-            self.wid_develop.deleteLater()
-            self.wid_develop = None
-            self.gl.setColumnStretch(1, 0)
+        if not helper.cm.connected:
+            return
 
-        elif state and helper.cm.connected:
-            if helper.cm.xml_mode < 2:
-                QtWidgets.QMessageBox.warning(
-                    self, self.tr("Warning"), self.tr(
-                        "XML-RPC access mode in the RevPiPyLoad "
-                        "configuration is too small to access this dialog!"
-                    )
-                )
-                self.act_developer.setChecked(False)
-
-            else:
-                self.wid_develop = RevPiDevelop(self.centralwidget)
-                self.gl.addWidget(self.wid_develop, 0, 1, 8, 1)
-                self.gl.setColumnStretch(1, 1)
-
-        elif state:
-            self.act_developer.setChecked(False)
-
-        self.centralwidget.adjustSize()
-        self.adjustSize()
+        if self.win_files.isHidden():
+            self.win_files.show()
+        else:
+            self.win_files.activateWindow()
 
     @QtCore.pyqtSlot()
     def on_act_pictory_triggered(self):
