@@ -49,9 +49,6 @@ class Ui_wid_develop(object):
         self.btn_select.setIconSize(QtCore.QSize(24, 24))
         self.btn_select.setObjectName("btn_select")
         self.gridLayout_2.addWidget(self.btn_select, 0, 1, 1, 1)
-        self.lbl_path = QtWidgets.QLabel(self.gb_select)
-        self.lbl_path.setObjectName("lbl_path")
-        self.gridLayout_2.addWidget(self.lbl_path, 1, 0, 1, 2)
         self.btn_refresh = QtWidgets.QPushButton(self.gb_select)
         icon1 = QtGui.QIcon()
         icon1.addPixmap(QtGui.QPixmap(":/action/ico/refresh.ico"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
@@ -59,6 +56,9 @@ class Ui_wid_develop(object):
         self.btn_refresh.setIconSize(QtCore.QSize(24, 24))
         self.btn_refresh.setObjectName("btn_refresh")
         self.gridLayout_2.addWidget(self.btn_refresh, 0, 2, 1, 1)
+        self.lbl_path = QtWidgets.QLabel(self.gb_select)
+        self.lbl_path.setObjectName("lbl_path")
+        self.gridLayout_2.addWidget(self.lbl_path, 1, 0, 1, 3)
         self.gridLayout_2.setColumnStretch(0, 1)
         self.gridLayout.addWidget(self.gb_select, 0, 0, 1, 2)
 
@@ -72,8 +72,8 @@ class Ui_wid_develop(object):
         self.gb_select.setTitle(_translate("wid_develop", "File watcher for PLC development"))
         self.lbl_select.setText(_translate("wid_develop", "Path to development root:"))
         self.btn_select.setToolTip(_translate("wid_develop", "Open developer root directory"))
-        self.lbl_path.setText(_translate("wid_develop", "/"))
         self.btn_refresh.setToolTip(_translate("wid_develop", "Reload file list"))
+        self.lbl_path.setText(_translate("wid_develop", "/"))
 
 from . import ressources_rc
 

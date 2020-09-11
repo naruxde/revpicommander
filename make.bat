@@ -1,5 +1,5 @@
 @echo off
 pyinstaller --clean -D --windowed ^
-    --add-data="data\revpipycontrol.ico;." ^
-    --icon=data\\revpipycontrol.ico ^
-    revpipycontrol\revpipycontrol.py
+    --add-data="data\revpicommander.ico;." ^
+    --icon=data\\revpicommander.ico ^
+    revpipycontrol\revpicommander.py
