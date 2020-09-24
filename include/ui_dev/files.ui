@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>725</width>
-    <height>592</height>
+    <height>519</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -23,7 +23,7 @@
       <property name="childrenCollapsible">
        <bool>false</bool>
       </property>
-      <widget class="QWidget" name="gridLayoutWidget">
+      <widget class="QWidget" name="verticalLayoutWidget">
        <layout class="QVBoxLayout" name="vl_local">
         <item>
          <widget class="QGroupBox" name="gb_select_local">
@@ -93,6 +93,43 @@
            </item>
           </layout>
          </widget>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="hl_revpi_2">
+          <item>
+           <spacer name="hs_local">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btn_to_right">
+            <property name="text">
+             <string/>
+            </property>
+            <property name="icon">
+             <iconset resource="ressources.qrc">
+              <normaloff>:/action/ico/arrow-right.ico</normaloff>:/action/ico/arrow-right.ico</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>24</width>
+              <height>24</height>
+             </size>
+            </property>
+            <property name="autoDefault">
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </item>
         <item>
          <widget class="QTreeWidget" name="tree_files_local">
@@ -180,26 +217,6 @@
         <item>
          <layout class="QHBoxLayout" name="hl_revpi">
           <item>
-           <widget class="QPushButton" name="btn_to_right">
-            <property name="text">
-             <string/>
-            </property>
-            <property name="icon">
-             <iconset resource="ressources.qrc">
-              <normaloff>:/action/ico/arrow-right.ico</normaloff>:/action/ico/arrow-right.ico</iconset>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>24</width>
-              <height>24</height>
-             </size>
-            </property>
-            <property name="autoDefault">
-             <bool>false</bool>
-            </property>
-           </widget>
-          </item>
-          <item>
            <widget class="QPushButton" name="btn_to_left">
             <property name="text">
              <string/>
@@ -240,7 +257,7 @@
            </widget>
           </item>
           <item>
-           <spacer name="horizontalSpacer_2">
+           <spacer name="hs_revpi">
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
             </property>

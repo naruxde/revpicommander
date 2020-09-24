@@ -40,10 +40,6 @@ class RevPiCommander(QtWidgets.QMainWindow, Ui_win_revpicommander):
         self.dict_men_connections_subfolder = {}
         """Submenus for folder entries."""
 
-        # fixme: Prepare gui
-        #self.__base_size = self.size()
-        #self.setFixedSize(self.__base_size)
-
         self._set_gui_control_states()
         self._load_men_connections()
 
@@ -115,7 +111,6 @@ class RevPiCommander(QtWidgets.QMainWindow, Ui_win_revpicommander):
 
         # This will remove the widgets in the button functions
         self.btn_plc_debug.setChecked(False)
-        self.act_developer.setChecked(False)
 
         self.diag_info.reject()
         self.diag_options.reject()
@@ -312,8 +307,8 @@ class RevPiCommander(QtWidgets.QMainWindow, Ui_win_revpicommander):
 
         self.diag_program.exec()
 
-    @QtCore.pyqtSlot(bool)
-    def on_act_developer_toggled(self, state: bool):
+    @QtCore.pyqtSlot()
+    def on_act_developer_triggered(self):
         """Extent developer mode to main window."""
         if not helper.cm.connected:
             return

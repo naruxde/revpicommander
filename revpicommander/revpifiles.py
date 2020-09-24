@@ -409,7 +409,7 @@ class RevPiFiles(QtWidgets.QMainWindow, Ui_win_files):
 
     @QtCore.pyqtSlot()
     def on_btn_all_pressed(self):
-        pi.logger.debug("RevPiDevelop.on_btn_all_pressed")
+        pi.logger.debug("RevPiFiles.on_btn_all_pressed")
         self._do_my_job(True)
         self.file_list_revpi()
 
@@ -446,25 +446,25 @@ class RevPiFiles(QtWidgets.QMainWindow, Ui_win_files):
 
     @QtCore.pyqtSlot()
     def on_btn_refresh_local_pressed(self):
-        pi.logger.debug("RevPiDevelop.on_btn_refresh_pressed")
+        pi.logger.debug("RevPiFiles.on_btn_refresh_pressed")
         self._load_files_local(False)
 
     @QtCore.pyqtSlot()
     def on_btn_refresh_revpi_pressed(self):
-        pi.logger.debug("RevPiDevelop.on_btn_refresh_revpi_pressed")
+        pi.logger.debug("RevPiFiles.on_btn_refresh_revpi_pressed")
         self._load_files_revpi(False)
 
     @QtCore.pyqtSlot()
     def on_btn_to_right_pressed(self):
         """Upload selected files to revolution pi."""
-        pi.logger.debug("RevPiDevelop.on_btn_to_right_pressed")
+        pi.logger.debug("RevPiFiles.on_btn_to_right_pressed")
         self._do_my_job(False)
         self.file_list_revpi()
 
     @QtCore.pyqtSlot()
     def on_btn_to_left_pressed(self):
         """Download selected file."""
-        pi.logger.debug("RevPiDevelop.on_btn_to_left_pressed")
+        pi.logger.debug("RevPiFiles.on_btn_to_left_pressed")
 
         override = None
         for item in self.tree_files_revpi.selectedItems():
@@ -511,7 +511,7 @@ class RevPiFiles(QtWidgets.QMainWindow, Ui_win_files):
     @QtCore.pyqtSlot()
     def on_btn_delete_revpi_pressed(self):
         """Remove selected files from working directory on revolution pi."""
-        pi.logger.debug("RevPiDevelop.btn_delete_revpi_pressed")
+        pi.logger.debug("RevPiFiles.btn_delete_revpi_pressed")
 
         lst_delete = []
         for item in self.tree_files_revpi.selectedItems():

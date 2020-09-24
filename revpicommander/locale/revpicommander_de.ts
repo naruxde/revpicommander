@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="de_DE">
+<!DOCTYPE TS><TS version="2.0" language="de_DE" sourcelanguage="">
 <context>
     <name>AclManager</name>
     <message>
@@ -65,27 +64,27 @@ Unsaved changes will be lost</source>
 <context>
     <name>AvahiSearch</name>
     <message>
-        <location filename="../avahisearch.py" line="112"/>
+        <location filename="../avahisearch.py" line="119"/>
         <source>Auto discovered</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../avahisearch.py" line="125"/>
+        <location filename="../avahisearch.py" line="132"/>
         <source>Already in list...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../avahisearch.py" line="125"/>
+        <location filename="../avahisearch.py" line="132"/>
         <source>The selected Revolution Pi is already saved in your connection list as &apos;{0}.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../avahisearch.py" line="146"/>
+        <location filename="../avahisearch.py" line="153"/>
         <source>Success</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../avahisearch.py" line="146"/>
+        <location filename="../avahisearch.py" line="153"/>
         <source>The connection with the name &apos;{0}&apos; was successfully saved to folder &apos;{1}&apos; in your connections.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -93,7 +92,7 @@ Unsaved changes will be lost</source>
 <context>
     <name>AvahiSearchThread</name>
     <message>
-        <location filename="../avahisearch.py" line="61"/>
+        <location filename="../avahisearch.py" line="68"/>
         <source>N/A</source>
         <translation type="unfinished"></translation>
     </message>
@@ -135,12 +134,12 @@ Unsaved changes will be lost</source>
 <context>
     <name>DebugIos</name>
     <message>
-        <location filename="../debugios.py" line="185"/>
+        <location filename="../debugios.py" line="190"/>
         <source>signed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../debugios.py" line="190"/>
+        <location filename="../debugios.py" line="195"/>
         <source>big_endian</source>
         <translation type="unfinished"></translation>
     </message>
@@ -172,22 +171,22 @@ Unsaved changes will be lost!</source>
 <context>
     <name>RevPiCommander</name>
     <message>
-        <location filename="../revpicommander.py" line="201"/>
+        <location filename="../revpicommander.py" line="198"/>
         <source>Select downloaded piCtory file...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="201"/>
+        <location filename="../revpicommander.py" line="198"/>
         <source>piCtory file (*.rsc);;All files (*.*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="221"/>
+        <location filename="../revpicommander.py" line="218"/>
         <source>Simulator started...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="221"/>
+        <location filename="../revpicommander.py" line="218"/>
         <source>The simulator is running!
 
 You can work with this simulator if your call RevPiModIO with this additional parameters:
@@ -198,162 +197,219 @@ You can copy that from header textbox.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="238"/>
+        <location filename="../revpicommander.py" line="235"/>
         <source>Can not start...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="238"/>
+        <location filename="../revpicommander.py" line="235"/>
         <source>Can not start the simulator! Maybe the piCtory file is corrupt or you can not write to the location &apos;{0}&apos;.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="456"/>
+        <location filename="../revpicommander.py" line="433"/>
         <source>Warning</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="252"/>
+        <location filename="../revpicommander.py" line="249"/>
         <source>This version of Logviewer ist not supported in version {0} of RevPiPyLoad on your RevPi! You need at least version 0.4.1.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="325"/>
+        <location filename="../revpicommander.py" line="300"/>
         <source>XML-RPC access mode in the RevPiPyLoad configuration is too small to access this dialog!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="483"/>
+        <location filename="../revpicommander.py" line="460"/>
         <source>Error</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="283"/>
+        <location filename="../revpicommander.py" line="280"/>
         <source>The Version of RevPiPyLoad on your Revolution Pi ({0}) is to old. This Version of RevPiCommander require at least version 0.6.0 of RevPiPyLoad. Please update your Revolution Pi!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="356"/>
+        <location filename="../revpicommander.py" line="333"/>
         <source>Question</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="356"/>
+        <location filename="../revpicommander.py" line="333"/>
         <source>Are you sure to reset piControl?
 The pictory configuration will be reloaded. During that time the process image will be interrupted and could rise errors on running control programs!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="369"/>
+        <location filename="../revpicommander.py" line="346"/>
         <source>Success</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="369"/>
+        <location filename="../revpicommander.py" line="346"/>
         <source>piControl reset executed successfully</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="376"/>
+        <location filename="../revpicommander.py" line="353"/>
         <source>piControl reset could not be executed successfully</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="391"/>
+        <location filename="../revpicommander.py" line="368"/>
         <source>Can not connect to RevPi XML-RPC Service! 
 
 This could have the following reasons: The RevPi is not online, the XML-RPC service is not running or the ACL permission is not set for your IP!!!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="432"/>
+        <location filename="../revpicommander.py" line="409"/>
         <source>Reset to piCtory defaults...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="432"/>
+        <location filename="../revpicommander.py" line="409"/>
         <source>Do you want to reset your process image to piCtory default values?
 You have to stop other RevPiModIO programs before doing that, because they could reset the outputs.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="456"/>
+        <location filename="../revpicommander.py" line="433"/>
         <source>The watch mode ist not supported in version {0} of RevPiPyLoad on your RevPi! You need at least version 0.5.3! Maybe the python3-revpimodio2 module is not installed on your RevPi at least version 2.0.0.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="468"/>
+        <location filename="../revpicommander.py" line="445"/>
         <source>Can not load this function, because your ACL level is to low!
 You need at least level 1 to read or level 3 to write.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="483"/>
+        <location filename="../revpicommander.py" line="460"/>
         <source>Can not load piCtory configuration. 
 Did you create a hardware configuration? Please check this in piCtory!</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
-    <name>RevPiDevelop</name>
+    <name>RevPiFiles</name>
     <message>
-        <location filename="../revpidevelop.py" line="35"/>
+        <location filename="../revpifiles.py" line="35"/>
         <source>Please select...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../revpidevelop.py" line="276"/>
+        <location filename="../revpifiles.py" line="431"/>
         <source>Error</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../revpidevelop.py" line="56"/>
+        <location filename="../revpifiles.py" line="69"/>
         <source>Can not stop plc program on Revolution Pi.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../revpidevelop.py" line="97"/>
+        <location filename="../revpifiles.py" line="110"/>
         <source>Information...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../revpidevelop.py" line="97"/>
+        <location filename="../revpifiles.py" line="110"/>
         <source>A PLC program has been uploaded. Please check the PLC options to see if the correct program is specified as the start program.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../revpidevelop.py" line="106"/>
+        <location filename="../revpifiles.py" line="119"/>
         <source>The Revolution Pi could not process some parts of the transmission.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../revpidevelop.py" line="114"/>
+        <location filename="../revpifiles.py" line="127"/>
         <source>Errors occurred during transmission</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../revpidevelop.py" line="120"/>
+        <location filename="../revpifiles.py" line="133"/>
         <source>Warning</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../revpidevelop.py" line="120"/>
+        <location filename="../revpifiles.py" line="133"/>
         <source>Could not start the plc program on Revolution Pi.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../revpidevelop.py" line="198"/>
+        <location filename="../revpifiles.py" line="154"/>
+        <source>The RevPiPyLoad version on the Revolution Pi is to old.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../revpifiles.py" line="226"/>
+        <source>Can not open last directory &apos;{0}&apos;.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../revpifiles.py" line="283"/>
         <source>Stop scanning for files, because we found more than {0} files.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../revpidevelop.py" line="265"/>
+        <location filename="../revpifiles.py" line="327"/>
+        <source>Could not load path of working dir</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../revpifiles.py" line="388"/>
+        <source>Can not load file list from Revolution Pi.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../revpifiles.py" line="420"/>
         <source>Select folder...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../revpidevelop.py" line="276"/>
+        <location filename="../revpifiles.py" line="431"/>
         <source>Can not access the folder &apos;{0}&apos; to read files.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../revpifiles.py" line="533"/>
+        <source>Error...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../revpifiles.py" line="482"/>
+        <source>Error while download file &apos;{0}&apos;.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../revpifiles.py" line="490"/>
+        <source>Override files...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../revpifiles.py" line="490"/>
+        <source>One or more files does exist on your computer! Do you want to override the existingfiles?
+
+Select &apos;Yes&apos; to override, &apos;No&apos; to download only missing files.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../revpifiles.py" line="522"/>
+        <source>Delete files from Revolution Pi...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../revpifiles.py" line="522"/>
+        <source>Do you want to delete {0} files from revolution pi?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../revpifiles.py" line="533"/>
+        <source>Error while delete file &apos;{0}&apos;.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -487,7 +543,7 @@ Unsaved changes will be lost.</source>
 <context>
     <name>RevPiProgram</name>
     <message>
-        <location filename="../revpiprogram.py" line="759"/>
+        <location filename="../revpiprogram.py" line="690"/>
         <source>Error</source>
         <translation type="unfinished"></translation>
     </message>
@@ -538,7 +594,7 @@ Please try again.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../revpiprogram.py" line="769"/>
+        <location filename="../revpiprogram.py" line="700"/>
         <source>Success</source>
         <translation type="unfinished"></translation>
     </message>
@@ -589,176 +645,156 @@ An error occurred on piControl reset!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../revpiprogram.py" line="331"/>
-        <source>Select folder...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../revpiprogram.py" line="348"/>
+        <location filename="../revpiprogram.py" line="330"/>
         <source>Save ZIP archive...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../revpiprogram.py" line="497"/>
+        <location filename="../revpiprogram.py" line="428"/>
         <source>ZIP archive (*.zip);;All files (*.*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../revpiprogram.py" line="369"/>
+        <location filename="../revpiprogram.py" line="351"/>
         <source>Save TGZ archive...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../revpiprogram.py" line="369"/>
+        <location filename="../revpiprogram.py" line="351"/>
         <source>TGZ archive (*.tgz);;All files (*.*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../revpiprogram.py" line="399"/>
+        <location filename="../revpiprogram.py" line="381"/>
         <source>Could not load PLC program from Revolution Pi.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../revpiprogram.py" line="426"/>
+        <location filename="../revpiprogram.py" line="394"/>
         <source>Coud not save the archive or extract the files!
 Please retry.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../revpiprogram.py" line="432"/>
+        <location filename="../revpiprogram.py" line="400"/>
         <source>Transfer successfully completed.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../revpiprogram.py" line="460"/>
-        <source>Upload plc files...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../revpiprogram.py" line="460"/>
-        <source>Python file (*.py);;Config file (*.conf);;;JSON file (*.json);;All files (*.*)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../revpiprogram.py" line="479"/>
-        <source>Select folder to upload...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../revpiprogram.py" line="497"/>
+        <location filename="../revpiprogram.py" line="428"/>
         <source>Upload content of ZIP archive...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../revpiprogram.py" line="522"/>
+        <location filename="../revpiprogram.py" line="453"/>
         <source>The selected file ist not a ZIP archive.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../revpiprogram.py" line="531"/>
+        <location filename="../revpiprogram.py" line="462"/>
         <source>Upload content of TAR archive...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../revpiprogram.py" line="531"/>
+        <location filename="../revpiprogram.py" line="462"/>
         <source>TAR archive (*.tgz);;All files (*.*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../revpiprogram.py" line="556"/>
+        <location filename="../revpiprogram.py" line="487"/>
         <source>The selected file ist not a TAR archive.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../revpiprogram.py" line="565"/>
+        <location filename="../revpiprogram.py" line="496"/>
         <source>No files to upload...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../revpiprogram.py" line="565"/>
+        <location filename="../revpiprogram.py" line="496"/>
         <source>Found no files to upload in given location or archive.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../revpiprogram.py" line="576"/>
+        <location filename="../revpiprogram.py" line="507"/>
         <source>There was an error deleting the files on the Revolution Pi.
 Upload aborted! Please try again.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../revpiprogram.py" line="622"/>
+        <location filename="../revpiprogram.py" line="553"/>
         <source>The PLC program was transferred successfully.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../revpiprogram.py" line="630"/>
+        <location filename="../revpiprogram.py" line="561"/>
         <source>Information</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../revpiprogram.py" line="630"/>
+        <location filename="../revpiprogram.py" line="561"/>
         <source>Could not find the selected PLC start program in uploaded files.
 This is not an error, if the file was already on the Revolution Pi. Check PLC start program field</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../revpiprogram.py" line="643"/>
+        <location filename="../revpiprogram.py" line="574"/>
         <source>There is no piCtory configuration in this archive.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../revpiprogram.py" line="650"/>
+        <location filename="../revpiprogram.py" line="581"/>
         <source>The Revolution Pi could not process some parts of the transmission.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../revpiprogram.py" line="657"/>
+        <location filename="../revpiprogram.py" line="588"/>
         <source>Errors occurred during transmission.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../revpiprogram.py" line="676"/>
+        <location filename="../revpiprogram.py" line="607"/>
         <source>Save piCtory file...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../revpiprogram.py" line="717"/>
+        <location filename="../revpiprogram.py" line="648"/>
         <source>piCtory file (*.rsc);;All files (*.*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../revpiprogram.py" line="695"/>
+        <location filename="../revpiprogram.py" line="626"/>
         <source>Could not load piCtory file from Revolution Pi.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../revpiprogram.py" line="705"/>
+        <location filename="../revpiprogram.py" line="636"/>
         <source>piCtory configuration successfully loaded and saved to:
 {0}.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../revpiprogram.py" line="717"/>
+        <location filename="../revpiprogram.py" line="648"/>
         <source>Upload piCtory file...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../revpiprogram.py" line="738"/>
+        <location filename="../revpiprogram.py" line="669"/>
         <source>Save piControl file...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../revpiprogram.py" line="738"/>
+        <location filename="../revpiprogram.py" line="669"/>
         <source>Process image file (*.img);;All files (*.*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../revpiprogram.py" line="759"/>
+        <location filename="../revpiprogram.py" line="690"/>
         <source>Could not load process image from Revolution Pi.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../revpiprogram.py" line="769"/>
+        <location filename="../revpiprogram.py" line="700"/>
         <source>Process image successfully loaded and saved to:
 {0}.</source>
         <translation type="unfinished"></translation>
@@ -1127,61 +1163,51 @@ Publish values with topic:    [basetopic]/set/[outputname]</source>
     </message>
     <message>
         <location filename="../../include/ui_dev/revpiprogram.ui" line="84"/>
-        <source>Files</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../include/ui_dev/revpiprogram.ui" line="89"/>
-        <source>Folder</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../include/ui_dev/revpiprogram.ui" line="94"/>
         <source>ZIP archive</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../include/ui_dev/revpiprogram.ui" line="99"/>
+        <location filename="../../include/ui_dev/revpiprogram.ui" line="89"/>
         <source>TGZ archive</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../include/ui_dev/revpiprogram.ui" line="165"/>
+        <location filename="../../include/ui_dev/revpiprogram.ui" line="155"/>
         <source>Upload</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../include/ui_dev/revpiprogram.ui" line="158"/>
+        <location filename="../../include/ui_dev/revpiprogram.ui" line="148"/>
         <source>Download</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../include/ui_dev/revpiprogram.ui" line="121"/>
+        <location filename="../../include/ui_dev/revpiprogram.ui" line="111"/>
         <source>Transfair format:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../include/ui_dev/revpiprogram.ui" line="128"/>
+        <location filename="../../include/ui_dev/revpiprogram.ui" line="118"/>
         <source>Including piCtory configuration</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../include/ui_dev/revpiprogram.ui" line="135"/>
+        <location filename="../../include/ui_dev/revpiprogram.ui" line="125"/>
         <source>Remove all files on Revolution Pi before upload</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../include/ui_dev/revpiprogram.ui" line="145"/>
+        <location filename="../../include/ui_dev/revpiprogram.ui" line="135"/>
         <source>Control files</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../include/ui_dev/revpiprogram.ui" line="172"/>
+        <location filename="../../include/ui_dev/revpiprogram.ui" line="162"/>
         <source>piCtory configuraiton</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../include/ui_dev/revpiprogram.ui" line="179"/>
+        <location filename="../../include/ui_dev/revpiprogram.ui" line="169"/>
         <source>Process image from piControl0</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1340,48 +1366,58 @@ applicable law.
     </message>
 </context>
 <context>
-    <name>wid_develop</name>
-    <message>
-        <location filename="../../include/ui_dev/revpidevelop.ui" line="35"/>
-        <source>Stop / Upload / Start</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../include/ui_dev/revpidevelop.ui" line="42"/>
-        <source>Just upload</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../include/ui_dev/revpidevelop.ui" line="76"/>
-        <source>File watcher for PLC development</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../include/ui_dev/revpidevelop.ui" line="82"/>
-        <source>Path to development root:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../include/ui_dev/revpidevelop.ui" line="89"/>
-        <source>Open developer root directory</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../include/ui_dev/revpidevelop.ui" line="106"/>
-        <source>/</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../include/ui_dev/revpidevelop.ui" line="113"/>
-        <source>Reload file list</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
     <name>win_debugios</name>
     <message>
         <location filename="../../include/ui_dev/debugios.ui" line="18"/>
         <source>{0}: Inputs | Outputs</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>win_files</name>
+    <message>
+        <location filename="../../include/ui_dev/files.ui" line="14"/>
+        <source>File manager</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../include/ui_dev/files.ui" line="31"/>
+        <source>Local computer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../include/ui_dev/files.ui" line="37"/>
+        <source>Path to development root:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../include/ui_dev/files.ui" line="44"/>
+        <source>Open developer root directory</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../include/ui_dev/files.ui" line="200"/>
+        <source>Reload file list</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../include/ui_dev/files.ui" line="186"/>
+        <source>/</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../include/ui_dev/files.ui" line="171"/>
+        <source>Revolution Pi</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../include/ui_dev/files.ui" line="193"/>
+        <source>RevPiPyLoad working directory:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../include/ui_dev/files.ui" line="311"/>
+        <source>Stop - Upload - Start</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1498,37 +1534,37 @@ applicable law.
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../include/ui_dev/revpicommander.ui" line="206"/>
+        <location filename="../../include/ui_dev/revpicommander.ui" line="203"/>
         <source>PLC de&amp;veloper...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../include/ui_dev/revpicommander.ui" line="209"/>
+        <location filename="../../include/ui_dev/revpicommander.ui" line="206"/>
         <source>F9</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../include/ui_dev/revpicommander.ui" line="214"/>
+        <location filename="../../include/ui_dev/revpicommander.ui" line="211"/>
         <source>piCtory configuraiton...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../include/ui_dev/revpicommander.ui" line="219"/>
+        <location filename="../../include/ui_dev/revpicommander.ui" line="216"/>
         <source>&amp;Disconnect</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../include/ui_dev/revpicommander.ui" line="222"/>
+        <location filename="../../include/ui_dev/revpicommander.ui" line="219"/>
         <source>Ctrl+X</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../include/ui_dev/revpicommander.ui" line="227"/>
+        <location filename="../../include/ui_dev/revpicommander.ui" line="224"/>
         <source>Reset driver...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../include/ui_dev/revpicommander.ui" line="232"/>
+        <location filename="../../include/ui_dev/revpicommander.ui" line="229"/>
         <source>Start local si&amp;mulator...</source>
         <translation type="unfinished"></translation>
     </message>
