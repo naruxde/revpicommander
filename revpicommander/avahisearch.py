@@ -33,6 +33,7 @@ class AvahiSearchThread(QtCore.QThread):
         )
 
     def _update_arp(self):
+        """Find mac address in arp table."""
         if osname == "posix":
             with open("/proc/net/arp") as fh:
                 for line in fh.readlines():
@@ -41,7 +42,13 @@ class AvahiSearchThread(QtCore.QThread):
                         self.__dict_arp[ip_mac.group("ip")] = ip_mac.group("mac")
 
     def get_mac(self, ip: str):
-        return self.__dict_arp.get(ip, None)
+        """
+        Get mac address of ip, if known.
+
+        :param ip: IP address to find mac address
+        :return: MAC address as string or empty string, if unknown
+        """
+        return self.__dict_arp.get(ip, "")
 
     def remove_service(self, zeroconf: Zeroconf, conf_type: str, name: str):
         """Revolution Pi disappeared."""
@@ -184,7 +191,7 @@ class AvahiSearch(QtWidgets.QDialog, Ui_diag_search):
         item_name.setIcon(QtGui.QIcon(":/main/ico/cpu.ico"))
         item_name.setText(server[:-1])
         item_name.setData(WidgetData.object_name, name)
-        item_name.setData(WidgetData.address, server[:-1])
+        item_name.setData(WidgetData.address, ip)
         item_name.setData(WidgetData.port, port)
         item_ip.setText(ip)
 

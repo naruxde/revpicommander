@@ -199,9 +199,6 @@
    </property>
   </action>
   <action name="act_developer">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
    <property name="text">
     <string>PLC de&amp;veloper...</string>
    </property>

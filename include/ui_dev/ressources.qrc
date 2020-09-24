@@ -9,6 +9,8 @@
     <file>ico/file-python.ico</file>
   </qresource>
   <qresource prefix="action">
+    <file>ico/arrow-left.ico</file>
+    <file>ico/arrow-right.ico</file>
     <file>ico/folder-open.ico</file>
     <file>ico/refresh.ico</file>
     <file>ico/reload.ico</file>

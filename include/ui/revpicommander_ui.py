@@ -81,7 +81,6 @@ class Ui_win_revpicommander(object):
         self.act_program = QtWidgets.QAction(win_revpicommander)
         self.act_program.setObjectName("act_program")
         self.act_developer = QtWidgets.QAction(win_revpicommander)
-        self.act_developer.setCheckable(True)
         self.act_developer.setObjectName("act_developer")
         self.act_pictory = QtWidgets.QAction(win_revpicommander)
         self.act_pictory.setObjectName("act_pictory")

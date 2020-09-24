@@ -313,8 +313,7 @@ class RevPiProgram(QtWidgets.QDialog, Ui_diag_program):
     @QtCore.pyqtSlot(int)
     def on_cbb_format_currentIndexChanged(self, index: int):
         helper.settings.setValue("program/cbb_format_index", index)
-        self.cbx_pictory.setEnabled(index >= 2)
-        self.btn_program_download.setEnabled(index != 1)
+        self.cbx_pictory.setEnabled(index >= 1)
 
     @QtCore.pyqtSlot()
     def on_btn_program_download_pressed(self):
@@ -325,23 +324,6 @@ class RevPiProgram(QtWidgets.QDialog, Ui_diag_program):
         selected_dir = ""
 
         if self.cbb_format.currentIndex() == 0:
-            # Save files to selected directory
-            diag_folder = QtWidgets.QFileDialog(
-                self, self.tr("Select folder..."),
-                helper.cm.program_last_dir_selected,
-            )
-            diag_folder.setFileMode(QtWidgets.QFileDialog.DirectoryOnly)
-            self.rejected.connect(diag_folder.reject)
-
-            if diag_folder.exec() != QtWidgets.QFileDialog.Accepted:
-                return
-
-            selected_dir = diag_folder.selectedFiles()[0]
-            fh = open(mkstemp()[1], "wb")
-
-            helper.cm.program_last_dir_selected = selected_dir
-
-        elif self.cbb_format.currentIndex() == 2:
             # Save files as zip archive
             diag_save = QtWidgets.QFileDialog(
                 self, self.tr("Save ZIP archive..."),
@@ -362,7 +344,7 @@ class RevPiProgram(QtWidgets.QDialog, Ui_diag_program):
 
             helper.cm.program_last_zip_file = filename
 
-        elif self.cbb_format.currentIndex() == 3:
+        elif self.cbb_format.currentIndex() == 1:
             # Save files as TarGz archive
             diag_save = QtWidgets.QFileDialog(
                 self, self.tr("Save TGZ archive..."),
@@ -389,7 +371,7 @@ class RevPiProgram(QtWidgets.QDialog, Ui_diag_program):
 
         plcfile = helper.cm.call_remote_function(
             "plcdownload",
-            "zip" if self.cbb_format.currentIndex() == 2 else "tar",
+            "zip" if self.cbb_format.currentIndex() == 0 else "tar",
             self.cbx_pictory.isChecked()
         )
 
@@ -404,20 +386,6 @@ class RevPiProgram(QtWidgets.QDialog, Ui_diag_program):
             try:
                 fh.write(plcfile.data)
                 fh.close()
-
-                if self.cbb_format.currentIndex() == 0:
-                    # Extract archive to selected directory
-                    os.makedirs(selected_dir, exist_ok=True)
-                    fh_pack = tarfile.open(fh.name)
-
-                    for tar_item in fh_pack.getmembers():
-                        if tar_item.name == "revpipyload":
-                            # Ignore root folder in Tar file
-                            continue
-                        tar_item.name = tar_item.name.replace("revpipyload/", "")
-                        fh_pack.extract(tar_item, selected_dir)
-
-                    fh_pack.close()
 
             except Exception as e:
                 pi.logger.error(e)
@@ -452,43 +420,6 @@ class RevPiProgram(QtWidgets.QDialog, Ui_diag_program):
         rscfile = None
 
         if self.cbb_format.currentIndex() == 0:
-            # Upload files
-            diag_open = QtWidgets.QFileDialog(
-                self,
-                self.tr("Upload plc files..."),
-                helper.cm.program_last_dir_upload,
-                self.tr("Python file (*.py);;Config file (*.conf);;;JSON file (*.json);;All files (*.*)")
-            )
-            diag_open.setAcceptMode(QtWidgets.QFileDialog.AcceptOpen)
-            diag_open.setFileMode(QtWidgets.QFileDialog.ExistingFiles)
-            self.rejected.connect(diag_open.reject)
-
-            if diag_open.exec() != QtWidgets.QFileDialog.AcceptSave or len(diag_open.selectedFiles()) != 1:
-                return
-
-            lst_files = diag_open.selectedFiles()
-            if len(lst_files) > 0:
-                helper.cm.program_last_dir_upload = os.path.dirname(lst_files[0])
-
-        elif self.cbb_format.currentIndex() == 1:
-            # Select folder to upload
-            diag_folder = QtWidgets.QFileDialog(
-                self, self.tr("Select folder to upload..."),
-                helper.cm.program_last_dir_upload,
-            )
-            diag_folder.setFileMode(QtWidgets.QFileDialog.DirectoryOnly)
-            self.rejected.connect(diag_folder.reject)
-
-            if diag_folder.exec() != QtWidgets.QFileDialog.Accepted:
-                return
-
-            selected_dir = diag_folder.selectedFiles()[0]
-            helper.cm.program_last_dir_upload = selected_dir
-
-            folder_name = os.path.basename(selected_dir)
-            lst_files = self.create_filelist(selected_dir)
-
-        elif self.cbb_format.currentIndex() == 2:
             # Upload zip archive content
             diag_open = QtWidgets.QFileDialog(
                 self, self.tr("Upload content of ZIP archive..."),
@@ -522,7 +453,7 @@ class RevPiProgram(QtWidgets.QDialog, Ui_diag_program):
                 )
                 return
 
-        elif self.cbb_format.currentIndex() == 3:
+        elif self.cbb_format.currentIndex() == 1:
             # Upload TarGz content
             diag_open = QtWidgets.QFileDialog(
                 self, self.tr("Upload content of TAR archive..."),

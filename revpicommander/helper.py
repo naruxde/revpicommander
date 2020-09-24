@@ -241,7 +241,7 @@ class ConnectionManager(QtCore.QThread):
 
         # Load values and test connection to Revolution Pi
         try:
-            pyload_version = list(map(int, sp.version().split(".")))
+            pyload_version = tuple(map(int, sp.version().split(".")))
             xml_funcs = sp.system.listMethods()
             xml_mode = sp.xmlmodus()
         except Exception as e:
