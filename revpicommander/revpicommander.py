@@ -281,7 +281,7 @@ class RevPiCommander(QtWidgets.QMainWindow, Ui_win_revpicommander):
             return
 
         # Check version of RevPiPyLoad, must be greater than 0.5!
-        if helper.cm.pyload_version[0] == 0 and helper.cm.pyload_version[1] < 6:
+        if helper.cm.pyload_version < (0, 6, 0):
             QtWidgets.QMessageBox.critical(
                 self, self.tr("Error"), self.tr(
                     "The Version of RevPiPyLoad on your Revolution Pi ({0}) is to old. "

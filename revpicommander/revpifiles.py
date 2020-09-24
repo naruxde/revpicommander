@@ -29,20 +29,32 @@ class RevPiFiles(QtWidgets.QMainWindow, Ui_win_files):
         super(RevPiFiles, self).__init__(parent)
         self.setupUi(self)
 
+        self.dc_settings = {}
         self.tree_files_counter = 0
         self.tree_files_counter_max = 10000
         self.lbl_path_local.setText(helper.cm.develop_watch_path or self.tr("Please select..."))
+        self.lbl_path_local.setToolTip(self.lbl_path_local.text())
 
         self.btn_all.setEnabled(False)
         self.btn_to_left.setEnabled(False)
         self.btn_to_right.setEnabled(False)
-        self.btn_delete.setEnabled(False)
+        self.btn_delete_revpi.setEnabled(False)
 
         if helper.cm.develop_watch_path:
-            self._load_path_files(True)
+            self._load_files_local(True)
+        if helper.cm.connected:
+            self._load_files_revpi(True)
+
+        self.restoreGeometry(helper.settings.value("files/geo", b''))
+        self.splitter.setSizes(list(map(int, helper.settings.value("files/splitter", [0, 0]))))
 
     def __del__(self):
         pi.logger.debug("RevPiFiles.__del__")
+
+    def closeEvent(self, a0: QtGui.QCloseEvent) -> None:
+        pi.logger.debug("RevPiFiles.closeEvent")
+        helper.settings.setValue("files/geo", self.saveGeometry())
+        helper.settings.setValue("files/splitter", self.splitter.sizes())
 
     def _do_my_job(self, stop_restart=True):
         """
@@ -67,7 +79,7 @@ class RevPiFiles(QtWidgets.QMainWindow, Ui_win_files):
         uploaded = True  # Will be False, when opt_program was found in files
         ec = 0
 
-        for file_name in self.file_list():
+        for file_name in self.file_list_local():
             # todo: Check exception of local file
             with open(file_name, "rb") as fh:
                 # Remove base dir of file to set relative for PyLoad
@@ -126,16 +138,78 @@ class RevPiFiles(QtWidgets.QMainWindow, Ui_win_files):
 
     def _set_gui_control_states(self):
         """Setup states of actions and buttons."""
-        state = len(self.tree_files_local.selectedItems()) > 0
-        self.btn_all.setEnabled(state)
-        self.btn_to_left.setEnabled(state)
-        self.btn_to_right.setEnabled(state)
-        self.btn_delete.setEnabled(state)
+        version_okay = helper.cm.pyload_version >= (0, 9, 3)
+        if not version_okay:
+            self.btn_to_left.setToolTip(self.tr("The RevPiPyLoad version on the Revolution Pi is to old."))
+            self.btn_delete_revpi.setToolTip(self.tr("The RevPiPyLoad version on the Revolution Pi is to old."))
+        state_local = len(self.tree_files_local.selectedItems()) > 0
+        state_revpi = version_okay and len(self.tree_files_revpi.selectedItems()) > 0
+        self.btn_all.setEnabled(state_local)
+        self.btn_to_left.setEnabled(state_revpi)
+        self.btn_to_right.setEnabled(state_local)
+        self.btn_delete_revpi.setEnabled(state_revpi)
 
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
     # region #      REGION: Tree management
 
-    def __insert_files(self, base_dir: str, child=None):
+    @staticmethod
+    def _parent_selection_state(item: QtWidgets.QTreeWidgetItem):
+        """Set selected, if all children are selected."""
+        if item.parent():
+            all_selected = True
+            for i in range(item.parent().childCount()):
+                if not item.parent().child(i).isSelected():
+                    all_selected = False
+                    break
+            item.parent().setSelected(all_selected)
+
+    def _select_children(self, top_item: QtWidgets.QTreeWidgetItem, value: bool):
+        """Recursive select children from parent."""
+        pi.logger.debug("RevPiFiles._select_children")
+
+        for i in range(top_item.childCount()):
+            item = top_item.child(i)
+            if item.type() == NodeType.DIR:
+                item.setSelected(value)
+                self._select_children(item, value)
+            elif item.type() == NodeType.FILE:
+                item.setSelected(value)
+
+    def __item_selection_changed(self, tree_view: QtWidgets.QTreeView):
+        """Manager vor item selection of three views."""
+        item = tree_view.currentItem()
+        if item is None:
+            return
+
+        pi.logger.debug("RevPiFiles.__itemSelectionChanged")
+
+        # Block while preselect other entries
+        tree_view.blockSignals(True)
+
+        if item.type() == NodeType.DIR:
+            self._select_children(item, item.isSelected())
+        elif item.type() == NodeType.FILE:
+            self._parent_selection_state(item)
+
+        tree_view.blockSignals(False)
+
+        self._set_gui_control_states()
+
+    @QtCore.pyqtSlot()
+    def on_tree_files_local_itemSelectionChanged(self):
+        self.__item_selection_changed(self.tree_files_local)
+        helper.cm.develop_watch_files = self.file_list_local()
+
+    @QtCore.pyqtSlot()
+    def on_tree_files_revpi_itemSelectionChanged(self):
+        self.__item_selection_changed(self.tree_files_revpi)
+
+    # endregion # # # # #
+
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+    # region #      REGION: Local file lists
+
+    def __insert_files_local(self, base_dir: str, child=None):
         """
         Recursively add files to tree view.
 
@@ -156,7 +230,7 @@ class RevPiFiles(QtWidgets.QMainWindow, Ui_win_files):
                 else:
                     self.tree_files_local.addTopLevelItem(item)
 
-                self.__insert_files(de.path, item)
+                self.__insert_files_local(de.path, item)
 
             elif de.is_file(follow_symlinks=False):
                 self.tree_files_counter += 1
@@ -174,34 +248,22 @@ class RevPiFiles(QtWidgets.QMainWindow, Ui_win_files):
                     self.tree_files_local.addTopLevelItem(item)
 
                 item.setSelected(de.path in helper.cm.develop_watch_files)
-                self._parent_selected(item)
+                self._parent_selection_state(item)
 
-    def __select_children(self, top_item: QtWidgets.QTreeWidgetItem, value: bool):
-        """Recursive select files from directory."""
-        pi.logger.debug("RevPiFiles.__select_children")
-
-        for i in range(top_item.childCount()):
-            item = top_item.child(i)
-            if item.type() == NodeType.DIR:
-                self.__select_children(item, value)
-            elif item.type() == NodeType.FILE:
-                item.setSelected(value)
-
-    def _load_path_files(self, silent=False):
+    def _load_files_local(self, silent=False):
         """
         Refresh the file list.
 
         :param silent: Do not show message boxes
         """
-        pi.logger.debug("RevPiFiles._load_path_files")
+        pi.logger.debug("RevPiFiles._load_files_local")
 
         self.tree_files_counter = 0
         self.tree_files_local.blockSignals(True)
         self.tree_files_local.clear()
-        self.tree_files_local.blockSignals(False)
-
-        self.__insert_files(helper.cm.develop_watch_path)
+        self.__insert_files_local(helper.cm.develop_watch_path)
         self.tree_files_local.sortItems(0, QtCore.Qt.AscendingOrder)
+        self.tree_files_local.blockSignals(False)
 
         if not silent and self.tree_files_counter > self.tree_files_counter_max:
             QtWidgets.QMessageBox.critical(
@@ -212,49 +274,122 @@ class RevPiFiles(QtWidgets.QMainWindow, Ui_win_files):
 
         self._set_gui_control_states()
 
-    def _parent_selected(self, item: QtWidgets.QTreeWidgetItem):
-        """Check all children of a parent are selected."""
-        if item.parent():
-            all_selected = True
-            for i in range(item.parent().childCount()):
-                if not item.parent().child(i).isSelected():
-                    all_selected = False
-                    break
-            item.parent().setSelected(all_selected)
-
-    def file_list(self):
+    def file_list_local(self):
         """Generate a file list with full path of selected entries."""
-        pi.logger.debug("RevPiFiles.file_list")
+        pi.logger.debug("RevPiFiles.file_list_local")
         lst = []
         for item in self.tree_files_local.selectedItems():
             if item.type() == NodeType.DIR:
+                # We just want files
                 continue
             lst.append(item.data(0, WidgetData.file_name))
 
         return lst
 
-    @QtCore.pyqtSlot()
-    def on_tree_files_local_itemSelectionChanged(self):
-        item = self.tree_files_local.currentItem()
-        if item is None:
-            return
+    # endregion # # # # #
 
-        pi.logger.debug("RevPiFiles.on_tree_files_itemSelectionChanged")
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+    # region #      REGION: RevPi file lists
 
-        # Block while preselect other entries
-        self.tree_files_local.blockSignals(True)
+    def _load_files_revpi(self, silent=False):
+        """
+        Refresh the file list of revolution pi.
 
-        if item.type() == NodeType.DIR:
-            self.__select_children(item, item.isSelected())
+        :param silent: Do not show message boxes
+        """
+        pi.logger.debug("RevPiFiles._load_files_revpi")
 
-        elif item.type() == NodeType.FILE:
-            self._parent_selected(item)
+        self.tree_files_revpi.blockSignals(True)
+        self.tree_files_revpi.clear()
+        self.tree_files_revpi.blockSignals(False)
 
-        self.tree_files_local.blockSignals(False)
+        if not helper.cm.connected:
+            lst_revpi = None
+        else:
+            lst_revpi = helper.cm.call_remote_function("get_filelist")
+            # Just load settings once
+            if not self.dc_settings:
+                self.dc_settings = helper.cm.call_remote_function("get_config", default_value={})
+                self.lbl_path_revpi.setText(
+                    self.dc_settings.get("plcworkdir", self.tr("Could not load path of working dir"))
+                )
+                self.lbl_path_revpi.setToolTip(self.lbl_path_revpi.text())
+
+        if lst_revpi:
+            lst_revpi.sort()
+
+            for path_file in lst_revpi:
+                lst_path_file = path_file.split("/")
+                dir_node = None  # type: QtWidgets.QTreeWidgetItem
+
+                for folder in lst_path_file[:-1]:
+                    new_dir_node = QtWidgets.QTreeWidgetItem(NodeType.DIR)
+                    new_dir_node.setText(0, folder)
+                    new_dir_node.setIcon(0, QtGui.QIcon(":/main/ico/folder.ico"))
+
+                    if dir_node:
+                        # Subfolder of top level
+                        for i in range(dir_node.childCount()):
+                            item = dir_node.child(i)
+                            if item.type() != NodeType.DIR:
+                                continue
+                            if item.text(0) == new_dir_node.text(0):
+                                dir_node = item
+                                new_dir_node = None
+                                break
+                        if new_dir_node:
+                            dir_node.addChild(new_dir_node)
+                            dir_node = new_dir_node
+                    else:
+                        # Search in top level
+                        for i in range(self.tree_files_revpi.topLevelItemCount()):
+                            item = self.tree_files_revpi.topLevelItem(i)
+                            if item.type() != NodeType.DIR:
+                                continue
+                            if item.text(0) == new_dir_node.text(0):
+                                dir_node = item
+                                new_dir_node = None
+                                break
+                        if new_dir_node:
+                            self.tree_files_revpi.addTopLevelItem(new_dir_node)
+                            dir_node = new_dir_node
+
+                # This is the file name
+                object_name = lst_path_file[-1]
+                item = QtWidgets.QTreeWidgetItem(NodeType.FILE)
+                item.setText(0, object_name)
+                item.setData(0, WidgetData.file_name, path_file)
+                item.setIcon(0, QtGui.QIcon(
+                    ":/file/ico/file-else.ico" if object_name.find(".py") == -1 else
+                    ":/file/ico/file-python.ico"
+                ))
+                if dir_node:
+                    dir_node.addChild(item)
+                else:
+                    self.tree_files_revpi.addTopLevelItem(item)
+
+            self.tree_files_revpi.sortItems(0, QtCore.Qt.AscendingOrder)
+
+        elif not silent:
+            QtWidgets.QMessageBox.critical(
+                self, self.tr("Error"), self.tr(
+                    "Can not load file list from Revolution Pi."
+                )
+            )
 
         self._set_gui_control_states()
 
-        helper.cm.develop_watch_files = self.file_list()
+    def file_list_revpi(self):
+        """Generate a file list with full path of selected entries."""
+        pi.logger.debug("RevPiFiles.file_list_revpi")
+        lst = []
+        for item in self.tree_files_revpi.selectedItems():
+            if item.type() == NodeType.DIR:
+                # We just want files
+                continue
+            lst.append(item.data(0, WidgetData.file_name))
+
+        return lst
 
     # endregion # # # # #
 
@@ -262,6 +397,7 @@ class RevPiFiles(QtWidgets.QMainWindow, Ui_win_files):
     def on_btn_all_pressed(self):
         pi.logger.debug("RevPiDevelop.on_btn_all_pressed")
         self._do_my_job(True)
+        self.file_list_revpi()
 
     @QtCore.pyqtSlot()
     def on_btn_select_local_pressed(self):
@@ -288,12 +424,25 @@ class RevPiFiles(QtWidgets.QMainWindow, Ui_win_files):
             return
 
         self.lbl_path_local.setText(selected_dir)
+        self.lbl_path_local.setToolTip(self.lbl_path_local.text())
         helper.cm.develop_watch_path = selected_dir
         helper.cm.develop_watch_files = []
 
-        self._load_path_files(False)
+        self._load_files_local(False)
 
     @QtCore.pyqtSlot()
     def on_btn_refresh_local_pressed(self):
         pi.logger.debug("RevPiDevelop.on_btn_refresh_pressed")
-        self._load_path_files(False)
+        self._load_files_local(False)
+
+    @QtCore.pyqtSlot()
+    def on_btn_refresh_revpi_pressed(self):
+        pi.logger.debug("RevPiDevelop.on_btn_refresh_revpi_pressed")
+        self._load_files_revpi(False)
+
+    @QtCore.pyqtSlot()
+    def on_btn_to_right_pressed(self):
+        """Upload selected files to revolution pi."""
+        pi.logger.debug("RevPiDevelop.on_btn_to_right_pressed")
+        self._do_my_job(False)
+        self.file_list_revpi()
