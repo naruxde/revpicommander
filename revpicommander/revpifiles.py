@@ -138,16 +138,22 @@ class RevPiFiles(QtWidgets.QMainWindow, Ui_win_files):
 
     def _set_gui_control_states(self):
         """Setup states of actions and buttons."""
-        version_okay = helper.cm.pyload_version >= (0, 9, 3)
-        if not version_okay:
-            self.btn_to_left.setToolTip(self.tr("The RevPiPyLoad version on the Revolution Pi is to old."))
-            self.btn_delete_revpi.setToolTip(self.tr("The RevPiPyLoad version on the Revolution Pi is to old."))
         state_local = len(self.tree_files_local.selectedItems()) > 0
-        state_revpi = version_okay and len(self.tree_files_revpi.selectedItems()) > 0
+        state_revpi = len(self.tree_files_revpi.selectedItems()) > 0
+
         self.btn_all.setEnabled(state_local)
-        self.btn_to_left.setEnabled(state_revpi)
         self.btn_to_right.setEnabled(state_local)
-        self.btn_delete_revpi.setEnabled(state_revpi)
+
+        if "plcdeletefile" not in helper.cm.xml_funcs:
+            self.btn_delete_revpi.setEnabled(False)
+            self.btn_delete_revpi.setToolTip(self.tr("The RevPiPyLoad version on the Revolution Pi is to old."))
+        else:
+            self.btn_delete_revpi.setEnabled(state_revpi)
+        if "plcdownload_file" not in helper.cm.xml_funcs:
+            self.btn_to_left.setEnabled(False)
+            self.btn_to_left.setToolTip(self.tr("The RevPiPyLoad version on the Revolution Pi is to old."))
+        else:
+            self.btn_to_left.setEnabled(state_revpi)
 
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
     # region #      REGION: Tree management
@@ -216,6 +222,14 @@ class RevPiFiles(QtWidgets.QMainWindow, Ui_win_files):
         :param base_dir: Directory to scan for files
         :param child: Child widget to add new widgets
         """
+        if not os.path.exists(base_dir):
+            QtWidgets.QMessageBox.critical(
+                self, self.tr("Error"), self.tr(
+                    "Can not open last directory '{0}'."
+                ).format(base_dir)
+            )
+            return
+
         for de in os.scandir(base_dir):  # type: DirEntry
 
             if self.tree_files_counter > self.tree_files_counter_max:
@@ -446,3 +460,79 @@ class RevPiFiles(QtWidgets.QMainWindow, Ui_win_files):
         pi.logger.debug("RevPiDevelop.on_btn_to_right_pressed")
         self._do_my_job(False)
         self.file_list_revpi()
+
+    @QtCore.pyqtSlot()
+    def on_btn_to_left_pressed(self):
+        """Download selected file."""
+        pi.logger.debug("RevPiDevelop.on_btn_to_left_pressed")
+
+        override = None
+        for item in self.tree_files_revpi.selectedItems():
+            if item.type() != NodeType.FILE:
+                continue
+
+            file_name = item.data(0, WidgetData.file_name)
+            rc = helper.cm.call_remote_function(
+                "plcdownload_file", file_name,
+                default_value=Binary()
+            )
+            rc = rc.data
+            if not rc:
+                QtWidgets.QMessageBox.critical(
+                    self, self.tr("Error..."), self.tr(
+                        "Error while download file '{0}'."
+                    ).format(file_name)
+                )
+            else:
+                file_name = os.path.join(helper.cm.develop_watch_path, file_name)
+                if override is None and os.path.exists(file_name):
+                    rc = QtWidgets.QMessageBox.question(
+                        self, self.tr("Override files..."), self.tr(
+                            "One or more files does exist on your computer! Do you want to override the existing"
+                            "files?\n\nSelect 'Yes' to override, 'No' to download only missing files."
+                        ),
+                        buttons=QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No | QtWidgets.QMessageBox.Cancel
+                    )
+                    if rc == QtWidgets.QMessageBox.Cancel:
+                        return
+                    override = rc == QtWidgets.QMessageBox.Yes
+
+                if os.path.exists(file_name) and not override:
+                    pi.logger.debug("Skip existing file '{0}'".format(file_name))
+                    continue
+
+                os.makedirs(os.path.dirname(file_name), exist_ok=True)
+                file_data = gzip.decompress(rc)
+                with open(os.path.join(helper.cm.develop_watch_path, file_name), "wb") as fh:
+                    fh.write(file_data)
+
+        self._load_files_local()
+
+    @QtCore.pyqtSlot()
+    def on_btn_delete_revpi_pressed(self):
+        """Remove selected files from working directory on revolution pi."""
+        pi.logger.debug("RevPiDevelop.btn_delete_revpi_pressed")
+
+        lst_delete = []
+        for item in self.tree_files_revpi.selectedItems():
+            if item.type() == NodeType.FILE:
+                lst_delete.append(item.data(0, WidgetData.file_name))
+
+        rc = QtWidgets.QMessageBox.question(
+            self, self.tr("Delete files from Revolution Pi..."), self.tr(
+                "Do you want to delete {0} files from revolution pi?"
+            ).format(len(lst_delete))
+        )
+        if rc != QtWidgets.QMessageBox.Yes:
+            return
+
+        for file_name in lst_delete:
+            rc = helper.cm.call_remote_function("plcdeletefile", file_name, default_value=False)
+            if not rc:
+                QtWidgets.QMessageBox.critical(
+                    self, self.tr("Error..."), self.tr(
+                        "Error while delete file '{0}'."
+                    ).format(file_name)
+                )
+
+        self._load_files_revpi()
