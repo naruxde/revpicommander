@@ -118,7 +118,13 @@ class DebugIos(QtWidgets.QMainWindow, Ui_win_debugios):
             # Bytes or string
             val = QtWidgets.QLineEdit()
             val.setReadOnly(read_only)
+            val.setProperty("big_endian", byteorder == "big")
+            val.setProperty("byte_length", byte_length)
+            val.setProperty("signed", signed)
+            val.setProperty("struct_type", "text")
+
             val.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
+            val.customContextMenuRequested.connect(self.on_context_menu)
 
             # Set alias to use the same function name on all widget types
             val.setValue = val.setText
@@ -186,6 +192,14 @@ class DebugIos(QtWidgets.QMainWindow, Ui_win_debugios):
         sender = self.sender()
         men = QtWidgets.QMenu(sender)
 
+        if sender.property("byte_length") > 4:
+            # Textbox needs format buttons
+            act_as_text = QtWidgets.QAction(self.tr("as text"))
+            men.addAction(act_as_text)
+            act_as_number = QtWidgets.QAction(self.tr("as number"))
+            men.addAction(act_as_number)
+            men.addSeparator()
+
         act_signed = QtWidgets.QAction(self.tr("signed"), men)
         act_signed.setCheckable(True)
         act_signed.setChecked(sender.property("signed") or False)
@@ -215,10 +229,17 @@ class DebugIos(QtWidgets.QMainWindow, Ui_win_debugios):
         elif rc == act_byteorder:
             sender.setProperty("big_endian", act_byteorder.isChecked())
 
-        sender.setProperty("frm", "{0}{1}".format(
-            ">" if act_byteorder.isChecked() else "<",
-            sender.property("struct_type").lower() if act_signed.isChecked() else sender.property("struct_type").upper()
-        ))
+        if sender.property("frm"):
+            sender.setProperty("frm", "{0}{1}".format(
+                ">" if act_byteorder.isChecked() else "<",
+                sender.property("struct_type").lower() if act_signed.isChecked()
+                else sender.property("struct_type").upper()
+            ))
+        elif sender.property("byte_length") > 4:
+            if rc == act_as_text:
+                sender.setProperty("struct_type", "text")
+            elif rc == act_as_number:
+                sender.setProperty("struct_type", "number")
 
         self.set_value(sender.objectName(), actual_value)
         men.deleteLater()
@@ -280,6 +301,23 @@ class DebugIos(QtWidgets.QMainWindow, Ui_win_debugios):
             return struct.pack(child.property("frm"), int(actual_value)), \
                 struct.pack(child.property("frm"), int(last_value))
         elif type(actual_value) == str:
+            if child.property("struct_type") == "number":
+                try:
+                    actual_value = int(actual_value).to_bytes(
+                        child.property("byte_length"),
+                        byteorder="big" if child.property("big_endian") else "little",
+                        signed=child.property("signed") or False
+                    )
+                    last_value = int(last_value).to_bytes(
+                        child.property("byte_length"),
+                        byteorder="big" if child.property("big_endian") else "little",
+                        signed=child.property("signed") or False
+                    )
+                    return actual_value, last_value
+                except Exception:
+                    pi.logger.error("Could not convert '{0}' to bytes".format(actual_value))
+                    pass
+
             return actual_value.encode(), last_value.encode()
         else:
             return actual_value, last_value
@@ -311,8 +349,15 @@ class DebugIos(QtWidgets.QMainWindow, Ui_win_debugios):
         child = self.__qwa[io_name]
         if child.property("frm"):
             value = struct.unpack(child.property("frm"), value)[0]
-        elif type(value) == bytearray:
-            value = value.decode()
+        elif type(value) == bytes:
+            if child.property("struct_type") == "number":
+                value = str(int.from_bytes(
+                    value,
+                    byteorder="big" if child.property("big_endian") else "little",
+                    signed=child.property("signed") or False
+                ))
+            else:
+                value = value.decode()
 
         child.setProperty("last_value", value)
         child.setValue(value)

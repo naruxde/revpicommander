@@ -329,7 +329,7 @@ class RevPiFiles(QtWidgets.QMainWindow, Ui_win_files):
                 )
                 self.lbl_path_revpi.setToolTip(self.lbl_path_revpi.text())
 
-        if lst_revpi:
+        if lst_revpi is not None:
             lst_revpi.sort()
 
             for path_file in lst_revpi:
