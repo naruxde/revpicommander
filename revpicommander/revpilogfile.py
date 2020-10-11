@@ -21,7 +21,7 @@ class LogType(IntEnum):
 
 class DataThread(QtCore.QThread):
 
-    error_detected = QtCore.pyqtSignal()
+    error_detected = QtCore.pyqtSignal(str)
     line_logged = QtCore.pyqtSignal(LogType, bool, str)
 
     def __init__(self, parent=None, cycle_time=1000):
@@ -31,7 +31,7 @@ class DataThread(QtCore.QThread):
         self._cycle_time = cycle_time
         self._paused = True
         self.error_count = 0
-        self.max_block = 16384
+        self.max_block = 256000
         self.mrk_app = 0
         self.mrk_daemon = 0
 
@@ -42,31 +42,27 @@ class DataThread(QtCore.QThread):
         :param log_type: Type of log file <class 'LogType'>
         :param xmlcall: XML-RPC call to get log text
         :param start_position: Start position in log file to read from
-        :return: New position in log file
+        :return: tuple(position: int, EOF: bool)
         """
-        buff_log = b''
-        while True:
-            # Load max data from start position to see the end of logfile
-            bytebuff = xmlcall(start_position, self.max_block).data
-            buff_log += bytebuff
-            start_position += len(bytebuff)
+        # Load max data from start position
+        buff_log = xmlcall(start_position, self.max_block).data
 
-            # If we get less than max_block, the log file is EOF for this time
-            if len(bytebuff) < self.max_block:
-                break
-
-        if bytebuff == b'\x16':  # 'ESC'
+        eof = True
+        if buff_log == b'\x16':  # 'ESC'
             # RevPiPyLoad could not access log file on Revolution Pi
             self.line_logged.emit(log_type, False, "")
 
-        elif bytebuff == b'\x19':  # 'EndOfMedia'
+        elif buff_log == b'\x19':  # 'EndOfMedia'
             # The log file was rotated by log rotate on the Revolution Pi
             start_position = 0
+            eof = False
 
         elif buff_log:
+            start_position += len(buff_log)
+            eof = len(buff_log) < self.max_block
             self.line_logged.emit(log_type, True, buff_log.decode("utf-8"))
 
-        return start_position
+        return start_position, eof
 
     def pause(self):
         """Stop checking new log lines, but leave thread alive."""
@@ -80,22 +76,26 @@ class DataThread(QtCore.QThread):
         pi.logger.debug("DataThread.run")
 
         while not self.isInterruptionRequested():
+            eof_app = False
+            eof_daemon = False
             if not self._paused:
                 try:
-                    self.mrk_app = self._load_log(
-                        LogType.APP,
-                        self._cli.load_applog,
-                        self.mrk_app,
-                    )
-                    self.mrk_daemon = self._load_log(
-                        LogType.DAEMON,
-                        self._cli.load_plclog,
-                        self.mrk_daemon,
-                    )
+                    while not (eof_app or self.isInterruptionRequested()):
+                        self.mrk_app, eof_app = self._load_log(
+                            LogType.APP,
+                            self._cli.load_applog,
+                            self.mrk_app,
+                        )
+                    while not (eof_daemon or self.isInterruptionRequested()):
+                        self.mrk_daemon, eof_daemon = self._load_log(
+                            LogType.DAEMON,
+                            self._cli.load_plclog,
+                            self.mrk_daemon,
+                        )
                     self.error_count = 0
-                except Exception:
+                except Exception as e:
                     if self.error_count == 0:
-                        self.error_detected.emit()
+                        self.error_detected.emit(str(e))
                     self.error_count += 1
 
             self.msleep(self._cycle_time)
@@ -125,6 +125,7 @@ class RevPiLogfile(QtWidgets.QMainWindow, Ui_win_revpilogfile):
         self.th_data.deleteLater()
 
         self.th_data = DataThread()
+        self.th_data.error_detected.connect(self.txt_daemon.setPlainText)
         self.th_data.line_logged.connect(self.on_line_logged)
         self.th_data.start()
 
