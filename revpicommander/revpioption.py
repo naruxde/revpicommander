@@ -82,8 +82,7 @@ class RevPiOption(QtWidgets.QDialog, Ui_diag_options):
             int(self.cbx_zeroonexit.isChecked()) != self.dc.get("zeroonexit", 0) or
             int(self.cbx_zeroonerror.isChecked()) != self.dc.get("zeroonerror", 0) or
             self.txt_replace_io.text() != self.dc.get("replace_ios", "") or
-            # todo: self.dc.get("plcprogram_watchdog", 0)
-            # todo: self.dc.get("reset_driver_action", 2)
+            self.cbb_reset_driver_action.currentIndex() != self.dc.get("reset_driver_action", 2) or
             # todo: self.dc.get("rtlevel", 2)
 
             int(self.cbx_plcslave.isChecked()) != self.dc.get("plcslave", 0) or
@@ -120,6 +119,7 @@ class RevPiOption(QtWidgets.QDialog, Ui_diag_options):
         self.cbx_zeroonexit.setChecked(bool(self.dc.get("zeroonexit", 0)))
         self.cbx_zeroonerror.setChecked(bool(self.dc.get("zeroonerror", 0)))
         self.txt_replace_io.setText(self.dc.get("replace_ios", ""))
+        self.cbb_reset_driver_action.setCurrentIndex(self.dc.get("reset_driver_action", 2))
         self.cbx_plcslave.setChecked(bool(self.dc.get("plcslave", 0)))
         self.acl_plcslave = self.dc.get("plcslaveacl", "")
         self.cbx_mqtt.setChecked(bool(self.dc.get("mqtt", 0)))
@@ -159,6 +159,7 @@ class RevPiOption(QtWidgets.QDialog, Ui_diag_options):
         self.dc["autostart"] = int(self.cbx_autostart.isChecked())
         self.dc["autoreload"] = int(self.cbx_autoreload.isChecked())
         self.dc["autoreloaddelay"] = self.sbx_autoreloaddelay.value()
+        self.dc["reset_driver_action"] = self.cbb_reset_driver_action.currentIndex()
         self.dc["zeroonexit"] = int(self.cbx_zeroonexit.isChecked())
         self.dc["zeroonerror"] = int(self.cbx_zeroonerror.isChecked())
         self.dc["replace_ios"] = self.txt_replace_io.text()

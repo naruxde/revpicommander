@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>452</width>
-    <height>503</height>
+    <width>416</width>
+    <height>522</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -27,23 +27,6 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="2">
-       <widget class="QSpinBox" name="sbx_autoreloaddelay">
-        <property name="minimum">
-         <number>5</number>
-        </property>
-        <property name="maximum">
-         <number>120</number>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="1" colspan="2">
-       <widget class="QCheckBox" name="cbx_zeroonexit">
-        <property name="text">
-         <string>... sucessfully without error</string>
-        </property>
-       </widget>
-      </item>
       <item row="5" column="1" colspan="2">
        <widget class="QCheckBox" name="cbx_zeroonerror">
         <property name="text">
@@ -58,10 +41,29 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="0" colspan="3">
-       <widget class="QCheckBox" name="cbx_autoreload">
+      <item row="8" column="1" colspan="2">
+       <widget class="QComboBox" name="cbb_reset_driver_action">
+        <item>
+         <property name="text">
+          <string>Do nothing</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Restart after piCtory changed</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Always restart the PLC program</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="8" column="0">
+       <widget class="QLabel" name="lbl_reset_driver_action">
         <property name="text">
-         <string>Restart PLC program after exit or crash</string>
+         <string>Driver reset action:</string>
         </property>
        </widget>
       </item>
@@ -71,9 +73,6 @@
          <string>Set process image to NULL if program terminates...</string>
         </property>
        </widget>
-      </item>
-      <item row="7" column="1" colspan="2">
-       <widget class="QLineEdit" name="txt_replace_io"/>
       </item>
       <item row="6" column="1" colspan="2">
        <widget class="QComboBox" name="cbb_replace_io">
@@ -99,10 +98,44 @@
         </item>
        </widget>
       </item>
+      <item row="4" column="1" colspan="2">
+       <widget class="QCheckBox" name="cbx_zeroonexit">
+        <property name="text">
+         <string>... sucessfully without error</string>
+        </property>
+       </widget>
+      </item>
       <item row="2" column="0" colspan="2">
        <widget class="QLabel" name="lbl_plc_delay">
         <property name="text">
          <string>Restart delay in seconds:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="2">
+       <widget class="QSpinBox" name="sbx_autoreloaddelay">
+        <property name="minimum">
+         <number>5</number>
+        </property>
+        <property name="maximum">
+         <number>120</number>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0" colspan="3">
+       <widget class="QCheckBox" name="cbx_autoreload">
+        <property name="text">
+         <string>Restart PLC program after exit or crash</string>
+        </property>
+       </widget>
+      </item>
+      <item row="7" column="1" colspan="2">
+       <widget class="QLineEdit" name="txt_replace_io"/>
+      </item>
+      <item row="9" column="0" colspan="3">
+       <widget class="QLabel" name="lbl_lbl_reset_driver_action">
+        <property name="text">
+         <string>PLC program behavior after piCtory driver reset clicked</string>
         </property>
        </widget>
       </item>

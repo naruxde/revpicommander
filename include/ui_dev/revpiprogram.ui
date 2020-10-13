@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>488</width>
-    <height>500</height>
+    <width>400</width>
+    <height>501</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -20,27 +20,13 @@
       <string>PLC program</string>
      </property>
      <layout class="QGridLayout" name="gridLayout">
-      <item row="3" column="1">
-       <widget class="QRadioButton" name="rbn_pythonversion_2">
-        <property name="text">
-         <string>Python 2</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="1" colspan="2">
-       <widget class="QLineEdit" name="txt_plcarguments"/>
+      <item row="1" column="0" colspan="3">
+       <widget class="QComboBox" name="cbb_plcprogram"/>
       </item>
       <item row="3" column="2">
        <widget class="QRadioButton" name="rbn_pythonversion_3">
         <property name="text">
          <string>Python 3</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="0" colspan="3">
-       <widget class="QLabel" name="lbl_plcprogram">
-        <property name="text">
-         <string>Python PLC start program:</string>
         </property>
        </widget>
       </item>
@@ -51,8 +37,12 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="0" colspan="3">
-       <widget class="QComboBox" name="cbb_plcprogram"/>
+      <item row="0" column="0" colspan="3">
+       <widget class="QLabel" name="lbl_plcprogram">
+        <property name="text">
+         <string>Python PLC start program:</string>
+        </property>
+       </widget>
       </item>
       <item row="3" column="0">
        <widget class="QLabel" name="lbl_pythonversion">
@@ -61,10 +51,37 @@
         </property>
        </widget>
       </item>
+      <item row="3" column="1">
+       <widget class="QRadioButton" name="rbn_pythonversion_2">
+        <property name="text">
+         <string>Python 2</string>
+        </property>
+       </widget>
+      </item>
       <item row="2" column="0">
        <widget class="QLabel" name="lbl_plcarguments">
         <property name="text">
          <string>Program arguments:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1" colspan="2">
+       <widget class="QLineEdit" name="txt_plcarguments"/>
+      </item>
+      <item row="5" column="2">
+       <widget class="QSpinBox" name="sbx_plcprogram_watchdog">
+        <property name="suffix">
+         <string> sec.</string>
+        </property>
+        <property name="maximum">
+         <number>600</number>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="0" colspan="2">
+       <widget class="QLabel" name="lbl_plcprogram_watchdog">
+        <property name="text">
+         <string>Software watchdog (0=disabled):</string>
         </property>
        </widget>
       </item>

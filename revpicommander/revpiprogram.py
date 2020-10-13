@@ -63,7 +63,8 @@ class RevPiProgram(QtWidgets.QDialog, Ui_diag_program):
             self.txt_plcarguments.text() != self.dc.get("plcarguments", "") or \
             self.rbn_pythonversion_2.isChecked() != (self.dc.get("pythonversion", 3) == 2) or \
             self.rbn_pythonversion_3.isChecked() != (self.dc.get("pythonversion", 3) == 3) or \
-            int(self.cbx_plcworkdir_set_uid.isChecked()) != self.dc.get("plcworkdir_set_uid", 0)
+            int(self.cbx_plcworkdir_set_uid.isChecked()) != self.dc.get("plcworkdir_set_uid", 0) or \
+            self.sbx_plcprogram_watchdog.value() != self.dc.get("plcprogram_watchdog", 0)
 
     def _load_settings(self, files_only=False):
         """Load values to GUI widgets."""
@@ -98,6 +99,7 @@ class RevPiProgram(QtWidgets.QDialog, Ui_diag_program):
             self.rbn_pythonversion_2.setChecked(self.dc.get("pythonversion", 3) == 2)
             self.rbn_pythonversion_3.setChecked(self.dc.get("pythonversion", 3) == 3)
             self.cbx_plcworkdir_set_uid.setChecked(bool(self.dc.get("plcworkdir_set_uid", 0)))
+            self.sbx_plcprogram_watchdog.setValue(self.dc.get("plcprogram_watchdog", 0))
 
     def accept(self) -> None:
         # todo: After upload ask for restart pcl program?
@@ -129,6 +131,7 @@ class RevPiProgram(QtWidgets.QDialog, Ui_diag_program):
         self.dc["plcarguments"] = self.txt_plcarguments.text()
         self.dc["pythonversion"] = 2 if self.rbn_pythonversion_2.isChecked() else 3
         self.dc["plcworkdir_set_uid"] = int(self.cbx_plcworkdir_set_uid.isChecked())
+        self.dc["plcprogram_watchdog"] = self.sbx_plcprogram_watchdog.value()
 
         saved = helper.cm.call_remote_function(
             "set_config", self.dc, ask,
