@@ -20,6 +20,7 @@ class DebugIos(QtWidgets.QMainWindow, Ui_win_debugios):
     """This window was closed."""
     do_read = QtCore.pyqtSignal()
     do_write = QtCore.pyqtSignal()
+    search_class = (QtWidgets.QLineEdit, QtWidgets.QDoubleSpinBox, QtWidgets.QCheckBox)
 
     def __init__(self, position: int, name: str, inputs: list, outputs: list, parent=None):
         super(DebugIos, self).__init__(parent)
@@ -36,7 +37,6 @@ class DebugIos(QtWidgets.QMainWindow, Ui_win_debugios):
         self.name = name
         self.inputs = inputs.copy()
         self.outputs = outputs.copy()
-        self.search_class = (QtWidgets.QLineEdit, QtWidgets.QDoubleSpinBox, QtWidgets.QCheckBox)
         self.write_values = False
 
         min_input = min(inputs, key=lambda k: k[2])
@@ -61,7 +61,8 @@ class DebugIos(QtWidgets.QMainWindow, Ui_win_debugios):
         helper.cm.debug_geos[self.position] = self.saveGeometry()
         self.device_closed.emit(self.position)
 
-    def _calc_min_max(self, byte_length: int, signed: bool):
+    @staticmethod
+    def _calc_min_max(byte_length: int, signed: bool):
         """Calculate min an max value which fits to bytes."""
         max_int_value = 256 ** byte_length
         return max_int_value / 2 * -1 if signed else 0.0, \
@@ -88,9 +89,18 @@ class DebugIos(QtWidgets.QMainWindow, Ui_win_debugios):
             byteorder = io[5]
             signed = io[6]
 
-            if container.findChild(self.search_class, name) is not None:
-                # Check properties of this IO
-                continue
+            val = container.findChild(self.search_class, name)
+            if val is not None:
+                # Destroy IO if the properties was changed
+                if byte_length != val.property("byte_length") or \
+                        bit_address != val.property("bit_address") or \
+                        byteorder != ("big" if val.property("big_endian") else "little") or \
+                        signed != val.property("signed"):
+                    del self.__qwa[name]
+                    layout.removeRow(layout.getWidgetPosition(val)[0])
+                    pi.logger.debug("Destroy property changed IO '{0}'".format(name))
+                else:
+                    continue
 
             lbl = QtWidgets.QLabel(name, container)
             lbl.setObjectName("lbl_".format(name))
@@ -118,9 +128,6 @@ class DebugIos(QtWidgets.QMainWindow, Ui_win_debugios):
             # Bytes or string
             val = QtWidgets.QLineEdit()
             val.setReadOnly(read_only)
-            val.setProperty("big_endian", byteorder == "big")
-            val.setProperty("byte_length", byte_length)
-            val.setProperty("signed", signed)
             val.setProperty("struct_type", "text")
 
             val.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
@@ -137,12 +144,9 @@ class DebugIos(QtWidgets.QMainWindow, Ui_win_debugios):
 
             val = QtWidgets.QDoubleSpinBox()
             val.setReadOnly(read_only)
-            val.setProperty("big_endian", byteorder == "big")
-            val.setProperty("byte_length", byte_length)
-            val.setProperty("signed", signed)
             val.setProperty("struct_type", struct_type)
             val.setProperty("frm", "{0}{1}".format(
-                ">" if val.property("big_endian") else "<",
+                ">" if byteorder == "big" else "<",
                 struct_type.lower() if signed else struct_type
             ))
 
@@ -157,6 +161,11 @@ class DebugIos(QtWidgets.QMainWindow, Ui_win_debugios):
                 val.valueChanged.connect(self._change_sbx_dvalue)
 
         val.setObjectName(name)
+        val.setProperty("big_endian", byteorder == "big")
+        val.setProperty("bit_address", bit_address)
+        val.setProperty("byte_length", byte_length)
+        val.setProperty("signed", signed)
+
         self.__qwa[name] = val
         return val
 
@@ -322,28 +331,13 @@ class DebugIos(QtWidgets.QMainWindow, Ui_win_debugios):
         else:
             return actual_value, last_value
 
-    def set_last_value(self, io_name: str, value):
-        """
-        Set last value for widget to sync after driver reset.
-
-        :param io_name: Name of IO
-        :param value: Process value as <class 'bool'> or <class 'bytes'>
-        """
-        # child = self.findChild(self.search_class, io_name)
-        child = self.__qwa[io_name]
-        if child.property("frm"):
-            value = struct.unpack(child.property("frm"), value)[0]
-        elif type(value) == bytearray:
-            value = value.decode()
-
-        child.setProperty("last_value", value)
-
-    def set_value(self, io_name: str, value):
+    def set_value(self, io_name: str, value, just_last_value=False):
         """
         Standard set function for a value of different widgets.
 
         :param io_name: Name of IO
         :param value: New value as bytes or bool for widget
+        :param just_last_value: Just set last value property
         """
         # child = self.findChild(self.search_class, io_name)
         child = self.__qwa[io_name]
@@ -360,4 +354,5 @@ class DebugIos(QtWidgets.QMainWindow, Ui_win_debugios):
                 value = value.decode()
 
         child.setProperty("last_value", value)
-        child.setValue(value)
+        if not just_last_value:
+            child.setValue(value)

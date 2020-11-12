@@ -194,10 +194,6 @@ class DebugControl(QtWidgets.QWidget, Ui_wid_debugcontrol):
                             int.from_bytes(value_procimg, byteorder=io[5], signed=io[6]) & 1 << io[4]
                         )
 
-                    if self.driver_reset_detected:
-                        # Change last value to save the actual states of outputs
-                        win.set_last_value(io[0], value_procimg)
-
                     if (refresh or write_out) and io_type == "out":
                         widget_value, last_value = win.get_value(io[0])
                         if widget_value != last_value:
@@ -290,7 +286,7 @@ class DebugControl(QtWidgets.QWidget, Ui_wid_debugcontrol):
         # ps_devices format: [[0, 'picore01'], [32, 'di01'], ...
         dict_devices = {v[0]: v[1] for v in helper.cm.call_remote_function("ps_devices", default_value=[])}
         if len(dict_devices) == 0:
-            # There is not piCtory configuration on the Revolution Pi
+            # There is no piCtory configuration on the Revolution Pi
             return False
 
         # Remove not existing or renamed devices
