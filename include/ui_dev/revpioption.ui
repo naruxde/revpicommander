@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>416</width>
-    <height>522</height>
+    <width>458</width>
+    <height>557</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -226,7 +226,7 @@
       <item row="4" column="0">
        <widget class="QCheckBox" name="cbx_xmlrpc">
         <property name="text">
-         <string>Activate XML-RPC for RevPiPyControl</string>
+         <string>Activate XML-RPC for RevPiCommander</string>
         </property>
        </widget>
       </item>

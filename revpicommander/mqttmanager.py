@@ -78,7 +78,7 @@ class MqttManager(QtWidgets.QDialog, Ui_diag_mqtt):
         if self._changesdone():
             ask = QtWidgets.QMessageBox.question(
                 self, self.tr("Question"), self.tr(
-                    "Do you really want to quit? \nUnsaved changes will be lost!"
+                    "Do you really want to quit? \nUnsaved changes will be lost."
                 )
             ) == QtWidgets.QMessageBox.Yes
             if ask:

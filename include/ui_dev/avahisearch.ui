@@ -85,7 +85,7 @@
      </attribute>
      <column>
       <property name="text">
-       <string>Zero conf Name</string>
+       <string>Zero-conf name</string>
       </property>
      </column>
      <column>

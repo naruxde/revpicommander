@@ -369,8 +369,10 @@ class RevPiCommander(QtWidgets.QMainWindow, Ui_win_revpicommander):
                 self, self.tr("Error"), self.tr(
                     "Can not connect to RevPi XML-RPC Service! \n\n"
                     "This could have the following reasons: The RevPi is not "
-                    "online, the XML-RPC service is not running or the ACL "
-                    "permission is not set for your IP!!!"
+                    "online, the XML-RPC service is not running / bind to "
+                    "localhost or the ACL permission is not set for your "
+                    "IP!!!\n\nRun 'sudo revpipyload_secure_installation' on "
+                    "Revolution Pi to setup this function!"
                 )
             )
 
@@ -474,6 +476,9 @@ class RevPiCommander(QtWidgets.QMainWindow, Ui_win_revpicommander):
 
 if __name__ == "__main__":
     import sys
+
+    #QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling, True)
+    #QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_UseHighDpiPixmaps, True)
 
     app = QtWidgets.QApplication(sys.argv)
 

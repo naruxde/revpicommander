@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Program information</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0" colspan="3">
@@ -24,7 +24,7 @@
       </font>
      </property>
      <property name="text">
-      <string>RevPi Python PLC - Control</string>
+      <string>RevPi Python PLC - Commander</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>

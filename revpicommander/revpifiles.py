@@ -108,10 +108,10 @@ class RevPiFiles(QtWidgets.QMainWindow, Ui_win_files):
             # Tell user, we did not find the auto start program in files
             if uploaded:
                 QtWidgets.QMessageBox.information(
-                    self, self.tr("Information..."), self.tr(
+                    self, self.tr("Information"), self.tr(
                         "A PLC program has been uploaded. Please check the "
-                        "PLC options to see if the correct program is "
-                        "specified as the start program."
+                        "PLC program settings to see if the correct program "
+                        "is specified as the start program."
                     )
                 )
 
