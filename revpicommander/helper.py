@@ -353,6 +353,7 @@ class ConnectionManager(QtCore.QThread):
                 # Get new connection information to create object in this thread
                 item = self._cli_connect.get()
                 sp = ServerProxy("http://{0}:{1}".format(*item))
+                self._cli_connect.task_done()
 
             if sp:
                 try:

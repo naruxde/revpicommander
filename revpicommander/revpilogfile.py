@@ -117,10 +117,6 @@ class RevPiLogfile(QtWidgets.QMainWindow, Ui_win_revpilogfile):
 
         self._load_gui_settings()
 
-    def __del__(self):
-        pi.logger.debug("RevPiLogfile.__del__")
-        self.th_data.deleteLater()
-
     def _create_data_thread(self):
         self.th_data.deleteLater()
 

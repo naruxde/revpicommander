@@ -7,7 +7,6 @@ __license__ = "GPLv3"
 import gzip
 import os
 from enum import IntEnum
-from os import DirEntry, scandir
 from xmlrpc.client import Binary
 
 from PyQt5 import QtCore, QtGui, QtWidgets
@@ -79,6 +78,7 @@ class RevPiFiles(QtWidgets.QMainWindow, Ui_win_files):
         uploaded = True  # Will be False, when opt_program was found in files
         ec = 0
 
+        # todo: Do this in a thread with status bar to prevent freezing program on long upload times
         for file_name in self.file_list_local():
             # todo: Check exception of local file
             with open(file_name, "rb") as fh:
@@ -152,6 +152,9 @@ class RevPiFiles(QtWidgets.QMainWindow, Ui_win_files):
         if "plcdownload_file" not in helper.cm.xml_funcs:
             self.btn_to_left.setEnabled(False)
             self.btn_to_left.setToolTip(self.tr("The RevPiPyLoad version on the Revolution Pi is to old."))
+        elif not helper.cm.develop_watch_path:
+            self.btn_to_left.setEnabled(False)
+            self.btn_to_left.setToolTip(self.tr("Choose a local directory first."))
         else:
             self.btn_to_left.setEnabled(state_revpi)
 
@@ -230,7 +233,7 @@ class RevPiFiles(QtWidgets.QMainWindow, Ui_win_files):
             )
             return
 
-        for de in os.scandir(base_dir):  # type: DirEntry
+        for de in os.scandir(base_dir):  # type: os.DirEntry
 
             if self.tree_files_counter > self.tree_files_counter_max:
                 return
@@ -459,7 +462,7 @@ class RevPiFiles(QtWidgets.QMainWindow, Ui_win_files):
         """Upload selected files to revolution pi."""
         pi.logger.debug("RevPiFiles.on_btn_to_right_pressed")
         self._do_my_job(False)
-        self.file_list_revpi()
+        self._load_files_revpi(True)
 
     @QtCore.pyqtSlot()
     def on_btn_to_left_pressed(self):

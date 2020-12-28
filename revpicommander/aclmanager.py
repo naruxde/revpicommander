@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-u"""Manager for ACL lists."""
+"""Manager for ACL lists."""
 __author__ = "Sven Sager"
 __copyright__ = "Copyright (C) 2018 Sven Sager"
 __license__ = "GPLv3"
@@ -20,7 +20,7 @@ class AclManager(QtWidgets.QDialog, Ui_diag_aclmanager):
         self.setupUi(self)
         self.setFixedSize(self.size())
 
-        self.__re_ipacl = compile(r"([\d*]{1,3}\.){3}[\d*]{1,3},-1")
+        self.__re_ipacl = compile(r"(25[0-5]|(2[0-4]|[01]?\d|)\d)(\.(25[0-5]|(2[0-4]|[01]?\d|)\d)){3},-1")
         self.__dict_acltext = {}
         self.__cbb_level_loaded_index = 0
         self.__mrk_message_shown = 0
