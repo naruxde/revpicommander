@@ -486,7 +486,8 @@ if __name__ == "__main__":
         # Setup translation from file with system language
         locale = QtCore.QLocale.system().name()
         translator = QtCore.QTranslator()
-        translator.load("locale/revpicommander_{0}".format(locale), suffix=".qm")
+        locale_file_name = "revpicommander_{0}".format(locale)
+        translator.load(join(dirname(__file__), "locale", locale_file_name), suffix=".qm")
         app.installTranslator(translator)
     except Exception:
         pass
