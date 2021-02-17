@@ -194,22 +194,22 @@ Ungesicherte Änderungen gehen verloren.</translation>
 <context>
     <name>RevPiCommander</name>
     <message>
-        <location filename="../revpicommander.py" line="199"/>
+        <location filename="../revpicommander.py" line="198"/>
         <source>Select downloaded piCtory file...</source>
         <translation>Heruntergeladene piCtory Datei auswählen...</translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="199"/>
+        <location filename="../revpicommander.py" line="198"/>
         <source>piCtory file (*.rsc);;All files (*.*)</source>
         <translation>piCtory Datei (*.rsc);;Alle Dateien (*.*)</translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="219"/>
+        <location filename="../revpicommander.py" line="218"/>
         <source>Simulator started...</source>
         <translation>Simulator gestartet...</translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="219"/>
+        <location filename="../revpicommander.py" line="218"/>
         <source>The simulator is running!
 
 You can work with this simulator if your call RevPiModIO with this additional parameters:
@@ -226,100 +226,100 @@ configrsc={configrsc}
 Dies kann aus der Textbox oben kopiert werden.</translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="236"/>
+        <location filename="../revpicommander.py" line="235"/>
         <source>Can not start...</source>
         <translation>Kann nicht gestartet werden...</translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="236"/>
+        <location filename="../revpicommander.py" line="235"/>
         <source>Can not start the simulator! Maybe the piCtory file is corrupt or you can not write to the location &apos;{0}&apos;.</source>
         <translation>Kann Simulator nicht starten! Vielleicht ist die piCtory Datei defekt oder es gibt keine Schreibberechtigung in &apos;{0}`.</translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="436"/>
+        <location filename="../revpicommander.py" line="435"/>
         <source>Warning</source>
         <translation>Warnung</translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="250"/>
+        <location filename="../revpicommander.py" line="249"/>
         <source>This version of Logviewer ist not supported in version {0} of RevPiPyLoad on your RevPi! You need at least version 0.4.1.</source>
         <translation>Diese Version vom Logbetrachter wird in RevPiPyLoad Version {0} nicht unterstützt! Es wird mindestens Version 0.4.1 benötigt.</translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="301"/>
+        <location filename="../revpicommander.py" line="300"/>
         <source>XML-RPC access mode in the RevPiPyLoad configuration is too small to access this dialog!</source>
         <translation>XML-RPC Zugriffsberechtigung in der RevPiPyLoad Konfiguraiton ist zu klein für diese Einstellungen!</translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="463"/>
+        <location filename="../revpicommander.py" line="462"/>
         <source>Error</source>
         <translation>Fehler</translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="281"/>
+        <location filename="../revpicommander.py" line="280"/>
         <source>The Version of RevPiPyLoad on your Revolution Pi ({0}) is to old. This Version of RevPiCommander require at least version 0.6.0 of RevPiPyLoad. Please update your Revolution Pi!</source>
         <translation>Die Version von RevPiPyLoad ({0}) auf dem Revolution Pi ist zu alt. Diese Version vom RevPiCommander braucht mindestens Version 0.6.0. Bitte aktualisiere deinen Revolution Pi!</translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="334"/>
+        <location filename="../revpicommander.py" line="333"/>
         <source>Question</source>
         <translation>Frage</translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="334"/>
+        <location filename="../revpicommander.py" line="333"/>
         <source>Are you sure to reset piControl?
 The pictory configuration will be reloaded. During that time the process image will be interrupted and could rise errors on running control programs!</source>
         <translation>Soll piControl wirklich zurückgesetzt werden?
 Die piCtory Konfiguration wird neu geladen. Das Prozessabbild wird in dieser Zeit nicht verfügbar sein und es könnten Fehler in Steuerungsprogrammen ausgelöst werden!</translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="347"/>
+        <location filename="../revpicommander.py" line="346"/>
         <source>Success</source>
         <translation>Erfolgreich</translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="347"/>
+        <location filename="../revpicommander.py" line="346"/>
         <source>piControl reset executed successfully</source>
         <translation>piControl wurde erfolgreich zurückgesetzt</translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="354"/>
+        <location filename="../revpicommander.py" line="353"/>
         <source>piControl reset could not be executed successfully</source>
         <translation>piControl konnte nicht zurückgesetzt werden</translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="412"/>
+        <location filename="../revpicommander.py" line="411"/>
         <source>Reset to piCtory defaults...</source>
         <translation>Standardwerte von piCtory laden...</translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="412"/>
+        <location filename="../revpicommander.py" line="411"/>
         <source>Do you want to reset your process image to piCtory default values?
 You have to stop other RevPiModIO programs before doing that, because they could reset the outputs.</source>
         <translation>Soll das virtuelle Prozessabbild auf die piCtory Standardwerte zurückgesetzt werden?
 Es sollten alle RevPiModIO Programme vorher beendet werden, da diese ihre IO Werte sofort wieder schreiben würden.</translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="436"/>
+        <location filename="../revpicommander.py" line="435"/>
         <source>The watch mode ist not supported in version {0} of RevPiPyLoad on your RevPi! You need at least version 0.5.3! Maybe the python3-revpimodio2 module is not installed on your RevPi at least version 2.0.0.</source>
         <translation>Der SPS Betrachter ist in Version {0} von RevPiPyLoad auf dem Rev Pi nicht unterstützt! Es muss mindestens Version 0.5.3 installiert sein! Vielleicht fehlt auch das python3-revpimodio2 Modul, welches mindestens Version 2.0.0 haben muss.</translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="448"/>
+        <location filename="../revpicommander.py" line="447"/>
         <source>Can not load this function, because your ACL level is to low!
 You need at least level 1 to read or level 3 to write.</source>
         <translation>Für diese Funktion ist das Berechtigungslevel zu gering!
 Es muss mindestens Level 1 zum Lesen oder Level 3 zu Schreiben sein.</translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="463"/>
+        <location filename="../revpicommander.py" line="462"/>
         <source>Can not load piCtory configuration. 
 Did you create a hardware configuration? Please check this in piCtory!</source>
         <translation>Kann piCtory Konfiguration nicht laden.
 Wurde eine Hardwarekonfiguration in piCtory erzeugt?</translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="369"/>
+        <location filename="../revpicommander.py" line="368"/>
         <source>Can not connect to RevPi XML-RPC Service! 
 
 This could have the following reasons: The RevPi is not online, the XML-RPC service is not running / bind to localhost or the ACL permission is not set for your IP!!!
@@ -1066,7 +1066,7 @@ Publish values with topic:    [basetopic]/set/[outputname]</source>
     <message>
         <location filename="../../include/ui_dev/mqttmanager.ui" line="138"/>
         <source>Broker settings</source>
-        <translation type="unfinished">Broker Einstellungen</translation>
+        <translation>Broker Einstellungen</translation>
     </message>
     <message>
         <location filename="../../include/ui_dev/mqttmanager.ui" line="32"/>

@@ -19,16 +19,15 @@ class MyEggInfo(distutils.command.install_egg_info.install_egg_info):
 
 
 setup(
-    version="0.9.0",
+    version="0.9.0a",
     python_requires="~=3.4",
-    requires=["PyQt5", "zeroconf"],
+    requires=["PyQt5", "revpimodio2", "zeroconf"],
 
     scripts=["data/revpicommander"],
     data_files=[
         ("share/applications", ["data/revpicommander.desktop"]),
         ("share/icons/hicolor/32x32/apps", ["data/revpicommander.png"]),
         ("share/revpicommander", glob("revpicommander/*.py")),
-        ("share/revpicommander/revpimodio2", glob("lib/revpimodio2/revpimodio2/*.py")),
         ("share/revpicommander/ui", glob("include/ui/*.py")),
         ("share/revpicommander/locale/", glob("revpicommander/locale/*.qm")),
     ],
@@ -42,12 +41,11 @@ setup(
     url="https://revpimodio.org/revpipyplc/",
     description="GUI for Revolution Pi to upload programs and do IO-Checks",
     long_description=""
-    "Dieses Programm startet beim Systemstart ein angegebenes Python PLC\n"
-    "Programm. Es überwacht das Programm und startet es im Fehlerfall neu.\n"
-    "Bei Abstruz kann das gesamte /dev/piControl0 auf 0x00 gesettz werden.\n"
-    "Außerdem stellt es einen XML-RPC Server bereit, über den die Software\n"
-    "auf den RevPi geladen werden kann. Das Prozessabbild kann über ein Tool\n"
-    "zur Laufzeit überwacht werden.",
+    "The RevPiCommander is a GUI tool to manage your revolution Pi over the\n"
+    "network. You can search for RevPis in your network, manage the settings\n"
+    "of RevPiPyLoad and do IO checks on your local machine. Developing your\n"
+    "control program is very easy with the developer, upload and debug it\n"
+    "over the network.",
     classifiers=[
         "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
         "Operating System :: POSIX :: Linux",
