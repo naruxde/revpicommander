@@ -9,7 +9,7 @@ import os
 import tarfile
 import zipfile
 from shutil import rmtree
-from tempfile import mkdtemp, mkstemp
+from tempfile import mkdtemp
 from xmlrpc.client import Binary
 
 from PyQt5 import QtCore, QtGui, QtWidgets
@@ -174,7 +174,7 @@ class RevPiProgram(QtWidgets.QDialog, Ui_diag_program):
 
         self._load_settings()
         self._apply_acl()
-        
+
         return super(RevPiProgram, self).exec()
 
     def reject(self) -> None:

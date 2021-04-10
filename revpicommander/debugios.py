@@ -112,7 +112,8 @@ class DebugIos(QtWidgets.QMainWindow, Ui_win_debugios):
 
         self.splitter.setSizes([1, 1])
 
-    def _create_widget(self, name: str, byte_length: int, bit_address: int, byteorder: str, signed: bool, read_only: bool):
+    def _create_widget(
+            self, name: str, byte_length: int, bit_address: int, byteorder: str, signed: bool, read_only: bool):
         """Create widget in functions address space to use lambda functions."""
         if bit_address >= 0:
             val = QtWidgets.QCheckBox()

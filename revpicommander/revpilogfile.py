@@ -20,7 +20,6 @@ class LogType(IntEnum):
 
 
 class DataThread(QtCore.QThread):
-
     error_detected = QtCore.pyqtSignal(str)
     line_logged = QtCore.pyqtSignal(LogType, bool, str)
 
