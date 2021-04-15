@@ -635,8 +635,7 @@ class RevPiProgram(QtWidgets.QDialog, Ui_diag_program):
             QtWidgets.QMessageBox.information(
                 self, self.tr("Success"), self.tr(
                     "piCtory configuration successfully loaded and saved to:\n{0}."
-                    "".format(filename)
-                )
+                ).format(filename)
             )
 
     @QtCore.pyqtSlot()
@@ -699,8 +698,7 @@ class RevPiProgram(QtWidgets.QDialog, Ui_diag_program):
             QtWidgets.QMessageBox.information(
                 self, self.tr("Success"), self.tr(
                     "Process image successfully loaded and saved to:\n{0}."
-                    "".format(filename)
-                )
+                ).format(filename)
             )
 
     # endregion # # # # #

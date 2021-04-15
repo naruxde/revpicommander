@@ -128,8 +128,8 @@ class AvahiSearch(QtWidgets.QDialog, Ui_diag_search):
                     QtWidgets.QMessageBox.information(
                         self, self.tr("Already in list..."), self.tr(
                             "The selected Revolution Pi is already saved in your "
-                            "connection list as '{0}.".format(name)
-                        )
+                            "connection list as '{0}'."
+                        ).format(name)
                     )
                 helper.settings.endArray()
                 return i
@@ -149,8 +149,8 @@ class AvahiSearch(QtWidgets.QDialog, Ui_diag_search):
             QtWidgets.QMessageBox.information(
                 self, self.tr("Success"), self.tr(
                     "The connection with the name '{0}' was successfully saved "
-                    "to folder '{1}' in your connections.".format(selected_name, folder_name)
-                )
+                    "to folder '{1}' in your connections."
+                ).format(selected_name, folder_name)
             )
 
         return i + 1

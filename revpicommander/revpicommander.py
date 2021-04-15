@@ -218,13 +218,11 @@ class RevPiCommander(QtWidgets.QMainWindow, Ui_win_revpicommander):
             QtWidgets.QMessageBox.information(
                 self, self.tr("Simulator started..."), self.tr(
                     "The simulator is running!\n\nYou can work with this simulator if your call "
-                    "RevPiModIO with this additional parameters:\nprocimg={procimg}\nconfigrsc={config}\n\n"
+                    "RevPiModIO with this additional parameters:\nprocimg={0}\nconfigrsc={1}\n\n"
                     "You can copy that from header textbox."
-                ).format(procimg=procimg_file, config=configrsc_file)
+                ).format(procimg_file, configrsc_file)
             )
-            self.txt_connection.setText(
-                "configrsc=\"{0}\", procimg=\"{1}\"".format(configrsc_file, procimg_file)
-            )
+            self.txt_connection.setText("configrsc=\"{0}\", procimg=\"{1}\"".format(configrsc_file, procimg_file))
 
             # Stop button will disable simulating
             self.btn_plc_stop.setEnabled(True)
@@ -235,8 +233,8 @@ class RevPiCommander(QtWidgets.QMainWindow, Ui_win_revpicommander):
             QtWidgets.QMessageBox.critical(
                 self, self.tr("Can not start..."), self.tr(
                     "Can not start the simulator! Maybe the piCtory file is corrupt "
-                    "or you can not write to the location '{0}'.".format(dir_name)
-                )
+                    "or you can not write to the location '{0}'."
+                ).format(dir_name)
             )
 
     @QtCore.pyqtSlot()
@@ -249,8 +247,7 @@ class RevPiCommander(QtWidgets.QMainWindow, Ui_win_revpicommander):
             QtWidgets.QMessageBox.warning(
                 self, self.tr("Warning"), self.tr(
                     "This version of Logviewer ist not supported in version {0} "
-                    "of RevPiPyLoad on your RevPi! You need at least version "
-                    "0.4.1."
+                    "of RevPiPyLoad on your RevPi! You need at least version 0.4.1."
                 ).format(helper.cm.call_remote_function("version", default_value="-"))
             )
             return None

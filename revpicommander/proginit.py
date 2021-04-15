@@ -85,11 +85,6 @@ parser = ArgumentParser(
     prog=programname,
     description="Program description"
 )
-# parser.add_argument(
-#     "-c", "--conffile", dest="conffile",
-#     default="{0}.conf".format(programname),
-#     help="Application configuration file"
-# )
 parser.add_argument(
     "-f", "--logfile", dest="logfile",
     help="Save log entries to this file"
