@@ -19,7 +19,7 @@ class MyEggInfo(distutils.command.install_egg_info.install_egg_info):
 
 
 setup(
-    version="0.9.1",
+    version="0.9.1f",
     python_requires="~=3.4",
     requires=["PyQt5", "revpimodio2", "zeroconf"],
 

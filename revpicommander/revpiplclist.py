@@ -51,6 +51,7 @@ class RevPiPlcList(QtWidgets.QDialog, Ui_diag_connections):
             con_item.setText(0, helper.settings.value("name", "Revolution Pi", str))
             con_item.setText(1, helper.settings.value("address", "127.0.0.1", str))
             con_item.setData(0, WidgetData.port, helper.settings.value("port", self.__default_port, int))
+            con_item.setData(0, WidgetData.timeout, helper.settings.value("timeout", 5, int))
 
             con_item.setData(0, WidgetData.last_dir_upload, helper.settings.value("last_dir_upload"))
             con_item.setData(0, WidgetData.last_file_upload, helper.settings.value("last_file_upload"))
@@ -95,6 +96,7 @@ class RevPiPlcList(QtWidgets.QDialog, Ui_diag_connections):
             helper.settings.setValue("folder", parent.text(0) if parent else "")
             helper.settings.setValue("name", node.text(0))
             helper.settings.setValue("port", node.data(0, WidgetData.port))
+            helper.settings.setValue("timeout", node.data(0, WidgetData.timeout))
 
             if node.data(0, WidgetData.last_dir_upload):
                 helper.settings.setValue("last_dir_upload", node.data(0, WidgetData.last_dir_upload))
@@ -192,6 +194,7 @@ class RevPiPlcList(QtWidgets.QDialog, Ui_diag_connections):
         self.txt_name.setEnabled(con_item)
         self.txt_address.setEnabled(con_item)
         self.sbx_port.setEnabled(con_item)
+        self.sbx_timeout.setEnabled(con_item)
         self.cbb_folder.setEnabled(con_item or dir_item)
 
     def _get_folder_item(self, name: str):
@@ -235,6 +238,7 @@ class RevPiPlcList(QtWidgets.QDialog, Ui_diag_connections):
             self.txt_name.setText(current.text(0))
             self.txt_address.setText(current.text(1))
             self.sbx_port.setValue(current.data(0, WidgetData.port))
+            self.sbx_timeout.setValue(current.data(0, WidgetData.timeout))
             if current.parent() is None:
                 self.cbb_folder.setCurrentIndex(0)
             else:
@@ -302,6 +306,12 @@ class RevPiPlcList(QtWidgets.QDialog, Ui_diag_connections):
         if self.__current_item.type() != NodeType.CON:
             return
         self.__current_item.setData(0, WidgetData.port, value)
+
+    @QtCore.pyqtSlot(int)
+    def on_sbx_timeout_valueChanged(self, value: int):
+        if self.__current_item.type() != NodeType.CON:
+            return
+        self.__current_item.setData(0, WidgetData.timeout, value)
 
     @QtCore.pyqtSlot(str)
     def on_cbb_folder_editTextChanged(self, text: str):

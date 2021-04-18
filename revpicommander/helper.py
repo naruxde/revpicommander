@@ -25,6 +25,7 @@ class WidgetData(IntEnum):
     has_error = 263
     port = 264
     object_name = 265
+    timeout = 266
     last_dir_upload = 301
     last_file_upload = 302
     last_dir_pictory = 303
@@ -218,9 +219,10 @@ class ConnectionManager(QtCore.QThread):
         settings.beginReadArray("connections")
         settings.setArrayIndex(settings_index)
 
-        address = settings.value("address")
-        name = settings.value("name")
-        port = settings.value("port", defaultValue=55123)
+        address = settings.value("address", str)
+        name = settings.value("name", str)
+        port = settings.value("port", 55123, int)
+        timeout = settings.value("timeout", 5, int)
 
         self.program_last_dir_upload = settings.value("last_dir_upload", ".", str)
         self.program_last_file_upload = settings.value("last_file_upload", ".", str)
@@ -228,8 +230,8 @@ class ConnectionManager(QtCore.QThread):
         self.program_last_dir_picontrol = settings.value("last_dir_picontrol", ".", str)
         self.program_last_dir_selected = settings.value("last_dir_selected", ".", str)
         self.program_last_pictory_file = settings.value("last_pictory_file", "{0}.rsc".format(name), str)
-        self.program_last_tar_file = settings.value("last_tar_file", "{0}.tgz".format(name))
-        self.program_last_zip_file = settings.value("last_zip_file", "{0}.zip".format(name))
+        self.program_last_tar_file = settings.value("last_tar_file", "{0}.tgz".format(name), str)
+        self.program_last_zip_file = settings.value("last_zip_file", "{0}.zip".format(name), str)
         self.develop_watch_files = settings.value("watch_files", [], list)
         self.develop_watch_path = settings.value("watch_path", "", str)
         self.debug_geos = settings.value("debug_geos", {}, dict)
@@ -256,7 +258,7 @@ class ConnectionManager(QtCore.QThread):
         self.xml_mode = xml_mode
 
         with self._lck_cli:
-            socket.setdefaulttimeout(5)
+            socket.setdefaulttimeout(timeout)
             self._cli = sp
             self._cli_connect.put_nowait((address, port))
 

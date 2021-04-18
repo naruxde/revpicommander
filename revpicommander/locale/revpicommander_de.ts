@@ -564,12 +564,12 @@ Ungesicherte √Ñnderungen gehen verloren.</translation>
         <translation>Neue Verbindung</translation>
     </message>
     <message>
-        <location filename="../revpiplclist.py" line="146"/>
+        <location filename="../revpiplclist.py" line="148"/>
         <source>Question</source>
         <translation>Frage</translation>
     </message>
     <message>
-        <location filename="../revpiplclist.py" line="146"/>
+        <location filename="../revpiplclist.py" line="148"/>
         <source>Do you really want to quit? 
 Unsaved changes will be lost.</source>
         <translation>Soll das Fenster wirklich geschlossen werden?
@@ -952,6 +952,16 @@ Dies ist kein Fehler, wenn das SPS Startprogramm bereits auf dem Rev Pi ist. Pr√
         <location filename="../../include/ui_dev/revpiplclist.ui" line="125"/>
         <source>Port (Default {0}):</source>
         <translation>Port (Standard {0}):</translation>
+    </message>
+    <message>
+        <location filename="../../include/ui_dev/revpiplclist.ui" line="169"/>
+        <source>Connection timeout:</source>
+        <translation>Verbindungs-Timeout:</translation>
+    </message>
+    <message>
+        <location filename="../../include/ui_dev/revpiplclist.ui" line="182"/>
+        <source> sec.</source>
+        <translation> Sek.</translation>
     </message>
 </context>
 <context>
