@@ -5,7 +5,7 @@
 __author__ = "Sven Sager"
 __copyright__ = "Copyright (C) 2018 Sven Sager"
 __license__ = "GPLv3"
-__version__ = "0.9.1f"
+__version__ = "0.9.1g"
 
 import webbrowser
 from os.path import basename, dirname, join
@@ -22,6 +22,7 @@ from revpiinfo import RevPiInfo
 from revpioption import RevPiOption
 from revpiplclist import RevPiPlcList
 from revpiprogram import RevPiProgram
+from simulator import Simulator
 from ui.revpicommander_ui import Ui_win_revpicommander
 
 
@@ -195,26 +196,15 @@ class RevPiCommander(QtWidgets.QMainWindow, Ui_win_revpicommander):
         """Start the simulator function."""
         helper.cm.pyload_disconnect()
 
-        diag_open = QtWidgets.QFileDialog(
-            self, self.tr("Select downloaded piCtory file..."),
-            helper.settings.value("simulator_pictory", ".", str),
-            self.tr("piCtory file (*.rsc);;All files (*.*)")
-        )
-        diag_open.setAcceptMode(QtWidgets.QFileDialog.AcceptOpen)
-        diag_open.setFileMode(QtWidgets.QFileDialog.ExistingFile)
-        diag_open.setDefaultSuffix("rsc")
-
-        if diag_open.exec() != QtWidgets.QFileDialog.AcceptSave or len(diag_open.selectedFiles()) != 1:
+        diag = Simulator(self)
+        if diag.exec() != QtWidgets.QDialog.Accepted:
+            diag.deleteLater()
             return
 
-        configrsc_file = diag_open.selectedFiles()[0]
-        dir_name = dirname(configrsc_file)
-        procimg_file = join(dir_name, "{0}.img".format(
-            basename(configrsc_file).rsplit(".", maxsplit=1)[0]
-        ))
-        helper.settings.setValue("simulator_pictory", configrsc_file)
+        configrsc_file = helper.settings.value("simulator/configrsc", "", str)
+        procimg_file = helper.settings.value("simulator/procimg", "", str)
 
-        if helper.cm.pyload_simulate(configrsc_file, procimg_file):
+        if helper.cm.pyload_simulate(configrsc_file, procimg_file, diag.cbx_stop_remove.isChecked()):
             QtWidgets.QMessageBox.information(
                 self, self.tr("Simulator started..."), self.tr(
                     "The simulator is running!\n\nYou can work with this simulator if your call "
@@ -233,9 +223,11 @@ class RevPiCommander(QtWidgets.QMainWindow, Ui_win_revpicommander):
             QtWidgets.QMessageBox.critical(
                 self, self.tr("Can not start..."), self.tr(
                     "Can not start the simulator! Maybe the piCtory file is corrupt "
-                    "or you can not write to the location '{0}'."
-                ).format(dir_name)
+                    "or you have no write permissions for '{0}'."
+                ).format(procimg_file)
             )
+
+        diag.deleteLater()
 
     @QtCore.pyqtSlot()
     def on_act_logs_triggered(self):
@@ -407,10 +399,10 @@ class RevPiCommander(QtWidgets.QMainWindow, Ui_win_revpicommander):
         if helper.cm.simulating:
             rc = QtWidgets.QMessageBox.question(
                 self, self.tr("Reset to piCtory defaults..."), self.tr(
-                    "Do you want to reset your process image to piCtory default values?\n"
+                    "Do you want to reset your process image to {0} values?\n"
                     "You have to stop other RevPiModIO programs before doing that, "
                     "because they could reset the outputs."
-                )
+                ).format("zero" if helper.settings.value("simulator/restart_zero", False, bool) else "piCtory default")
             ) == QtWidgets.QMessageBox.Yes
             if rc:
                 # Set piCtory default values in process image
@@ -494,7 +486,7 @@ if __name__ == "__main__":
 
     win = RevPiCommander()
     win.show()
-    exit_code = app.exec_()
+    exit_code = app.exec()
 
     # Clean up workers
     helper.cm.requestInterruption()

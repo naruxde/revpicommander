@@ -9,6 +9,7 @@ import socket
 from enum import IntEnum
 from http.client import CannotSendRequest
 from os import environ, remove
+from os.path import exists
 from queue import Queue
 from threading import Lock
 from xmlrpc.client import Binary, ServerProxy
@@ -273,7 +274,8 @@ class ConnectionManager(QtCore.QThread):
 
             self._revpi.cleanup()
             self._revpi_output.cleanup()
-            remove(self._revpi.procimg)
+            if settings.value("simulator/stop_remove", False, bool):
+                remove(self._revpi.procimg)
             self._revpi = None
             self._revpi_output = None
 
@@ -297,17 +299,18 @@ class ConnectionManager(QtCore.QThread):
 
             self.connection_disconnected.emit()
 
-    def pyload_simulate(self, configrsc: str, procimg: str):
+    def pyload_simulate(self, configrsc: str, procimg: str, clean_existing: bool):
         """Start the simulator for piControl on local computer."""
         pi.logger.debug("ConnectionManager.start_simulate")
 
-        with open(procimg, "wb") as fh:
-            fh.write(b'\x00' * 4096)
+        if not exists(procimg) or clean_existing:
+            with open(procimg, "wb") as fh:
+                fh.write(b'\x00' * 4096)
 
         try:
             import revpimodio2
 
-            # Prepare process image with default values
+            # Prepare process image with default values for outputs
             self._revpi_output = revpimodio2.RevPiModIO(configrsc=configrsc, procimg=procimg)
             self._revpi_output.setdefaultvalues()
             self._revpi_output.writeprocimg()
@@ -334,9 +337,14 @@ class ConnectionManager(QtCore.QThread):
     def reset_simulator(self):
         """Reset all io to piCtory defaults."""
         pi.logger.debug("ConnectionManager.reset_simulator")
-        self._revpi_output.writeprocimg()
-        self._revpi.setdefaultvalues()
-        self._revpi.writeprocimg()
+        if settings.value("simulator/restart_zero", False, bool):
+            with open(self._revpi.procimg, "wb") as fh:
+                fh.write(b'\x00' * 4096)
+            self._revpi.readprocimg()
+        else:
+            self._revpi_output.writeprocimg()
+            self._revpi.setdefaultvalues()
+            self._revpi.writeprocimg()
 
     def run(self):
         """Thread worker to check status of RevPiPyLoad."""

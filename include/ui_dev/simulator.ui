@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>diag_simulator</class>
+ <widget class="QDialog" name="diag_simulator">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>522</width>
+    <height>500</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>piControl simulator</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QGroupBox" name="gb_settings">
+     <property name="title">
+      <string>Simulator settings</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout">
+      <item row="0" column="0">
+       <widget class="QLabel" name="lbl_history">
+        <property name="text">
+         <string>Last used:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="lbl_configrsc">
+        <property name="text">
+         <string>piCtory file:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QLineEdit" name="txt_configrsc">
+        <property name="focusPolicy">
+         <enum>Qt::NoFocus</enum>
+        </property>
+        <property name="text">
+         <string notr="true"/>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="2">
+       <widget class="QPushButton" name="btn_configrsc">
+        <property name="text">
+         <string>select...</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="lbl_procimg">
+        <property name="text">
+         <string>Process image:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QLineEdit" name="txt_procimg">
+        <property name="focusPolicy">
+         <enum>Qt::NoFocus</enum>
+        </property>
+        <property name="text">
+         <string notr="true"/>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="lbl_stop">
+        <property name="text">
+         <string>Stop action:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0">
+       <widget class="QLabel" name="lbl_restart">
+        <property name="text">
+         <string>Restart action:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1" colspan="2">
+       <widget class="QComboBox" name="cbb_history">
+        <property name="sizeAdjustPolicy">
+         <enum>QComboBox::AdjustToMinimumContentsLength</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1" colspan="2">
+       <widget class="QCheckBox" name="cbx_stop_remove">
+        <property name="text">
+         <string>Remove process image</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="1" colspan="2">
+       <widget class="QRadioButton" name="rb_restart_pictory">
+        <property name="text">
+         <string>Restore piCtory default values</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="1" colspan="2">
+       <widget class="QRadioButton" name="rb_restart_zero">
+        <property name="text">
+         <string>Reset everything to ZERO</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="gb_info">
+     <property name="title">
+      <string>RevPiModIO integration</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_2">
+      <item>
+       <widget class="QLabel" name="lbl_info">
+        <property name="text">
+         <string>You can work with this simulator if your call RevPiModIO with this additional parameters:</string>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPlainTextEdit" name="txt_info">
+        <property name="sizeAdjustPolicy">
+         <enum>QAbstractScrollArea::AdjustToContents</enum>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+        <property name="plainText">
+         <string notr="true"/>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QPushButton" name="btn_start_pictory">
+     <property name="text">
+      <string>Start with piCtory default values</string>
+     </property>
+     <property name="shortcut">
+      <string>Ctrl+1</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QPushButton" name="btn_start_empty">
+     <property name="text">
+      <string>Start with empty process image</string>
+     </property>
+     <property name="shortcut">
+      <string>Ctrl+2</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QPushButton" name="btn_start_nochange">
+     <property name="text">
+      <string>Start without changing actual process image</string>
+     </property>
+     <property name="shortcut">
+      <string>Ctrl+3</string>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <tabstops>
+  <tabstop>cbb_history</tabstop>
+  <tabstop>btn_configrsc</tabstop>
+  <tabstop>cbx_stop_remove</tabstop>
+  <tabstop>rb_restart_pictory</tabstop>
+  <tabstop>rb_restart_zero</tabstop>
+  <tabstop>txt_info</tabstop>
+  <tabstop>btn_start_pictory</tabstop>
+  <tabstop>btn_start_empty</tabstop>
+  <tabstop>btn_start_nochange</tabstop>
+ </tabstops>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>btn_start_empty</sender>
+   <signal>clicked()</signal>
+   <receiver>diag_simulator</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>268</x>
+     <y>447</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>268</x>
+     <y>249</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>btn_start_nochange</sender>
+   <signal>clicked()</signal>
+   <receiver>diag_simulator</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>268</x>
+     <y>478</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>268</x>
+     <y>249</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>btn_start_pictory</sender>
+   <signal>clicked()</signal>
+   <receiver>diag_simulator</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>268</x>
+     <y>416</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>268</x>
+     <y>249</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>
