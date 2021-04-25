@@ -153,7 +153,7 @@ class Ui_win_revpicommander(object):
         self.act_disconnect.setText(_translate("win_revpicommander", "&Disconnect"))
         self.act_disconnect.setShortcut(_translate("win_revpicommander", "Ctrl+X"))
         self.act_reset.setText(_translate("win_revpicommander", "Reset driver..."))
-        self.act_simulator.setText(_translate("win_revpicommander", "Start local si&mulator..."))
+        self.act_simulator.setText(_translate("win_revpicommander", "RevPi si&mulator..."))
 from . import ressources_rc
 
 

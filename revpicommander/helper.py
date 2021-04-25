@@ -248,6 +248,7 @@ class ConnectionManager(QtCore.QThread):
             xml_funcs = sp.system.listMethods()
             xml_mode = sp.xmlmodus()
         except Exception as e:
+            pi.logger.exception(e)
             self.connection_error_observed.emit(str(e))
             return False
 
@@ -322,11 +323,15 @@ class ConnectionManager(QtCore.QThread):
 
             self.xml_funcs = ["psstart", "psstop", "ps_devices", "ps_inps", "ps_outs", "ps_values", "ps_setvalue"]
 
+            self.connection_established.emit()
+
         except Exception as e:
             pi.logger.exception(e)
+            self.connection_error_observed.emit(str(e))
             self._revpi_output = None
             self._revpi = None
-            remove(procimg)
+            if settings.value("simulator/stop_remove", False, bool):
+                remove(procimg)
 
         return self._revpi is not None
 
@@ -453,14 +458,22 @@ class ConnectionManager(QtCore.QThread):
             return None
 
     @property
-    def connected(self):
+    def connected(self) -> bool:
         """True if we have an active connection."""
         return self._cli is not None
 
     @property
-    def simulating(self):
+    def simulating(self) -> bool:
         """True, if simulating mode is running."""
         return self._revpi is not None
+
+    @property
+    def simulating_configrsc(self) -> str:
+        return self._revpi.configrsc if self._revpi else ""
+
+    @property
+    def simulating_procimg(self) -> str:
+        return self._revpi.procimg if self._revpi else ""
 
 
 cm = ConnectionManager()

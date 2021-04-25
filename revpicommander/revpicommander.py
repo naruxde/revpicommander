@@ -70,20 +70,26 @@ class RevPiCommander(QtWidgets.QMainWindow, Ui_win_revpicommander):
 
     def _set_gui_control_states(self):
         """Setup states of actions and buttons."""
-        connected = helper.cm.connected
-        self.men_plc.setEnabled(connected)
-        self.act_logs.setEnabled(connected)
-        self.act_options.setEnabled(connected and helper.cm.xml_mode >= 2)
-        self.act_program.setEnabled(connected and helper.cm.xml_mode >= 2)
-        self.act_developer.setEnabled(connected and helper.cm.xml_mode >= 3)
-        self.act_pictory.setEnabled(connected)
-        self.act_reset.setEnabled(connected and helper.cm.xml_mode >= 3)
-        self.act_disconnect.setEnabled(connected)
-        self.btn_plc_start.setEnabled(connected)
-        self.btn_plc_stop.setEnabled(connected)
-        self.btn_plc_restart.setEnabled(connected)
-        self.btn_plc_logs.setEnabled(connected)
-        self.btn_plc_debug.setEnabled(connected and helper.cm.xml_mode >= 1)
+        if helper.cm.simulating:
+            self.btn_plc_stop.setEnabled(True)  # Stop simulator
+            self.btn_plc_restart.setEnabled(True)  # Reset simulator values
+            self.btn_plc_debug.setEnabled(True)
+
+        else:
+            connected = helper.cm.connected
+            self.men_plc.setEnabled(connected)
+            self.act_logs.setEnabled(connected)
+            self.act_options.setEnabled(connected and helper.cm.xml_mode >= 2)
+            self.act_program.setEnabled(connected and helper.cm.xml_mode >= 2)
+            self.act_developer.setEnabled(connected and helper.cm.xml_mode >= 3)
+            self.act_pictory.setEnabled(connected)
+            self.act_reset.setEnabled(connected and helper.cm.xml_mode >= 3)
+            self.act_disconnect.setEnabled(connected)
+            self.btn_plc_start.setEnabled(connected)
+            self.btn_plc_stop.setEnabled(connected)
+            self.btn_plc_restart.setEnabled(connected)
+            self.btn_plc_logs.setEnabled(connected)
+            self.btn_plc_debug.setEnabled(connected and helper.cm.xml_mode >= 1)
 
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
     # region #      REGION: Connection management
@@ -128,11 +134,17 @@ class RevPiCommander(QtWidgets.QMainWindow, Ui_win_revpicommander):
         pi.logger.debug("RevPiCommander.on_cm_connection_established")
 
         self._set_gui_control_states()
-        self.txt_connection.setText("{0} - {1}:{2}".format(
-            helper.cm.name,
-            helper.cm.address,
-            helper.cm.port
-        ))
+        if helper.cm.simulating:
+            self.txt_connection.setText("configrsc=\"{0}\", procimg=\"{1}\"".format(
+                helper.cm.simulating_configrsc,
+                helper.cm.simulating_procimg,
+            ))
+        else:
+            self.txt_connection.setText("{0} - {1}:{2}".format(
+                helper.cm.name,
+                helper.cm.address,
+                helper.cm.port
+            ))
         self.win_files = RevPiFiles(self)
 
     @QtCore.pyqtSlot(str, str)
@@ -194,13 +206,12 @@ class RevPiCommander(QtWidgets.QMainWindow, Ui_win_revpicommander):
     @QtCore.pyqtSlot()
     def on_act_simulator_triggered(self):
         """Start the simulator function."""
-        helper.cm.pyload_disconnect()
-
         diag = Simulator(self)
         if diag.exec() != QtWidgets.QDialog.Accepted:
             diag.deleteLater()
             return
 
+        helper.cm.pyload_disconnect()
         configrsc_file = helper.settings.value("simulator/configrsc", "", str)
         procimg_file = helper.settings.value("simulator/procimg", "", str)
 
@@ -212,12 +223,6 @@ class RevPiCommander(QtWidgets.QMainWindow, Ui_win_revpicommander):
                     "You can copy that from header textbox."
                 ).format(procimg_file, configrsc_file)
             )
-            self.txt_connection.setText("configrsc=\"{0}\", procimg=\"{1}\"".format(configrsc_file, procimg_file))
-
-            # Stop button will disable simulating
-            self.btn_plc_stop.setEnabled(True)
-            self.btn_plc_restart.setEnabled(True)
-            self.btn_plc_debug.setEnabled(True)
         else:
             pi.logger.error("Can not start simulator")
             QtWidgets.QMessageBox.critical(

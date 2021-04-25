@@ -226,7 +226,7 @@
   </action>
   <action name="act_simulator">
    <property name="text">
-    <string>Start local si&amp;mulator...</string>
+    <string>RevPi si&amp;mulator...</string>
    </property>
   </action>
  </widget>
