@@ -40,6 +40,7 @@ class Ui_diag_revpiinfo(object):
         font.setBold(True)
         font.setWeight(75)
         self.lbl_version_pyload.setFont(font)
+        self.lbl_version_pyload.setText("0.0.0")
         self.lbl_version_pyload.setAlignment(QtCore.Qt.AlignCenter)
         self.lbl_version_pyload.setObjectName("lbl_version_pyload")
         self.gridLayout.addWidget(self.lbl_version_pyload, 3, 1, 1, 1)
@@ -65,6 +66,7 @@ class Ui_diag_revpiinfo(object):
         font = QtGui.QFont()
         font.setPointSize(14)
         self.lbl_version_control.setFont(font)
+        self.lbl_version_control.setText("0.0.0")
         self.lbl_version_control.setObjectName("lbl_version_control")
         self.horizontalLayout.addWidget(self.lbl_version_control)
         self.gridLayout.addLayout(self.horizontalLayout, 1, 0, 1, 3)
@@ -86,10 +88,8 @@ class Ui_diag_revpiinfo(object):
         diag_revpiinfo.setWindowTitle(_translate("diag_revpiinfo", "Program information"))
         self.lbl_head.setText(_translate("diag_revpiinfo", "RevPi Python PLC - Commander"))
         self.lbl_lbl_version_pyload.setText(_translate("diag_revpiinfo", "RevPiPyLoad version on RevPi:"))
-        self.lbl_version_pyload.setText(_translate("diag_revpiinfo", "0.0.0"))
         self.lbl_link.setText(_translate("diag_revpiinfo", "<html><head/><body><p><a href=\"https://revpimodio.org/\"><span style=\" text-decoration: underline; color:#0000ff;\">https://revpimodio.org/</span></a></p></body></html>"))
         self.lbl_lbl_version_control.setText(_translate("diag_revpiinfo", "Version:"))
-        self.lbl_version_control.setText(_translate("diag_revpiinfo", "0.0.0"))
         self.lbl_info.setText(_translate("diag_revpiinfo", "RevPiModIO, RevPiPyLoad and RevPiPyControl are community driven projects. They are all free and open source software.\n"
 "All of them comes with ABSOLUTELY NO WARRANTY, to the extent permitted by\n"
 "applicable law.\n"

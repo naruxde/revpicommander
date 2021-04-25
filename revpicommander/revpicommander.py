@@ -407,7 +407,9 @@ class RevPiCommander(QtWidgets.QMainWindow, Ui_win_revpicommander):
                     "Do you want to reset your process image to {0} values?\n"
                     "You have to stop other RevPiModIO programs before doing that, "
                     "because they could reset the outputs."
-                ).format("zero" if helper.settings.value("simulator/restart_zero", False, bool) else "piCtory default")
+                ).format(
+                    self.tr("zero") if helper.settings.value("simulator/restart_zero", False, bool)
+                    else self.tr("piCtory default"))
             ) == QtWidgets.QMessageBox.Yes
             if rc:
                 # Set piCtory default values in process image

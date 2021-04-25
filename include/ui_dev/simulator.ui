@@ -92,7 +92,7 @@
       <item row="3" column="1" colspan="2">
        <widget class="QCheckBox" name="cbx_stop_remove">
         <property name="text">
-         <string>Remove process image</string>
+         <string>Remove process image file</string>
         </property>
        </widget>
       </item>
@@ -125,7 +125,7 @@
       <item>
        <widget class="QLabel" name="lbl_info">
         <property name="text">
-         <string>You can work with this simulator if your call RevPiModIO with this additional parameters:</string>
+         <string>You can work with this simulator if you call RevPiModIO with this additional parameters:</string>
         </property>
         <property name="wordWrap">
          <bool>true</bool>
@@ -154,7 +154,7 @@
       <string>Start with piCtory default values</string>
      </property>
      <property name="shortcut">
-      <string>Ctrl+1</string>
+      <string notr="true">Ctrl+1</string>
      </property>
     </widget>
    </item>
@@ -164,7 +164,7 @@
       <string>Start with empty process image</string>
      </property>
      <property name="shortcut">
-      <string>Ctrl+2</string>
+      <string notr="true">Ctrl+2</string>
      </property>
     </widget>
    </item>
@@ -174,7 +174,7 @@
       <string>Start without changing actual process image</string>
      </property>
      <property name="shortcut">
-      <string>Ctrl+3</string>
+      <string notr="true">Ctrl+3</string>
      </property>
     </widget>
    </item>
