@@ -13,6 +13,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 
 import helper
 import proginit as pi
+from backgroundworker import BackgroundWorker
 from helper import WidgetData
 from ui.files_ui import Ui_win_files
 
@@ -20,6 +21,57 @@ from ui.files_ui import Ui_win_files
 class NodeType(IntEnum):
     FILE = 1000
     DIR = 1001
+
+
+class UploadFiles(BackgroundWorker):
+
+    def __init__(self, file_list: list, parent):
+        super(UploadFiles, self).__init__(parent)
+        self.ec = 1
+        self.file_list = file_list
+        self.plc_program_included = False  # Will be True, when opt_program was found in files
+
+    def run(self) -> None:
+        self.steps_todo.emit(len(self.file_list))
+
+        # Get config to find actual auto start program for warnings
+        opt_program = helper.cm.call_remote_function("get_config", default_value={})
+        opt_program = opt_program.get("plcprogram", "none.py")
+
+        progress_counter = 0
+        for file_name in self.file_list:
+            progress_counter += 1
+
+            # Remove base dir of file to set relative for PyLoad
+            send_name = file_name.replace(helper.cm.develop_watch_path, "")[1:]
+            self.status_message.emit(send_name)
+
+            # Check whether this is the auto start program
+            if send_name == opt_program:
+                self.plc_program_included = True
+
+
+            # Transfer file
+            try:
+                with open(file_name, "rb") as fh:
+                    upload_status = helper.cm.call_remote_function(
+                        "plcupload", Binary(gzip.compress(fh.read())), send_name,
+                        default_value=False
+                    )
+            except Exception as e:
+                pi.logger.error(e)
+                self.ec = -2
+                return
+
+            if not upload_status:
+                self.ec = -1
+                return
+
+            self.steps_done.emit(progress_counter)
+            if self.check_cancel():
+                return
+
+        self.ec = 0
 
 
 class RevPiFiles(QtWidgets.QMainWindow, Ui_win_files):
@@ -72,41 +124,13 @@ class RevPiFiles(QtWidgets.QMainWindow, Ui_win_files):
             )
             return
 
-        # Get config to find actual auto start program for warnings
-        opt_program = helper.cm.call_remote_function("get_config", default_value={})
-        opt_program = opt_program.get("plcprogram", "none.py")
-        uploaded = True  # Will be False, when opt_program was found in files
-        ec = 0
+        uploader = UploadFiles(self.file_list_local(), self)
+        if uploader.exec_dialog() == QtWidgets.QDialog.Rejected:
+            return
 
-        # todo: Do this in a thread with status bar to prevent freezing program on long upload times
-        for file_name in self.file_list_local():
-            # todo: Check exception of local file
-            with open(file_name, "rb") as fh:
-                # Remove base dir of file to set relative for PyLoad
-                send_name = file_name.replace(helper.cm.develop_watch_path, "")[1:]
-
-                # Check whether this is the auto start program
-                if send_name == opt_program:
-                    uploaded = False
-
-                # Transfer file
-                try:
-                    upload_status = helper.cm.call_remote_function(
-                        "plcupload", Binary(gzip.compress(fh.read())), send_name,
-                        default_value=False
-                    )
-                except Exception as e:
-                    pi.logger.error(e)
-                    ec = -2
-                    break
-
-                if not upload_status:
-                    ec = -1
-                    break
-
-        if ec == 0:
+        if uploader.ec == 0:
             # Tell user, we did not find the auto start program in files
-            if uploaded:
+            if not uploader.plc_program_included:
                 QtWidgets.QMessageBox.information(
                     self, self.tr("Information"), self.tr(
                         "A PLC program has been uploaded. Please check the "
@@ -115,7 +139,7 @@ class RevPiFiles(QtWidgets.QMainWindow, Ui_win_files):
                     )
                 )
 
-        elif ec == -1:
+        elif uploader.ec == -1:
             QtWidgets.QMessageBox.critical(
                 self, self.tr("Error"), self.tr(
                     "The Revolution Pi could not process some parts of the "
@@ -123,7 +147,7 @@ class RevPiFiles(QtWidgets.QMainWindow, Ui_win_files):
                 )
             )
 
-        elif ec == -2:
+        elif uploader.ec == -2:
             QtWidgets.QMessageBox.critical(
                 self, self.tr("Error"),
                 self.tr("Errors occurred during transmission")
@@ -489,16 +513,16 @@ class RevPiFiles(QtWidgets.QMainWindow, Ui_win_files):
             else:
                 file_name = os.path.join(helper.cm.develop_watch_path, file_name)
                 if override is None and os.path.exists(file_name):
-                    rc = QtWidgets.QMessageBox.question(
+                    rc_diag = QtWidgets.QMessageBox.question(
                         self, self.tr("Override files..."), self.tr(
                             "One or more files does exist on your computer! Do you want to override the existing"
                             "files?\n\nSelect 'Yes' to override, 'No' to download only missing files."
                         ),
                         buttons=QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No | QtWidgets.QMessageBox.Cancel
                     )
-                    if rc == QtWidgets.QMessageBox.Cancel:
+                    if rc_diag == QtWidgets.QMessageBox.Cancel:
                         return
-                    override = rc == QtWidgets.QMessageBox.Yes
+                    override = rc_diag == QtWidgets.QMessageBox.Yes
 
                 if os.path.exists(file_name) and not override:
                     pi.logger.debug("Skip existing file '{0}'".format(file_name))
