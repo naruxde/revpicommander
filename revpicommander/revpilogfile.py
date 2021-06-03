@@ -44,7 +44,7 @@ class DataThread(QtCore.QThread):
         :return: tuple(position: int, EOF: bool)
         """
         # Load max data from start position
-        buff_log = xmlcall(start_position, self.max_block).data
+        buff_log = xmlcall(start_position, self.max_block).data  # type: bytes
 
         eof = True
         if buff_log == b'\x16':  # 'ESC'
@@ -59,7 +59,7 @@ class DataThread(QtCore.QThread):
         elif buff_log:
             start_position += len(buff_log)
             eof = len(buff_log) < self.max_block
-            self.line_logged.emit(log_type, True, buff_log.decode("utf-8"))
+            self.line_logged.emit(log_type, True, buff_log.decode("utf-8", errors="replace"))
 
         return start_position, eof
 

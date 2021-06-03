@@ -340,7 +340,6 @@ class DebugIos(QtWidgets.QMainWindow, Ui_win_debugios):
         :param value: New value as bytes or bool for widget
         :param just_last_value: Just set last value property
         """
-        # child = self.findChild(self.search_class, io_name)
         child = self.__qwa[io_name]
         if child.property("frm"):
             value = struct.unpack(child.property("frm"), value)[0]
