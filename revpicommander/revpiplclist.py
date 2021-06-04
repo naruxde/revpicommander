@@ -278,6 +278,7 @@ class RevPiPlcList(QtWidgets.QDialog, Ui_diag_connections):
         self.__current_item.setIcon(0, QtGui.QIcon(":/main/ico/cpu.ico"))
         self.__current_item.setText(0, self.__default_name)
         self.__current_item.setData(0, WidgetData.port, self.__default_port)
+        self.__current_item.setData(0, WidgetData.timeout, 5)
         sub_folder = self._get_folder_item(self.cbb_folder.currentText())
         if sub_folder:
             sub_folder.addChild(self.__current_item)
