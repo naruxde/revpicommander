@@ -94,6 +94,19 @@ class RevPiCommander(QtWidgets.QMainWindow, Ui_win_revpicommander):
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
     # region #      REGION: Connection management
 
+    def _pyload_connect(self, settings_index: int) -> None:
+        if not helper.cm.pyload_connect(settings_index):
+            QtWidgets.QMessageBox.critical(
+                self, self.tr("Error"), self.tr(
+                    "Can not connect to RevPi XML-RPC Service! \n\n"
+                    "This could have the following reasons: The RevPi is not "
+                    "online, the XML-RPC service is not running / bind to "
+                    "localhost or the ACL permission is not set for your "
+                    "IP!!!\n\nRun 'sudo revpipyload_secure_installation' on "
+                    "Revolution Pi to setup this function!"
+                )
+            )
+
     @QtCore.pyqtSlot(str)
     def on_cm_connection_error_observed(self, message: str):
         """
@@ -199,7 +212,7 @@ class RevPiCommander(QtWidgets.QMainWindow, Ui_win_revpicommander):
         """Search for Revolution Pi with zero conf."""
         if self.diag_search.exec() == QtWidgets.QDialog.Accepted:
             if self.diag_search.connect_index >= 0:
-                helper.cm.pyload_connect(self.diag_search.connect_index)
+                self._pyload_connect(self.diag_search.connect_index)
 
         self._load_men_connections()
 
@@ -358,17 +371,7 @@ class RevPiCommander(QtWidgets.QMainWindow, Ui_win_revpicommander):
     @QtCore.pyqtSlot(QtWidgets.QAction)
     def on_men_connections_triggered(self, action: QtWidgets.QAction):
         """A connection is selected in the men_connections menu."""
-        if not helper.cm.pyload_connect(action.data()):
-            QtWidgets.QMessageBox.critical(
-                self, self.tr("Error"), self.tr(
-                    "Can not connect to RevPi XML-RPC Service! \n\n"
-                    "This could have the following reasons: The RevPi is not "
-                    "online, the XML-RPC service is not running / bind to "
-                    "localhost or the ACL permission is not set for your "
-                    "IP!!!\n\nRun 'sudo revpipyload_secure_installation' on "
-                    "Revolution Pi to setup this function!"
-                )
-            )
+        self._pyload_connect(action.data())
 
     @QtCore.pyqtSlot()
     def on_act_webpage_triggered(self):
