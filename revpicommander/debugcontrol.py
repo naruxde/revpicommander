@@ -186,7 +186,7 @@ class DebugControl(QtWidgets.QWidget, Ui_wid_debugcontrol):
 
                 win = self.dict_windows[position]
                 for io in self.dict_ios[io_type][position]:  # type: list
-                    # ['name', bitlength, byte_address, 'bmk', bitaddress, 'byteorder', signed]
+                    # ['name', bytelen, byte_address, 'bmk', bitaddress, 'byteorder', signed]
                     value_procimg = bytes(ba_values[io[2]:io[2] + io[1]])
                     if io[4] >= 0:
                         # Bit-IO

@@ -344,14 +344,22 @@ class DebugIos(QtWidgets.QMainWindow, Ui_win_debugios):
         if child.property("frm"):
             value = struct.unpack(child.property("frm"), value)[0]
         elif type(value) == bytes:
+            if child.property("struct_type") == "text":
+                try:
+                    value = value.decode("utf-8")
+                except UnicodeDecodeError:
+                    child.setProperty("struct_type", "number")
+                    QtWidgets.QMessageBox.warning(
+                        self, self.tr("Can not use format text"), self.tr(
+                            "Can not convert bytes {0} to a text for IO '{1}'. Switch to number format instead!"
+                        ).format(value, io_name)
+                    )
             if child.property("struct_type") == "number":
                 value = str(int.from_bytes(
                     value,
                     byteorder="big" if child.property("big_endian") else "little",
                     signed=child.property("signed") or False
                 ))
-            else:
-                value = value.decode()
 
         child.setProperty("last_value", value)
         if not just_last_value:
