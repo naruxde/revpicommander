@@ -110,7 +110,7 @@ class Simulator(QtWidgets.QDialog, Ui_diag_simulator):
         configrsc_file = self.txt_configrsc.text()
         procimg_file = self.txt_procimg.text()
         if configrsc_file and procimg_file:
-            file_access = access(procimg_file, W_OK)
+            file_access = access(procimg_file, W_OK) if exists(procimg_file) else access(dirname(procimg_file), W_OK)
             self.txt_info.setPlainText("configrsc=\"{0}\", procimg=\"{1}\"".format(configrsc_file, procimg_file))
             self.btn_start_pictory.setEnabled(file_access)
             self.btn_start_empty.setEnabled(file_access)
