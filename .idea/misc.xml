@@ -6,7 +6,7 @@
   <component name="ProjectPlainTextFileTypeManager">
     <file url="file://$PROJECT_DIR$/revpicommander/locale/revpicommander_de.ts" />
   </component>
-  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.8" project-jdk-type="Python SDK" />
+  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.9 (revpicommander)" project-jdk-type="Python SDK" />
   <component name="PythonCompatibilityInspectionAdvertiser">
     <option name="version" value="3" />
   </component>
