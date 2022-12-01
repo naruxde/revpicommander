@@ -150,6 +150,9 @@
    <property name="text">
     <string>&amp;Connections...</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+N</string>
+   </property>
   </action>
   <action name="act_search">
    <property name="text">
@@ -179,7 +182,7 @@
     <string>PLC &amp;logs...</string>
    </property>
    <property name="shortcut">
-    <string>F3</string>
+    <string>Ctrl+L</string>
    </property>
   </action>
   <action name="act_options">
@@ -203,7 +206,7 @@
     <string>PLC de&amp;veloper...</string>
    </property>
    <property name="shortcut">
-    <string>F9</string>
+    <string>Ctrl+D</string>
    </property>
   </action>
   <action name="act_pictory">
