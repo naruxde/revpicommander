@@ -180,24 +180,24 @@ class RevPiCommander(QtWidgets.QMainWindow, Ui_win_revpicommander):
         for i in range(helper.settings.beginReadArray("connections")):
             helper.settings.setArrayIndex(i)
 
-            act = QtWidgets.QAction(self)
+            if helper.settings.value("folder"):
+                if helper.settings.value("folder") not in self.dict_men_connections_subfolder:
+                    men_sub = QtWidgets.QMenu(self.men_connections)
+                    men_sub.setTitle(helper.settings.value("folder"))
+                    self.dict_men_connections_subfolder[helper.settings.value("folder")] = men_sub
+                    self.men_connections.addMenu(men_sub)
+                parent_menu = self.dict_men_connections_subfolder[helper.settings.value("folder")]
+            else:
+                parent_menu = self.men_connections
+
+            act = QtWidgets.QAction(parent_menu)
             act.setText(helper.settings.value("name"))
             act.setData(i)
             act.setToolTip("{0}:{1}".format(
                 helper.settings.value("address"),
                 helper.settings.value("port"),
             ))
-
-            if helper.settings.value("folder"):
-                if helper.settings.value("folder") not in self.dict_men_connections_subfolder:
-                    men_sub = QtWidgets.QMenu(self)
-                    men_sub.setTitle(helper.settings.value("folder"))
-                    self.dict_men_connections_subfolder[helper.settings.value("folder")] = men_sub
-                    self.men_connections.addMenu(men_sub)
-                self.dict_men_connections_subfolder[helper.settings.value("folder")].addAction(act)
-
-            else:
-                self.men_connections.addAction(act)
+            parent_menu.addAction(act)
 
         helper.settings.endArray()
 
