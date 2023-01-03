@@ -20,6 +20,7 @@ class AvahiSearchThread(QtCore.QThread):
     """Search thread for Revolution Pi with installed RevPiPyLoad."""
     added = QtCore.pyqtSignal(str, str, int, str, str)
     removed = QtCore.pyqtSignal(str, str)
+    updated = QtCore.pyqtSignal(str, str, int, str, str)
 
     def __init__(self, parent=None):
         super(AvahiSearchThread, self).__init__(parent)
@@ -63,6 +64,16 @@ class AvahiSearchThread(QtCore.QThread):
 
         for ip in info.parsed_addresses(IPVersion.V4Only):
             self.added.emit(name, info.server, info.port, conf_type, ip)
+
+    def update_service(self, zeroconf: Zeroconf, conf_type: str, name: str) -> None:
+        """New data of revolution pi"""
+        pi.logger.debug("AvahiSearchThread.add_service")
+        info = zeroconf.get_service_info(conf_type, name)
+        if not info:
+            return
+
+        for ip in info.parsed_addresses(IPVersion.V4Only):
+            self.updated.emit(name, info.server, info.port, conf_type, ip)
 
     def run(self) -> None:
         pi.logger.debug("Started zero conf discovery.")
@@ -110,13 +121,14 @@ class AvahiSearch(QtWidgets.QDialog, Ui_diag_search):
         helper.settings.endArray()
 
     def _restart_search(self) -> None:
-        """Clean up an restart search thread."""
+        """Clean up and restart search thread."""
         while self.tb_revpi.rowCount() > 0:
             self.tb_revpi.removeRow(0)
         self.th_zero_conf.requestInterruption()
 
         self.th_zero_conf = AvahiSearchThread(self)
         self.th_zero_conf.added.connect(self.on_avahi_added)
+        self.th_zero_conf.updated.connect(self.on_avahi_added)
         self.th_zero_conf.removed.connect(self.on_avahi_removed)
         self.th_zero_conf.start()
 
