@@ -63,6 +63,8 @@ class RevPiCommander(QtWidgets.QMainWindow, Ui_win_revpicommander):
 
         self.restoreGeometry(helper.settings.value("geo", b''))
 
+        self.setWindowFlag(QtCore.Qt.WindowMaximizeButtonHint, False)
+
     def closeEvent(self, a0: QtGui.QCloseEvent) -> None:
         pi.logger.debug("RevPiCommander.closeEvent")
         helper.cm.pyload_disconnect()
@@ -122,6 +124,8 @@ class RevPiCommander(QtWidgets.QMainWindow, Ui_win_revpicommander):
         pi.logger.debug("RevPiCommander.on_cm_connection_disconnected")
 
         self._set_gui_control_states()
+        self.txt_host.setVisible(True)
+        self.txt_host.clear()
         self.txt_connection.clear()
 
     @QtCore.pyqtSlot()
@@ -148,16 +152,14 @@ class RevPiCommander(QtWidgets.QMainWindow, Ui_win_revpicommander):
 
         self._set_gui_control_states()
         if helper.cm.simulating:
+            self.txt_host.setVisible(False)
             self.txt_connection.setText("configrsc=\"{0}\", procimg=\"{1}\"".format(
                 helper.cm.simulating_configrsc,
                 helper.cm.simulating_procimg,
             ))
         else:
-            self.txt_connection.setText("{0} - {1}:{2}".format(
-                helper.cm.name,
-                helper.cm.address,
-                helper.cm.port
-            ))
+            self.txt_host.setText(helper.cm.name)
+            self.txt_connection.setText(helper.cm.address)
         self.win_files = RevPiFiles(self)
 
     @QtCore.pyqtSlot(str, str)
