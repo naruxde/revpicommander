@@ -2,6 +2,7 @@ SOURCES       = revpicommander/aclmanager.py \
                 revpicommander/avahisearch.py \
                 revpicommander/debugcontrol.py \
                 revpicommander/debugios.py \
+                revpicommander/helper.py \
                 revpicommander/mqttmanager.py \
                 revpicommander/revpifiles.py \
                 revpicommander/revpiinfo.py \

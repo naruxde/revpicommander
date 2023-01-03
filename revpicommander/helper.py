@@ -360,10 +360,10 @@ class ConnectionManager(QtCore.QThread):
 
             if self._revpi is not None:
                 sp = None
-                self.status_changed.emit("SIMULATING", "yellow")
+                self.status_changed.emit(self.tr("SIMULATING"), "yellow")
             elif self._cli is None:
                 sp = None
-                self.status_changed.emit("NOT CONNECTED", "lightblue")
+                self.status_changed.emit(self.tr("NOT CONNECTED"), "lightblue")
             elif not self._cli_connect.empty():
                 # Get new connection information to create object in this thread
                 item = self._cli_connect.get()
@@ -380,23 +380,23 @@ class ConnectionManager(QtCore.QThread):
                     pi.logger.warning(e)
                 except Exception as e:
                     pi.logger.warning(e)
-                    self.status_changed.emit("SERVER ERROR", "red")
+                    self.status_changed.emit(self.tr("SERVER ERROR"), "red")
                     self.connection_error_observed.emit("{0} | {1}".format(e, type(e)))
                 else:
                     if plc_exit_code == -1:
-                        self.status_changed.emit("RUNNING", "green")
+                        self.status_changed.emit(self.tr("RUNNING"), "green")
                     elif plc_exit_code == -2:
-                        self.status_changed.emit("FILE NOT FOUND", "red")
+                        self.status_changed.emit(self.tr("PLC FILE NOT FOUND"), "red")
                     elif plc_exit_code == -3:
-                        self.status_changed.emit("NOT RUNNING (NO STATUS)", "yellow")
+                        self.status_changed.emit(self.tr("NOT RUNNING (NO STATUS)"), "yellow")
                     elif plc_exit_code == -9:
-                        self.status_changed.emit("PROGRAM KILLED", "red")
+                        self.status_changed.emit(self.tr("PROGRAM KILLED"), "red")
                     elif plc_exit_code == -15:
-                        self.status_changed.emit("PROGRAM TERMED", "red")
+                        self.status_changed.emit(self.tr("PROGRAM TERMED"), "red")
                     elif plc_exit_code == 0:
-                        self.status_changed.emit("NOT RUNNING", "yellow")
+                        self.status_changed.emit(self.tr("NOT RUNNING"), "yellow")
                     else:
-                        self.status_changed.emit("FINISHED WITH CODE {0}".format(plc_exit_code), "yellow")
+                        self.status_changed.emit(self.tr("FINISHED WITH CODE {0}").format(plc_exit_code), "yellow")
 
             self.msleep(self._cycle_time)
 
