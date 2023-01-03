@@ -457,7 +457,7 @@ class RevPiCommander(QtWidgets.QMainWindow, Ui_win_revpicommander):
             debugcontrol = DebugControl(self.centralwidget)
             if debugcontrol.reload_devices():
                 self.wid_debugcontrol = debugcontrol
-                self.gl.addWidget(self.wid_debugcontrol, 7, 0)
+                self.gl.addWidget(self.wid_debugcontrol)
             else:
                 debugcontrol.deleteLater()
                 QtWidgets.QMessageBox.critical(

@@ -19,7 +19,7 @@
     <normaloff>:/main/ico/revpipycontrol.ico</normaloff>:/main/ico/revpipycontrol.ico</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QVBoxLayout" name="verticalLayout">
+   <layout class="QVBoxLayout" name="gl">
     <item>
      <layout class="QHBoxLayout" name="hzl_connection">
       <item>
