@@ -120,6 +120,21 @@
     </widget>
    </item>
   </layout>
+  <action name="act_copy_host">
+   <property name="text">
+    <string>Copy host name</string>
+   </property>
+  </action>
+  <action name="act_copy_ip">
+   <property name="text">
+    <string>Copy IP address</string>
+   </property>
+  </action>
+  <action name="act_open_pictory">
+   <property name="text">
+    <string>Open piCtory</string>
+   </property>
+  </action>
  </widget>
  <resources>
   <include location="ressources.qrc"/>

@@ -4,8 +4,10 @@ __author__ = "Sven Sager"
 __copyright__ = "Copyright (C) 2020 Sven Sager"
 __license__ = "GPLv3"
 
+import webbrowser
 from os import name as osname
 from re import compile
+from sys import platform
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from zeroconf import IPVersion, ServiceBrowser, Zeroconf
@@ -92,6 +94,7 @@ class AvahiSearch(QtWidgets.QDialog, Ui_diag_search):
         super(AvahiSearch, self).__init__(parent)
         self.setupUi(self)
 
+        self.clipboard = QtGui.QGuiApplication.clipboard()
         self.connect_index = -1
         self.known_hosts = {}
         self.th_zero_conf = AvahiSearchThread(self)
@@ -105,6 +108,23 @@ class AvahiSearch(QtWidgets.QDialog, Ui_diag_search):
         if len(column_sizes) == self.tb_revpi.columnCount():
             for i in range(self.tb_revpi.columnCount()):
                 self.tb_revpi.setColumnWidth(i, int(column_sizes[i]))
+
+        # Global context menus
+        self.cm_quick_actions = QtWidgets.QMenu(self)
+        self.cm_quick_actions.addAction(self.act_open_pictory)
+        self.cm_quick_actions.addSeparator()
+        self.cm_quick_actions.addAction(self.act_copy_ip)
+        self.cm_quick_actions.addAction(self.act_copy_host)
+
+        self.tb_revpi.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
+        self.tb_revpi.customContextMenuRequested.connect(self._context_menu)
+
+    @QtCore.pyqtSlot(QtCore.QPoint)
+    def _context_menu(self, position: QtCore.QPoint) -> None:
+        sender = self.sender()
+        action = self.cm_quick_actions.exec(sender.mapToGlobal(position))
+        if action:
+            action.trigger()
 
     def _load_known_hosts(self) -> None:
         """Load existing connections to show hostname of existing ip addresses"""
@@ -201,6 +221,40 @@ class AvahiSearch(QtWidgets.QDialog, Ui_diag_search):
         self.th_zero_conf.requestInterruption()
         return rc
 
+    @QtCore.pyqtSlot()
+    def on_act_copy_host_triggered(self) -> None:
+        """Copy ip address of selected item to clipboard."""
+        selected_items = self.tb_revpi.selectedItems()
+        if not selected_items:
+            return
+        item = selected_items[0]
+        host_name = item.data(WidgetData.host_name)
+        if platform == "win32":
+            # Strip hostname on Windows systems, it can not resolve .local addresses
+            host_name = host_name[:host_name.find(".")]
+        self.clipboard.setText(host_name)
+
+    @QtCore.pyqtSlot()
+    def on_act_copy_ip_triggered(self) -> None:
+        """Copy ip address of selected item to clipboard."""
+        selected_items = self.tb_revpi.selectedItems()
+        if not selected_items:
+            return
+        item = selected_items[0]
+        self.clipboard.setText(item.data(WidgetData.address))
+
+    @QtCore.pyqtSlot()
+    def on_act_open_pictory_triggered(self) -> None:
+        """Open piCtory in default browser of operating system."""
+        selected_items = self.tb_revpi.selectedItems()
+        if not selected_items:
+            return
+        item = selected_items[0]
+        if platform == "win32":
+            webbrowser.open("http://{0}/".format(item.data(WidgetData.address)))
+        else:
+            webbrowser.open("http://{0}/".format(item.data(WidgetData.host_name)))
+
     @QtCore.pyqtSlot(str, str, int, str, str)
     def on_avahi_added(self, name: str, server: str, port: int, conf_type: str, ip: str) -> None:
         """New Revolution Pi found."""
@@ -224,14 +278,16 @@ class AvahiSearch(QtWidgets.QDialog, Ui_diag_search):
             item_name = self.tb_revpi.item(index, 0)
             item_ip = self.tb_revpi.item(index, 1)
 
+        host_name = server[:-1]
         item_name.setIcon(QtGui.QIcon(":/main/ico/cpu.ico"))
         if ip in self.known_hosts:
-            item_name.setText("{0} ({1})".format(server[:-1], self.known_hosts[ip]))
+            item_name.setText("{0} ({1})".format(host_name, self.known_hosts[ip]))
         else:
-            item_name.setText(server[:-1])
+            item_name.setText(host_name)
         item_name.setData(WidgetData.object_name, name)
         item_name.setData(WidgetData.address, ip)
         item_name.setData(WidgetData.port, port)
+        item_name.setData(WidgetData.host_name, host_name)
         item_ip.setText(ip)
 
     @QtCore.pyqtSlot(str, str)

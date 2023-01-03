@@ -27,6 +27,7 @@ class WidgetData(IntEnum):
     port = 264
     object_name = 265
     timeout = 266
+    host_name = 267
     last_dir_upload = 301
     last_file_upload = 302
     last_dir_pictory = 303
