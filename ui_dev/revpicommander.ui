@@ -55,12 +55,20 @@
       <property name="text">
        <string>PLC &amp;start</string>
       </property>
+      <property name="icon">
+       <iconset resource="ressources.qrc">
+        <normaloff>:/action/ico/system-run.ico</normaloff>:/action/ico/system-run.ico</iconset>
+      </property>
      </widget>
     </item>
     <item>
      <widget class="QPushButton" name="btn_plc_stop">
       <property name="text">
        <string>PLC s&amp;top</string>
+      </property>
+      <property name="icon">
+       <iconset resource="ressources.qrc">
+        <normaloff>:/action/ico/process-stop.ico</normaloff>:/action/ico/process-stop.ico</iconset>
       </property>
      </widget>
     </item>
@@ -69,12 +77,20 @@
       <property name="text">
        <string>PLC restart</string>
       </property>
+      <property name="icon">
+       <iconset resource="ressources.qrc">
+        <normaloff>:/action/ico/view-refresh.ico</normaloff>:/action/ico/view-refresh.ico</iconset>
+      </property>
      </widget>
     </item>
     <item>
      <widget class="QPushButton" name="btn_plc_logs">
       <property name="text">
        <string>PLC &amp;logs</string>
+      </property>
+      <property name="icon">
+       <iconset resource="ressources.qrc">
+        <normaloff>:/action/ico/applications-utilities.ico</normaloff>:/action/ico/applications-utilities.ico</iconset>
       </property>
      </widget>
     </item>
@@ -115,6 +131,10 @@
       </property>
       <property name="text">
        <string>PLC watch &amp;mode</string>
+      </property>
+      <property name="icon">
+       <iconset resource="ressources.qrc">
+        <normaloff>:/action/ico/edit-find.ico</normaloff>:/action/ico/edit-find.ico</iconset>
       </property>
       <property name="checkable">
        <bool>true</bool>
