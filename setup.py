@@ -4,33 +4,22 @@ __author__ = "Sven Sager"
 __copyright__ = "Copyright (C) 2018 Sven Sager"
 __license__ = "LGPLv3"
 
-import distutils.command.install_egg_info
-from distutils.core import setup
-from glob import glob
-
-
-class MyEggInfo(distutils.command.install_egg_info.install_egg_info):
-
-    u"""Disable egg_info installation, seems pointless for a non-library."""
-
-    def run(self):
-        u"""just pass egg_info."""
-        pass
+from setuptools import setup
 
 
 setup(
-    version="0.9.3b",
-    python_requires="~=3.4",
-    requires=["PyQt5", "revpimodio2", "zeroconf"],
+    version="0.9.10rc1",
+    # python_requires="~=3.4",
+    install_requires=["PyQt5", "revpimodio2", "zeroconf"],
 
-    scripts=["data/revpicommander"],
-    data_files=[
-        ("share/applications", ["data/revpicommander.desktop"]),
-        ("share/icons/hicolor/32x32/apps", ["data/revpicommander.png"]),
-        ("share/revpicommander", glob("revpicommander/*.py")),
-        ("share/revpicommander/ui", glob("include/ui/*.py")),
-        ("share/revpicommander/locale/", glob("revpicommander/locale/*.qm")),
-    ],
+    entry_points={
+        'console_scripts': [
+            'revpicommander = revpicommander.revpicommander:main',
+        ],
+        'gui_scripts': [
+            'RevPiCommander = revpicommander.revpicommander:main',
+        ],
+    },
 
     # Additional meta-data
     name="revpicommander",
@@ -51,5 +40,4 @@ setup(
         "Operating System :: POSIX :: Linux",
     ],
     license="GPLv3",
-    cmdclass={"install_egg_info": MyEggInfo},
 )
