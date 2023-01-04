@@ -1693,147 +1693,147 @@ applicable law.
         <translation type="unfinished">SPS &amp;start</translation>
     </message>
     <message>
-        <location filename="../../../ui_dev/revpicommander.ui" line="63"/>
+        <location filename="../../../ui_dev/revpicommander.ui" line="67"/>
         <source>PLC s&amp;top</source>
         <translation type="unfinished">SPS s&amp;top</translation>
     </message>
     <message>
-        <location filename="../../../ui_dev/revpicommander.ui" line="70"/>
+        <location filename="../../../ui_dev/revpicommander.ui" line="78"/>
         <source>PLC restart</source>
         <translation type="unfinished">SPS Neustart</translation>
     </message>
     <message>
-        <location filename="../../../ui_dev/revpicommander.ui" line="77"/>
+        <location filename="../../../ui_dev/revpicommander.ui" line="89"/>
         <source>PLC &amp;logs</source>
         <translation type="unfinished">SPS &amp;Logdateien</translation>
     </message>
     <message>
-        <location filename="../../../ui_dev/revpicommander.ui" line="86"/>
+        <location filename="../../../ui_dev/revpicommander.ui" line="102"/>
         <source>Status:</source>
         <translation type="unfinished">Status:</translation>
     </message>
     <message>
-        <location filename="../../../ui_dev/revpicommander.ui" line="117"/>
+        <location filename="../../../ui_dev/revpicommander.ui" line="133"/>
         <source>PLC watch &amp;mode</source>
         <translation type="unfinished">SPS &amp;Monitor</translation>
     </message>
     <message>
-        <location filename="../../../ui_dev/revpicommander.ui" line="137"/>
+        <location filename="../../../ui_dev/revpicommander.ui" line="157"/>
         <source>&amp;File</source>
         <translation type="unfinished">&amp;Datei</translation>
     </message>
     <message>
-        <location filename="../../../ui_dev/revpicommander.ui" line="148"/>
+        <location filename="../../../ui_dev/revpicommander.ui" line="168"/>
         <source>&amp;Help</source>
         <translation type="unfinished">&amp;Hilfe</translation>
     </message>
     <message>
-        <location filename="../../../ui_dev/revpicommander.ui" line="156"/>
+        <location filename="../../../ui_dev/revpicommander.ui" line="176"/>
         <source>&amp;PLC</source>
         <translation type="unfinished">S&amp;PS</translation>
     </message>
     <message>
-        <location filename="../../../ui_dev/revpicommander.ui" line="170"/>
+        <location filename="../../../ui_dev/revpicommander.ui" line="190"/>
         <source>&amp;Connections</source>
         <translation type="unfinished">&amp;Verbindungen</translation>
     </message>
     <message>
-        <location filename="../../../ui_dev/revpicommander.ui" line="185"/>
+        <location filename="../../../ui_dev/revpicommander.ui" line="205"/>
         <source>&amp;Connections...</source>
         <translation type="unfinished">&amp;Verbindungen...</translation>
     </message>
     <message>
-        <location filename="../../../ui_dev/revpicommander.ui" line="193"/>
+        <location filename="../../../ui_dev/revpicommander.ui" line="213"/>
         <source>&amp;Search Revolution Pi...</source>
         <translation type="unfinished">&amp;Suche Revolution Pi...</translation>
     </message>
     <message>
-        <location filename="../../../ui_dev/revpicommander.ui" line="201"/>
+        <location filename="../../../ui_dev/revpicommander.ui" line="221"/>
         <source>&amp;Quit</source>
         <translation type="unfinished">&amp;Beenden</translation>
     </message>
     <message>
-        <location filename="../../../ui_dev/revpicommander.ui" line="206"/>
+        <location filename="../../../ui_dev/revpicommander.ui" line="226"/>
         <source>Visit &amp;webpage...</source>
         <translation type="unfinished">&amp;Webseite besuchen...</translation>
     </message>
     <message>
-        <location filename="../../../ui_dev/revpicommander.ui" line="216"/>
+        <location filename="../../../ui_dev/revpicommander.ui" line="236"/>
         <source>PLC &amp;logs...</source>
         <translation type="unfinished">SPS &amp;Logdateien...</translation>
     </message>
     <message>
-        <location filename="../../../ui_dev/revpicommander.ui" line="224"/>
+        <location filename="../../../ui_dev/revpicommander.ui" line="244"/>
         <source>PLC &amp;options...</source>
         <translation type="unfinished">SPS &amp;Optionen...</translation>
     </message>
     <message>
-        <location filename="../../../ui_dev/revpicommander.ui" line="232"/>
+        <location filename="../../../ui_dev/revpicommander.ui" line="252"/>
         <source>PLC progra&amp;m...</source>
         <translation type="unfinished">SPS Progra&amp;mm...</translation>
     </message>
     <message>
-        <location filename="../../../ui_dev/revpicommander.ui" line="240"/>
+        <location filename="../../../ui_dev/revpicommander.ui" line="260"/>
         <source>PLC de&amp;veloper...</source>
         <translation type="unfinished">SPS Ent&amp;wickler...</translation>
     </message>
     <message>
-        <location filename="../../../ui_dev/revpicommander.ui" line="248"/>
+        <location filename="../../../ui_dev/revpicommander.ui" line="268"/>
         <source>piCtory configuraiton...</source>
         <translation type="unfinished">piCtory Konfiguration...</translation>
     </message>
     <message>
-        <location filename="../../../ui_dev/revpicommander.ui" line="253"/>
+        <location filename="../../../ui_dev/revpicommander.ui" line="273"/>
         <source>&amp;Disconnect</source>
         <translation type="unfinished">&amp;Trennen</translation>
     </message>
     <message>
-        <location filename="../../../ui_dev/revpicommander.ui" line="261"/>
+        <location filename="../../../ui_dev/revpicommander.ui" line="281"/>
         <source>Reset driver...</source>
         <translation type="unfinished">Treiber zurücksetzen...</translation>
     </message>
     <message>
-        <location filename="../../../ui_dev/revpicommander.ui" line="266"/>
+        <location filename="../../../ui_dev/revpicommander.ui" line="286"/>
         <source>RevPi si&amp;mulator...</source>
         <translation type="unfinished">RevPi Si&amp;mulator...</translation>
     </message>
     <message>
-        <location filename="../../../ui_dev/revpicommander.ui" line="188"/>
+        <location filename="../../../ui_dev/revpicommander.ui" line="208"/>
         <source>Ctrl+N</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../ui_dev/revpicommander.ui" line="196"/>
+        <location filename="../../../ui_dev/revpicommander.ui" line="216"/>
         <source>Ctrl+F</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../ui_dev/revpicommander.ui" line="211"/>
+        <location filename="../../../ui_dev/revpicommander.ui" line="231"/>
         <source>&amp;Info...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../ui_dev/revpicommander.ui" line="219"/>
+        <location filename="../../../ui_dev/revpicommander.ui" line="239"/>
         <source>Ctrl+L</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../ui_dev/revpicommander.ui" line="227"/>
+        <location filename="../../../ui_dev/revpicommander.ui" line="247"/>
         <source>Ctrl+O</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../ui_dev/revpicommander.ui" line="235"/>
+        <location filename="../../../ui_dev/revpicommander.ui" line="255"/>
         <source>Ctrl+P</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../ui_dev/revpicommander.ui" line="243"/>
+        <location filename="../../../ui_dev/revpicommander.ui" line="263"/>
         <source>Ctrl+D</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../ui_dev/revpicommander.ui" line="256"/>
+        <location filename="../../../ui_dev/revpicommander.ui" line="276"/>
         <source>Ctrl+X</source>
         <translation type="unfinished"></translation>
     </message>

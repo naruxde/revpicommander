@@ -1,7 +1,12 @@
 recursive-include data *
 recursive-include src/revpicommander *.py *.qm
-global-exclude *.pyc
+recursive-include ui_dev *
 include LICENSE.txt
+include Makefile
 include MANIFEST.in
 include README.md
+include requirements.txt
+include setup.iss
+include setup.py
 include stdeb.cfg
+include translate.pro
