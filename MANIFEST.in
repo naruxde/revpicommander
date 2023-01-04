@@ -1,5 +1,5 @@
 recursive-include data *
-recursive-include revpicommander *.py *.qm
+recursive-include src/revpicommander *.py *.qm
 global-exclude *.pyc
 include LICENSE.txt
 include MANIFEST.in
