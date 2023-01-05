@@ -2,3 +2,5 @@ Pyinstaller
 PyQt5>=5.14.1
 revpimodio2>=2.5.6
 zeroconf>=0.24.4
+setuptools>=65.6.3
+wheel

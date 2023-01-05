@@ -72,15 +72,7 @@ installer_mac: all
 		src/$(PACKAGE)/__main__.py
 
 installer_win: all
-	$(PYTHON) -m PyInstaller -n "RevPi Commander" \
-		--add-data="src\\$(PACKAGE)\\locale;.\\locale" \
-		--add-data="data\\$(PACKAGE).ico;." \
-		--icon=data\\$(PACKAGE).ico \
-		--noconfirm \
-		--clean \
-		--onedir \
-		--windowed \
-        src/$(PACKAGE)\__main__.py
+	make_installer_win.bat
 
 .PHONY: installer_mac installer_win
 
