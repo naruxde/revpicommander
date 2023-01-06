@@ -27,7 +27,6 @@ class DataThread(QtCore.QThread):
     def __init__(self, parent=None, cycle_time=1000):
         super(DataThread, self).__init__(parent)
 
-        self._cli = helper.cm.get_cli()
         self._cycle_time = cycle_time
         self._paused = True
         self.error_count = 0
@@ -45,7 +44,12 @@ class DataThread(QtCore.QThread):
         :return: tuple(position: int, EOF: bool)
         """
         # Load max data from start position
-        buff_log = xmlcall(start_position, self.max_block).data  # type: bytes
+        buff_log = helper.cm.call_remote_function(
+            xmlcall,
+            start_position,
+            self.max_block,
+            raise_exception=True
+        ).data  # type: bytes
 
         eof = True
         if buff_log == b'\x16':  # 'ESC'
@@ -86,13 +90,13 @@ class DataThread(QtCore.QThread):
                     while not (eof_app or self.isInterruptionRequested()):
                         self.mrk_app, eof_app = self._load_log(
                             LogType.APP,
-                            self._cli.load_applog,
+                            "load_applog",
                             self.mrk_app,
                         )
                     while not (eof_daemon or self.isInterruptionRequested()):
                         self.mrk_daemon, eof_daemon = self._load_log(
                             LogType.DAEMON,
-                            self._cli.load_plclog,
+                            "load_plclog",
                             self.mrk_daemon,
                         )
                     self.error_count = 0
