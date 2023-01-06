@@ -60,9 +60,9 @@ install:
 .PHONY: build install
 
 ## PyInstaller
-installer_mac: all
+installer_mac:
 	$(PYTHON) -m PyInstaller -n "RevPi Commander" \
-		--add-data="src/$(PACKAGE)/locale:locale" \
+		--add-data="src/$(PACKAGE)/locale:./revpicommander/locale" \
 		--add-data="data/$(PACKAGE).icns:." \
 		--icon=data/$(PACKAGE).icns \
 		--noconfirm \
@@ -78,6 +78,6 @@ installer_win: all
 
 ## Clean
 clean:
-	rm -rf build dist src/*.egg-info src/$(PACKAGE)/ui/[^__]*.py *.spec
+	rm -rf build dist src/*.egg-info *.spec
 
 .PHONY: clean

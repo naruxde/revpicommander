@@ -487,10 +487,11 @@ def main() -> int:
 
     try:
         # Setup translation from file with system language
-        locale = QtCore.QLocale.system().name()
         translator = QtCore.QTranslator()
-        locale_file_name = "revpicommander_{0}".format(locale)
-        translator.load(join(dirname(__file__), "locale", locale_file_name), suffix=".qm")
+        translator.load(
+            QtCore.QLocale.system(),
+            "revpicommander", "_", join(dirname(__file__), "locale"), ".qm"
+        )
         app.installTranslator(translator)
     except Exception:
         pass
