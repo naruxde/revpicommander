@@ -14,9 +14,12 @@ from queue import Queue
 from threading import Lock
 from xmlrpc.client import Binary, ServerProxy
 
-from PyQt5 import QtCore
+from PyQt5 import QtCore, QtWidgets
+from paramiko.ssh_exception import AuthenticationException
 
 from . import proginit as pi
+from .ssh_tunneling.server import SSHLocalTunnel
+from .sshauth import SSHAuth, SSHAuthType
 
 
 class WidgetData(IntEnum):
@@ -40,6 +43,9 @@ class WidgetData(IntEnum):
     watch_files = 310
     watch_path = 311
     debug_geos = 312
+    ssh_use_tunnel = 313
+    ssh_port = 315
+    ssh_user = 316
 
 
 class ConnectionManager(QtCore.QThread):
@@ -55,6 +61,8 @@ class ConnectionManager(QtCore.QThread):
     """This will be triggered, if a connection error was detected."""
     status_changed = QtCore.pyqtSignal(str, str)
     """Status message and color suggestion."""
+    connection_recovered = QtCore.pyqtSignal()
+    """After errors the connection is established again, could have other port information (SSH)."""
 
     def __init__(self, parent=None, cycle_time_ms=1000):
         super(ConnectionManager, self).__init__(parent)
@@ -70,6 +78,12 @@ class ConnectionManager(QtCore.QThread):
         self.address = ""
         self.name = ""
         self.port = 55123
+
+        self.ssh_tunnel_server = None  # type: SSHLocalTunnel
+        self.ssh_use_tunnel = False
+        self.ssh_port = 22
+        self.ssh_user = "pi"
+        self.ssh_pass = ""
 
         # Sync this with revpiplclist to preserve settings
         self.program_last_dir_upload = ""
@@ -167,6 +181,12 @@ class ConnectionManager(QtCore.QThread):
         self.address = ""
         self.name = ""
         self.port = 55123
+
+        self.ssh_use_tunnel = False
+        self.ssh_port = 22
+        self.ssh_user = "pi"
+        self.ssh_pass = ""
+
         self.pyload_version = (0, 0, 0)
         self.xml_funcs.clear()
         self.xml_mode = -1
@@ -207,11 +227,12 @@ class ConnectionManager(QtCore.QThread):
 
         settings.endArray()
 
-    def pyload_connect(self, settings_index: int):
+    def pyload_connect(self, settings_index: int, parent=None) -> bool:
         """
         Create a new connection from settings object.
 
         :param settings_index: Index of settings array 'connections'
+        :param parent: Qt parent window for dialog positioning
         :return: True, if the connection was successfully established
         """
 
@@ -225,6 +246,13 @@ class ConnectionManager(QtCore.QThread):
         name = settings.value("name", str)
         port = settings.value("port", 55123, int)
         timeout = settings.value("timeout", 5, int)
+
+        ssh_tunnel_server = None
+        ssh_use_tunnel = settings.value("ssh_use_tunnel", False, bool)
+        ssh_port = settings.value("ssh_port", 22, int)
+        ssh_user = settings.value("ssh_user", "pi", str)
+        ssh_tunnel_port = 0
+        ssh_pass = ""
 
         self.program_last_dir_upload = settings.value("last_dir_upload", ".", str)
         self.program_last_file_upload = settings.value("last_file_upload", ".", str)
@@ -241,7 +269,42 @@ class ConnectionManager(QtCore.QThread):
         settings.endArray()
 
         socket.setdefaulttimeout(2)
-        sp = ServerProxy("http://{0}:{1}".format(address, port))
+
+        if ssh_use_tunnel:
+            while True:
+                diag_ssh_auth = SSHAuth(SSHAuthType.PASS, parent)
+                diag_ssh_auth.username = ssh_user
+                if not diag_ssh_auth.exec() == QtWidgets.QDialog.Accepted:
+                    self._clear_settings()
+                    return False
+
+                ssh_user = diag_ssh_auth.username
+                ssh_pass = diag_ssh_auth.password
+                ssh_tunnel_server = SSHLocalTunnel(port, address, ssh_port)
+                try:
+                    ssh_tunnel_port = ssh_tunnel_server.connect_by_credentials(ssh_user, ssh_pass)
+                    break
+                except AuthenticationException:
+                    QtWidgets.QMessageBox.critical(
+                        parent, self.tr("Error"), self.tr(
+                            "The combination of username and password was rejected from the SSH server.\n\n"
+                            "Try again."
+                        )
+                    )
+                except Exception as e:
+                    # todo: Check some more kinds of exceptions and nice user info
+                    self._clear_settings()
+                    QtWidgets.QMessageBox.critical(
+                        parent, self.tr("Error"), self.tr(
+                            "Could not establish a SSH connection to server:\n\n{0}"
+                        ).format(str(e))
+                    )
+                    return False
+
+            sp = ServerProxy("http://127.0.0.1:{0}".format(ssh_tunnel_port))
+
+        else:
+            sp = ServerProxy("http://{0}:{1}".format(address, port))
 
         # Load values and test connection to Revolution Pi
         try:
@@ -251,19 +314,41 @@ class ConnectionManager(QtCore.QThread):
         except Exception as e:
             pi.logger.exception(e)
             self.connection_error_observed.emit(str(e))
+
+            if not self.ssh_use_tunnel:
+                # todo: Change message, that user can use ssh
+                QtWidgets.QMessageBox.critical(
+                    parent, self.tr("Error"), self.tr(
+                        "Can not connect to RevPi XML-RPC Service! \n\n"
+                        "This could have the following reasons: The RevPi is not "
+                        "online, the XML-RPC service is not running / bind to "
+                        "localhost or the ACL permission is not set for your "
+                        "IP!!!\n\nRun 'sudo revpipyload_secure_installation' on "
+                        "Revolution Pi to setup this function!"
+                    )
+                )
+
             return False
 
         self.address = address
         self.name = name
         self.port = port
+        self.ssh_use_tunnel = ssh_use_tunnel
+        self.ssh_port = ssh_port
+        self.ssh_user = ssh_user
+        self.ssh_pass = ssh_pass
         self.pyload_version = pyload_version
         self.xml_funcs = xml_funcs
         self.xml_mode = xml_mode
 
         with self._lck_cli:
             socket.setdefaulttimeout(timeout)
+            self.ssh_tunnel_server = ssh_tunnel_server
             self._cli = sp
-            self._cli_connect.put_nowait((address, port))
+            self._cli_connect.put_nowait((
+                "127.0.0.1" if ssh_use_tunnel else address,
+                ssh_tunnel_port if ssh_use_tunnel else port
+            ))
 
         self.connection_established.emit()
 
@@ -286,7 +371,7 @@ class ConnectionManager(QtCore.QThread):
 
         elif self._cli is not None:
 
-            # Tell all widget, that we want do disconnect, to save the settings
+            # Tell all widget, that we want to disconnect, to save the settings
             self.connection_disconnecting.emit()
             self._save_settings()
 
@@ -298,6 +383,10 @@ class ConnectionManager(QtCore.QThread):
                         pass
                 self._clear_settings()
                 self._cli = None
+
+                if self.ssh_tunnel_server:
+                    self.ssh_tunnel_server.disconnect()
+                    self.ssh_tunnel_server = None
 
             self.connection_disconnected.emit()
 
@@ -383,6 +472,23 @@ class ConnectionManager(QtCore.QThread):
                     pi.logger.warning(e)
                     self.status_changed.emit(self.tr("SERVER ERROR"), "red")
                     self.connection_error_observed.emit("{0} | {1}".format(e, type(e)))
+
+                    if self.ssh_tunnel_server and not self.ssh_tunnel_server.connected:
+                        self.ssh_tunnel_server.disconnect()
+                        ssh_tunnel_server = SSHLocalTunnel(self.port, self.address, self.ssh_port)
+                        try:
+                            ssh_tunnel_port = self.ssh_tunnel_server.connect_by_credentials(
+                                self.ssh_user,
+                                self.ssh_pass
+                            )
+                            sp = ServerProxy("http://127.0.0.1:{0}".format(ssh_tunnel_port))
+                            with self._lck_cli:
+                                self.ssh_tunnel_server = ssh_tunnel_server
+                                self._cli = sp
+                                self.connection_recovered.emit()
+                        except Exception:
+                            pass
+
                 else:
                     if plc_exit_code == -1:
                         self.status_changed.emit(self.tr("RUNNING"), "green")
@@ -452,11 +558,17 @@ class ConnectionManager(QtCore.QThread):
         return default_value
 
     def get_cli(self):
-        """Connection proxy of actual connection."""
-        if self.address and self.port:
+        """
+        Connection proxy of actual connection.
+
+        Use connection_recovered signal to figure out new parameters.
+        """
+        if not self.ssh_use_tunnel and self.address and self.port:
             return ServerProxy("http://{0}:{1}".format(self.address, self.port))
-        else:
-            return None
+        if self.ssh_use_tunnel and self.ssh_tunnel_server and self.ssh_tunnel_server.connected:
+            return ServerProxy("http://127.0.0.1:{0}".format(self.ssh_tunnel_server.local_tunnel_port))
+
+        return None
 
     @property
     def connected(self) -> bool:

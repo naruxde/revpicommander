@@ -51,6 +51,10 @@ class RevPiPlcList(QtWidgets.QDialog, Ui_diag_connections):
             con_item.setData(0, WidgetData.port, settings.value("port", self.__default_port, int))
             con_item.setData(0, WidgetData.timeout, settings.value("timeout", 5, int))
 
+            con_item.setData(0, WidgetData.ssh_use_tunnel, settings.value("ssh_use_tunnel", False, bool))
+            con_item.setData(0, WidgetData.ssh_port, settings.value("ssh_port", 22, int))
+            con_item.setData(0, WidgetData.ssh_user, settings.value("ssh_user", "pi", str))
+
             con_item.setData(0, WidgetData.last_dir_upload, settings.value("last_dir_upload"))
             con_item.setData(0, WidgetData.last_file_upload, settings.value("last_file_upload"))
             con_item.setData(0, WidgetData.last_dir_pictory, settings.value("last_dir_pictory"))
@@ -61,7 +65,12 @@ class RevPiPlcList(QtWidgets.QDialog, Ui_diag_connections):
             con_item.setData(0, WidgetData.last_zip_file, settings.value("last_zip_file"))
             con_item.setData(0, WidgetData.watch_files, settings.value("watch_files"))
             con_item.setData(0, WidgetData.watch_path, settings.value("watch_path"))
-            con_item.setData(0, WidgetData.debug_geos, settings.value("debug_geos"))
+            try:
+                # Bytes with QSettings are a little difficult sometimes
+                con_item.setData(0, WidgetData.debug_geos, settings.value("debug_geos"))
+            except Exception:
+                # Just drop the geos of IO windows
+                pass
 
             folder = settings.value("folder", "", str)
             if folder:
@@ -95,6 +104,9 @@ class RevPiPlcList(QtWidgets.QDialog, Ui_diag_connections):
             settings.setValue("name", node.text(0))
             settings.setValue("port", node.data(0, WidgetData.port))
             settings.setValue("timeout", node.data(0, WidgetData.timeout))
+            settings.setValue("ssh_use_tunnel", node.data(0, WidgetData.ssh_use_tunnel))
+            settings.setValue("ssh_port", node.data(0, WidgetData.ssh_port))
+            settings.setValue("ssh_user", node.data(0, WidgetData.ssh_user))
 
             if node.data(0, WidgetData.last_dir_upload):
                 settings.setValue("last_dir_upload", node.data(0, WidgetData.last_dir_upload))
@@ -195,6 +207,10 @@ class RevPiPlcList(QtWidgets.QDialog, Ui_diag_connections):
         self.sbx_timeout.setEnabled(con_item)
         self.cbb_folder.setEnabled(con_item or dir_item)
 
+        self.cbx_ssh_use_tunnel.setEnabled(con_item)
+        self.sbx_ssh_port.setEnabled(con_item)
+        self.txt_ssh_user.setEnabled(con_item)
+
     def _get_folder_item(self, name: str):
         """Find the folder entry by name."""
         for i in range(self.tre_connections.topLevelItemCount()):
@@ -241,6 +257,11 @@ class RevPiPlcList(QtWidgets.QDialog, Ui_diag_connections):
                 self.cbb_folder.setCurrentIndex(0)
             else:
                 self.cbb_folder.setCurrentText(current.parent().text(0))
+
+            self.cbx_ssh_use_tunnel.setChecked(current.data(0, WidgetData.ssh_use_tunnel))
+            self.sbx_ssh_port.setValue(current.data(0, WidgetData.ssh_port))
+            self.txt_ssh_user.setText(current.data(0, WidgetData.ssh_user))
+
         elif current and current.type() == NodeType.DIR:
             self.__current_item = current
             self.cbb_folder.setCurrentText(current.text(0))
@@ -278,6 +299,9 @@ class RevPiPlcList(QtWidgets.QDialog, Ui_diag_connections):
         self.__current_item.setText(0, self.__default_name)
         self.__current_item.setData(0, WidgetData.port, self.__default_port)
         self.__current_item.setData(0, WidgetData.timeout, 5)
+        self.__current_item.setData(0, WidgetData.ssh_use_tunnel, False)
+        self.__current_item.setData(0, WidgetData.ssh_port, 22)
+        self.__current_item.setData(0, WidgetData.ssh_user, "pi")
         sub_folder = self._get_folder_item(self.cbb_folder.currentText())
         if sub_folder:
             sub_folder.addChild(self.__current_item)
@@ -311,6 +335,24 @@ class RevPiPlcList(QtWidgets.QDialog, Ui_diag_connections):
         if self.__current_item.type() != NodeType.CON:
             return
         self.__current_item.setData(0, WidgetData.timeout, value)
+
+    @QtCore.pyqtSlot(int)
+    def on_cbx_ssh_use_tunnel_stateChanged(self, check_state: int):
+        if self.__current_item.type() != NodeType.CON:
+            return
+        self.__current_item.setData(0, WidgetData.ssh_use_tunnel, check_state == QtCore.Qt.CheckState.Checked)
+
+    @QtCore.pyqtSlot(int)
+    def on_sbx_ssh_port_valueChanged(self, value: int):
+        if self.__current_item.type() != NodeType.CON:
+            return
+        self.__current_item.setData(0, WidgetData.ssh_port, value)
+
+    @QtCore.pyqtSlot(str)
+    def on_txt_ssh_user_textEdited(self, text):
+        if self.__current_item.type() != NodeType.CON:
+            return
+        self.__current_item.setData(0, WidgetData.ssh_user, text)
 
     @QtCore.pyqtSlot(str)
     def on_cbb_folder_editTextChanged(self, text: str):

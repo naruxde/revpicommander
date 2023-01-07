@@ -5,7 +5,7 @@
 __author__ = "Sven Sager"
 __copyright__ = "Copyright (C) 2018 Sven Sager"
 __license__ = "GPLv3"
-__version__ = "0.9.3"
+__version__ = "0.9.10rc1"
 
 import webbrowser
 from os.path import basename, dirname, join
@@ -97,17 +97,7 @@ class RevPiCommander(QtWidgets.QMainWindow, Ui_win_revpicommander):
     # region #      REGION: Connection management
 
     def _pyload_connect(self, settings_index: int) -> None:
-        if not helper.cm.pyload_connect(settings_index):
-            QtWidgets.QMessageBox.critical(
-                self, self.tr("Error"), self.tr(
-                    "Can not connect to RevPi XML-RPC Service! \n\n"
-                    "This could have the following reasons: The RevPi is not "
-                    "online, the XML-RPC service is not running / bind to "
-                    "localhost or the ACL permission is not set for your "
-                    "IP!!!\n\nRun 'sudo revpipyload_secure_installation' on "
-                    "Revolution Pi to setup this function!"
-                )
-            )
+        helper.cm.pyload_connect(settings_index, self)
 
     @QtCore.pyqtSlot(str)
     def on_cm_connection_error_observed(self, message: str):
@@ -192,8 +182,12 @@ class RevPiCommander(QtWidgets.QMainWindow, Ui_win_revpicommander):
             else:
                 parent_menu = self.men_connections
 
+            display_name = helper.settings.value("name")
+            if helper.settings.value("ssh_use_tunnel", False, bool):
+                display_name += " (SSH)"
+
             act = QtWidgets.QAction(parent_menu)
-            act.setText(helper.settings.value("name"))
+            act.setText(display_name)
             act.setData(i)
             act.setToolTip("{0}:{1}".format(
                 helper.settings.value("address"),
