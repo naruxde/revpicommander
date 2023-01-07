@@ -59,7 +59,7 @@
          <string>Read &amp;all IO values</string>
         </property>
         <property name="shortcut">
-         <string>F4</string>
+         <string notr="true">F4</string>
         </property>
        </widget>
       </item>
@@ -72,7 +72,7 @@
          <string>&amp;Refresh unchanged IOs</string>
         </property>
         <property name="shortcut">
-         <string>F5</string>
+         <string notr="true">F5</string>
         </property>
        </widget>
       </item>
@@ -85,7 +85,7 @@
          <string>&amp;Write changed outputs</string>
         </property>
         <property name="shortcut">
-         <string>F6</string>
+         <string notr="true">F6</string>
         </property>
        </widget>
       </item>

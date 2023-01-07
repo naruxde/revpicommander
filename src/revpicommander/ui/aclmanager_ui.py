@@ -87,6 +87,7 @@ class Ui_diag_aclmanager(object):
         self.txt_ip_a.setObjectName("txt_ip_a")
         self.hl_ip.addWidget(self.txt_ip_a)
         self.lbl_ip_a = QtWidgets.QLabel(self.gb_edit)
+        self.lbl_ip_a.setText(".")
         self.lbl_ip_a.setObjectName("lbl_ip_a")
         self.hl_ip.addWidget(self.lbl_ip_a)
         self.txt_ip_b = QtWidgets.QLineEdit(self.gb_edit)
@@ -94,6 +95,7 @@ class Ui_diag_aclmanager(object):
         self.txt_ip_b.setObjectName("txt_ip_b")
         self.hl_ip.addWidget(self.txt_ip_b)
         self.lbl_ip_b = QtWidgets.QLabel(self.gb_edit)
+        self.lbl_ip_b.setText(".")
         self.lbl_ip_b.setObjectName("lbl_ip_b")
         self.hl_ip.addWidget(self.lbl_ip_b)
         self.txt_ip_c = QtWidgets.QLineEdit(self.gb_edit)
@@ -101,6 +103,7 @@ class Ui_diag_aclmanager(object):
         self.txt_ip_c.setObjectName("txt_ip_c")
         self.hl_ip.addWidget(self.txt_ip_c)
         self.lbl_ip_c = QtWidgets.QLabel(self.gb_edit)
+        self.lbl_ip_c.setText(".")
         self.lbl_ip_c.setObjectName("lbl_ip_c")
         self.hl_ip.addWidget(self.lbl_ip_c)
         self.txt_ip_d = QtWidgets.QLineEdit(self.gb_edit)
@@ -147,9 +150,6 @@ class Ui_diag_aclmanager(object):
         self.btn_add.setText(_translate("diag_aclmanager", "&Save entry"))
         self.lbl_ip.setText(_translate("diag_aclmanager", "IP address:"))
         self.lbl_level.setText(_translate("diag_aclmanager", "Access level:"))
-        self.lbl_ip_a.setText(_translate("diag_aclmanager", "."))
-        self.lbl_ip_b.setText(_translate("diag_aclmanager", "."))
-        self.lbl_ip_c.setText(_translate("diag_aclmanager", "."))
 
 
 if __name__ == "__main__":

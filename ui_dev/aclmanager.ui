@@ -145,7 +145,7 @@
           <item>
            <widget class="QLabel" name="lbl_ip_a">
             <property name="text">
-             <string>.</string>
+             <string notr="true">.</string>
             </property>
            </widget>
           </item>
@@ -159,7 +159,7 @@
           <item>
            <widget class="QLabel" name="lbl_ip_b">
             <property name="text">
-             <string>.</string>
+             <string notr="true">.</string>
             </property>
            </widget>
           </item>
@@ -173,7 +173,7 @@
           <item>
            <widget class="QLabel" name="lbl_ip_c">
             <property name="text">
-             <string>.</string>
+             <string notr="true">.</string>
             </property>
            </widget>
           </item>

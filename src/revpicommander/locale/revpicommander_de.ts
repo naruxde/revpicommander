@@ -68,82 +68,118 @@ Nicht gespeicherte Änderunen gehen verloren</translation>
 <context>
     <name>AvahiSearch</name>
     <message>
-        <location filename="../avahisearch.py" line="166"/>
+        <location filename="../avahisearch.py" line="216"/>
         <source>Auto discovered</source>
         <translation>Automatisch erkannt</translation>
     </message>
     <message>
-        <location filename="../avahisearch.py" line="179"/>
+        <location filename="../avahisearch.py" line="229"/>
         <source>Already in list...</source>
         <translation>Bereits in Liste...</translation>
     </message>
     <message>
-        <location filename="../avahisearch.py" line="200"/>
+        <location filename="../avahisearch.py" line="254"/>
         <source>Success</source>
         <translation>Erfolgreich</translation>
     </message>
     <message>
-        <location filename="../avahisearch.py" line="200"/>
+        <location filename="../avahisearch.py" line="254"/>
         <source>The connection with the name &apos;{0}&apos; was successfully saved to folder &apos;{1}&apos; in your connections.</source>
-        <translation>Die Verbindung mit dem Namen '{0}' wurde erfolgreich im Ordner '{1}' gespeichert.</translation>
+        <translation>Die Verbindung mit dem Namen &apos;{0}&apos; wurde erfolgreich im Ordner &apos;{1}&apos; gespeichert.</translation>
     </message>
     <message>
-        <location filename="../avahisearch.py" line="179"/>
+        <location filename="../avahisearch.py" line="229"/>
         <source>The selected Revolution Pi is already saved in your connection list as &apos;{0}&apos;.</source>
-        <translation>Der ausgewählte RevPi ist schon in der Verbindungsliste als '{0}'.</translation>
+        <translation>Der ausgewählte RevPi ist schon in der Verbindungsliste als &apos;{0}&apos;.</translation>
     </message>
 </context>
 <context>
     <name>ConnectionManager</name>
     <message>
-        <location filename="../helper.py" line="364"/>
+        <location filename="../helper.py" line="454"/>
         <source>SIMULATING</source>
         <translation>SIMULATION</translation>
     </message>
     <message>
-        <location filename="../helper.py" line="367"/>
+        <location filename="../helper.py" line="457"/>
         <source>NOT CONNECTED</source>
         <translation>NICHT VERBUNDEN</translation>
     </message>
     <message>
-        <location filename="../helper.py" line="384"/>
+        <location filename="../helper.py" line="474"/>
         <source>SERVER ERROR</source>
         <translation>SERVER FEHLER</translation>
     </message>
     <message>
-        <location filename="../helper.py" line="388"/>
+        <location filename="../helper.py" line="495"/>
         <source>RUNNING</source>
         <translation>LÄUFT</translation>
     </message>
     <message>
-        <location filename="../helper.py" line="390"/>
+        <location filename="../helper.py" line="497"/>
         <source>PLC FILE NOT FOUND</source>
         <translation>SPS PROGRAMM NICHT GEFUNDEN</translation>
     </message>
     <message>
-        <location filename="../helper.py" line="392"/>
+        <location filename="../helper.py" line="499"/>
         <source>NOT RUNNING (NO STATUS)</source>
         <translation>LÄUFT NICHT (KEIN STATUS)</translation>
     </message>
     <message>
-        <location filename="../helper.py" line="394"/>
+        <location filename="../helper.py" line="501"/>
         <source>PROGRAM KILLED</source>
         <translation>PROGRAMM GETÖTET</translation>
     </message>
     <message>
-        <location filename="../helper.py" line="396"/>
+        <location filename="../helper.py" line="503"/>
         <source>PROGRAM TERMED</source>
         <translation>PROGRAMM BEENDET</translation>
     </message>
     <message>
-        <location filename="../helper.py" line="398"/>
+        <location filename="../helper.py" line="505"/>
         <source>NOT RUNNING</source>
         <translation>LÄUFT NICHT</translation>
     </message>
     <message>
-        <location filename="../helper.py" line="400"/>
+        <location filename="../helper.py" line="507"/>
         <source>FINISHED WITH CODE {0}</source>
         <translation>BEENDET MIT CODE {0}</translation>
+    </message>
+    <message>
+        <location filename="../helper.py" line="321"/>
+        <source>Error</source>
+        <translation>Fehler</translation>
+    </message>
+    <message>
+        <location filename="../helper.py" line="289"/>
+        <source>The combination of username and password was rejected from the SSH server.
+
+Try again.</source>
+        <translation>Die Kombination aus Benutzername und Password wurden vom SSH Server abgelehnt
+
+Bitte erneut versuchen.</translation>
+    </message>
+    <message>
+        <location filename="../helper.py" line="298"/>
+        <source>Could not establish a SSH connection to server:
+
+{0}</source>
+        <translation>Konnte keine Verbindung zum SSH Server herstellen:
+
+{0}</translation>
+    </message>
+    <message>
+        <location filename="../helper.py" line="321"/>
+        <source>Can not connect to RevPi XML-RPC Service! 
+
+This could have the following reasons: The RevPi is not online, the XML-RPC service is not running / bind to localhost or the ACL permission is not set for your IP!!!
+
+Run &apos;sudo revpipyload_secure_installation&apos; on Revolution Pi to setup this function!</source>
+        <translation>Kann keine Verbindung zum RevPi XML-RPC Dienst herstellen!
+
+Das kann eine der folgenden Ursachen haben: Der Rev Pi ist nicht online, der XML-RPC Dienst läuft nicht / ist an localhost gebunden order die Berechtigungen sind nicht für diese IP gesetzt!!!
+
+Führe &apos;sudo revpipyload_secure_installation&apos; auf dem Revolution Pi aus um diese Funktion zu konfigurieren!</translation>
     </message>
 </context>
 <context>
@@ -172,7 +208,7 @@ Nicht gespeicherte Änderunen gehen verloren</translation>
         <location filename="../debugcontrol.py" line="257"/>
         <source>Error set value of device &apos;{0}&apos; Output &apos;{1}&apos;: {2}
 </source>
-        <translation>Fehler beim Setzen des Ausgangs '{1}' auf Modul '{0}': {2}
+        <translation>Fehler beim Setzen des Ausgangs &apos;{1}&apos; auf Modul &apos;{0}&apos;: {2}
 </translation>
     </message>
     <message>
@@ -211,7 +247,7 @@ Nicht gespeicherte Änderunen gehen verloren</translation>
     <message>
         <location filename="../debugios.py" line="352"/>
         <source>Can not convert bytes {0} to a text for IO &apos;{1}&apos;. Switch to number format instead!</source>
-        <translation>Kann bytes {0} für '{1}' nicht in Text konvertieren. Wechseln Sie auf Nummernformat!</translation>
+        <translation>Kann bytes {0} für &apos;{1}&apos; nicht in Text konvertieren. Wechseln Sie auf Nummernformat!</translation>
     </message>
 </context>
 <context>
@@ -242,86 +278,86 @@ Ungesicherte Änderungen gehen verloren.</translation>
 <context>
     <name>RevPiCommander</name>
     <message>
-        <location filename="../revpicommander.py" line="234"/>
+        <location filename="../revpicommander.py" line="228"/>
         <source>Simulator started...</source>
         <translation>Simulator gestartet...</translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="243"/>
+        <location filename="../revpicommander.py" line="237"/>
         <source>Can not start...</source>
         <translation>Kann nicht gestartet werden...</translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="436"/>
+        <location filename="../revpicommander.py" line="430"/>
         <source>Warning</source>
         <translation>Warnung</translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="259"/>
+        <location filename="../revpicommander.py" line="253"/>
         <source>This version of Logviewer ist not supported in version {0} of RevPiPyLoad on your RevPi! You need at least version 0.4.1.</source>
         <translation>Diese Version vom Logbetrachter wird in RevPiPyLoad Version {0} nicht unterstützt! Es wird mindestens Version 0.4.1 benötigt.</translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="309"/>
+        <location filename="../revpicommander.py" line="303"/>
         <source>XML-RPC access mode in the RevPiPyLoad configuration is too small to access this dialog!</source>
         <translation>XML-RPC Zugriffsberechtigung in der RevPiPyLoad Konfiguraiton ist zu klein für diese Einstellungen!</translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="463"/>
+        <location filename="../revpicommander.py" line="457"/>
         <source>Error</source>
         <translation>Fehler</translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="289"/>
+        <location filename="../revpicommander.py" line="283"/>
         <source>The Version of RevPiPyLoad on your Revolution Pi ({0}) is to old. This Version of RevPiCommander require at least version 0.6.0 of RevPiPyLoad. Please update your Revolution Pi!</source>
         <translation>Die Version von RevPiPyLoad ({0}) auf dem Revolution Pi ist zu alt. Diese Version vom RevPiCommander braucht mindestens Version 0.6.0. Bitte aktualisiere deinen Revolution Pi!</translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="342"/>
+        <location filename="../revpicommander.py" line="336"/>
         <source>Question</source>
         <translation>Frage</translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="342"/>
+        <location filename="../revpicommander.py" line="336"/>
         <source>Are you sure to reset piControl?
 The pictory configuration will be reloaded. During that time the process image will be interrupted and could rise errors on running control programs!</source>
         <translation>Soll piControl wirklich zurückgesetzt werden?
 Die piCtory Konfiguration wird neu geladen. Das Prozessabbild wird in dieser Zeit nicht verfügbar sein und es könnten Fehler in Steuerungsprogrammen ausgelöst werden!</translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="355"/>
+        <location filename="../revpicommander.py" line="349"/>
         <source>Success</source>
         <translation>Erfolgreich</translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="355"/>
+        <location filename="../revpicommander.py" line="349"/>
         <source>piControl reset executed successfully</source>
         <translation>piControl wurde erfolgreich zurückgesetzt</translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="362"/>
+        <location filename="../revpicommander.py" line="356"/>
         <source>piControl reset could not be executed successfully</source>
         <translation>piControl konnte nicht zurückgesetzt werden</translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="410"/>
+        <location filename="../revpicommander.py" line="404"/>
         <source>Reset to piCtory defaults...</source>
         <translation>Standardwerte von piCtory laden...</translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="436"/>
+        <location filename="../revpicommander.py" line="430"/>
         <source>The watch mode ist not supported in version {0} of RevPiPyLoad on your RevPi! You need at least version 0.5.3! Maybe the python3-revpimodio2 module is not installed on your RevPi at least version 2.0.0.</source>
         <translation>Der SPS Betrachter ist in Version {0} von RevPiPyLoad auf dem Rev Pi nicht unterstützt! Es muss mindestens Version 0.5.3 installiert sein! Vielleicht fehlt auch das python3-revpimodio2 Modul, welches mindestens Version 2.0.0 haben muss.</translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="448"/>
+        <location filename="../revpicommander.py" line="442"/>
         <source>Can not load this function, because your ACL level is to low!
 You need at least level 1 to read or level 3 to write.</source>
         <translation>Für diese Funktion ist das Berechtigungslevel zu gering!
 Es muss mindestens Level 1 zum Lesen oder Level 3 zu Schreiben sein.</translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="463"/>
+        <location filename="../revpicommander.py" line="457"/>
         <source>Can not load piCtory configuration. 
 Did you create a hardware configuration? Please check this in piCtory!</source>
         <translation>Kann piCtory Konfiguration nicht laden.
@@ -334,14 +370,14 @@ Wurde eine Hardwarekonfiguration in piCtory erzeugt?</translation>
 This could have the following reasons: The RevPi is not online, the XML-RPC service is not running / bind to localhost or the ACL permission is not set for your IP!!!
 
 Run &apos;sudo revpipyload_secure_installation&apos; on Revolution Pi to setup this function!</source>
-        <translation>Kann keine Verbindung zum RevPi XML-RPC Dienst herstellen!
+        <translation type="obsolete">Kann keine Verbindung zum RevPi XML-RPC Dienst herstellen!
 
 Das kann eine der folgenden Ursachen haben: Der Rev Pi ist nicht online, der XML-RPC Dienst läuft nicht / ist an localhost gebunden order die Berechtigungen sind nicht für diese IP gesetzt!!!
 
-Führe 'sudo revpipyload_secure_installation' auf dem Revolution Pi aus um diese Funktion zu konfigurieren!</translation>
+Führe &apos;sudo revpipyload_secure_installation&apos; auf dem Revolution Pi aus um diese Funktion zu konfigurieren!</translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="234"/>
+        <location filename="../revpicommander.py" line="228"/>
         <source>The simulator is running!
 
 You can work with this simulator if your call RevPiModIO with this additional parameters:
@@ -358,24 +394,24 @@ configrsc={1}
 Dies kann aus der Textbox oben kopiert werden.</translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="243"/>
+        <location filename="../revpicommander.py" line="237"/>
         <source>Can not start the simulator! Maybe the piCtory file is corrupt or you have no write permissions for &apos;{0}&apos;.</source>
-        <translation>Kann Simulator nicht starten! Vielleicht ist die piCtory Datei defekt oder es gibt keine Schreibberechtigung für '{0}`.</translation>
+        <translation>Kann Simulator nicht starten! Vielleicht ist die piCtory Datei defekt oder es gibt keine Schreibberechtigung für &apos;{0}`.</translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="410"/>
+        <location filename="../revpicommander.py" line="404"/>
         <source>Do you want to reset your process image to {0} values?
 You have to stop other RevPiModIO programs before doing that, because they could reset the outputs.</source>
         <translation>Soll das virtuelle Prozessabbild auf {0} zurückgesetzt werden?
 Es sollten alle RevPiModIO Programme vorher beendet werden, da diese ihre IO Werte sofort wieder schreiben würden.</translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="410"/>
+        <location filename="../revpicommander.py" line="404"/>
         <source>zero</source>
         <translation>null</translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="410"/>
+        <location filename="../revpicommander.py" line="404"/>
         <source>piCtory default</source>
         <translation>piCtory Standardwerte</translation>
     </message>
@@ -425,7 +461,7 @@ Es sollten alle RevPiModIO Programme vorher beendet werden, da diese ihre IO Wer
     <message>
         <location filename="../revpifiles.py" line="253"/>
         <source>Can not open last directory &apos;{0}&apos;.</source>
-        <translation>Kann letztes Verzeichnis '{0}' nicht öffnen.</translation>
+        <translation>Kann letztes Verzeichnis &apos;{0}&apos; nicht öffnen.</translation>
     </message>
     <message>
         <location filename="../revpifiles.py" line="310"/>
@@ -450,7 +486,7 @@ Es sollten alle RevPiModIO Programme vorher beendet werden, da diese ihre IO Wer
     <message>
         <location filename="../revpifiles.py" line="458"/>
         <source>Can not access the folder &apos;{0}&apos; to read files.</source>
-        <translation>Keine Berechtigung für Zugriff auf Ordner '{0}'.</translation>
+        <translation>Keine Berechtigung für Zugriff auf Ordner &apos;{0}&apos;.</translation>
     </message>
     <message>
         <location filename="../revpifiles.py" line="559"/>
@@ -460,7 +496,7 @@ Es sollten alle RevPiModIO Programme vorher beendet werden, da diese ihre IO Wer
     <message>
         <location filename="../revpifiles.py" line="508"/>
         <source>Error while download file &apos;{0}&apos;.</source>
-        <translation>Fehler beim Herunterladen der Datei '{0}'.</translation>
+        <translation>Fehler beim Herunterladen der Datei &apos;{0}&apos;.</translation>
     </message>
     <message>
         <location filename="../revpifiles.py" line="516"/>
@@ -474,7 +510,7 @@ Es sollten alle RevPiModIO Programme vorher beendet werden, da diese ihre IO Wer
 Select &apos;Yes&apos; to override, &apos;No&apos; to download only missing files.</source>
         <translation>Eine oder mehrere Dateien existieren auf diesem Computer! Sollen bestehende Dateien überschrieben werden?
 
-Wählen Sie 'Ja' zum Überschreiben, 'Nein' um nur fehlende Dateien zu laden.</translation>
+Wählen Sie &apos;Ja&apos; zum Überschreiben, &apos;Nein&apos; um nur fehlende Dateien zu laden.</translation>
     </message>
     <message>
         <location filename="../revpifiles.py" line="548"/>
@@ -489,7 +525,7 @@ Wählen Sie 'Ja' zum Überschreiben, 'Nein' um nur fehlende Dateien zu laden.</t
     <message>
         <location filename="../revpifiles.py" line="559"/>
         <source>Error while delete file &apos;{0}&apos;.</source>
-        <translation>Fehler beim Löschen der Datei '{0}'.</translation>
+        <translation>Fehler beim Löschen der Datei &apos;{0}&apos;.</translation>
     </message>
     <message>
         <location filename="../revpifiles.py" line="134"/>
@@ -523,7 +559,7 @@ Wählen Sie 'Ja' zum Überschreiben, 'Nein' um nur fehlende Dateien zu laden.</t
 <context>
     <name>RevPiLogfile</name>
     <message>
-        <location filename="../revpilogfile.py" line="204"/>
+        <location filename="../revpilogfile.py" line="208"/>
         <source>Can not access log file on the RevPi</source>
         <translation>Kann auf Logbuch vom RevPi nicht zugreifen</translation>
     </message>
@@ -627,12 +663,12 @@ Ungesicherte Änderungen gehen verloren.</translation>
         <translation>Neue Verbindung</translation>
     </message>
     <message>
-        <location filename="../revpiplclist.py" line="146"/>
+        <location filename="../revpiplclist.py" line="158"/>
         <source>Question</source>
         <translation>Frage</translation>
     </message>
     <message>
-        <location filename="../revpiplclist.py" line="146"/>
+        <location filename="../revpiplclist.py" line="158"/>
         <source>Do you really want to quit? 
 Unsaved changes will be lost.</source>
         <translation>Soll das Fenster wirklich geschlossen werden?
@@ -929,62 +965,65 @@ Dies ist kein Fehler, wenn das SPS Startprogramm bereits auf dem Rev Pi ist. Pr�
     <message>
         <location filename="../../../ui_dev/aclmanager.ui" line="14"/>
         <source>IP access control list</source>
-        <translation type="unfinished">IP Berechtigungsliste</translation>
+        <translation>IP Berechtigungsliste</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/aclmanager.ui" line="20"/>
         <source>Existing ACLs</source>
-        <translation type="unfinished">Aktuelle ACLs</translation>
+        <translation>Aktuelle ACLs</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/aclmanager.ui" line="54"/>
         <source>IP Address</source>
-        <translation type="unfinished">IP Adresse</translation>
+        <translation>IP Adresse</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/aclmanager.ui" line="59"/>
         <source>Access Level</source>
-        <translation type="unfinished">Berechtigungslevel</translation>
+        <translation>Berechtigungslevel</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/aclmanager.ui" line="75"/>
         <source>&amp;Edit</source>
-        <translation type="unfinished">&amp;Bearbeiten</translation>
+        <translation>&amp;Bearbeiten</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/aclmanager.ui" line="88"/>
         <source>&amp;Remove</source>
-        <translation type="unfinished">&amp;Löschen</translation>
+        <translation>&amp;Löschen</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/aclmanager.ui" line="100"/>
         <source>Add / Edit access entry</source>
-        <translation type="unfinished">Eintrag hinzufügen / bearbeiten</translation>
+        <translation>Eintrag hinzufügen / bearbeiten</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/aclmanager.ui" line="106"/>
         <source>Clear fields</source>
-        <translation type="unfinished">Felder leeren</translation>
+        <translation>Felder leeren</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/aclmanager.ui" line="113"/>
         <source>&amp;Save entry</source>
-        <translation type="unfinished">Eintrag &amp;Speichern</translation>
+        <translation>Eintrag &amp;Speichern</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/aclmanager.ui" line="122"/>
         <source>IP address:</source>
-        <translation type="unfinished">IP Adresse:</translation>
+        <translation>IP Adresse:</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/aclmanager.ui" line="129"/>
         <source>Access level:</source>
-        <translation type="unfinished">Berechtigungslevel:</translation>
+        <translation>Berechtigungslevel:</translation>
     </message>
+</context>
+<context>
+    <name>diag_backgroundworker</name>
     <message>
-        <location filename="../../../ui_dev/aclmanager.ui" line="176"/>
-        <source>.</source>
-        <translation type="unfinished"></translation>
+        <location filename="../../../ui_dev/backgroundworker.ui" line="14"/>
+        <source>File transfer...</source>
+        <translation>Dateiübertragung...</translation>
     </message>
 </context>
 <context>
@@ -992,52 +1031,77 @@ Dies ist kein Fehler, wenn das SPS Startprogramm bereits auf dem Rev Pi ist. Pr�
     <message>
         <location filename="../../../ui_dev/revpiplclist.ui" line="14"/>
         <source>Revolution Pi connections</source>
-        <translation type="unfinished">Revolution Pi Verbindungen</translation>
+        <translation>Revolution Pi Verbindungen</translation>
     </message>
     <message>
-        <location filename="../../../ui_dev/revpiplclist.ui" line="24"/>
+        <location filename="../../../ui_dev/revpiplclist.ui" line="194"/>
         <source>Connection name</source>
-        <translation type="unfinished">Verbindungsname</translation>
+        <translation>Verbindungsname</translation>
     </message>
     <message>
-        <location filename="../../../ui_dev/revpiplclist.ui" line="29"/>
+        <location filename="../../../ui_dev/revpiplclist.ui" line="199"/>
         <source>Address</source>
-        <translation type="unfinished">Adresse</translation>
+        <translation>Adresse</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/revpiplclist.ui" line="98"/>
         <source>Connection properties</source>
-        <translation type="unfinished">Verbindungseinstellungen</translation>
+        <translation type="obsolete">Verbindungseinstellungen</translation>
     </message>
     <message>
-        <location filename="../../../ui_dev/revpiplclist.ui" line="104"/>
+        <location filename="../../../ui_dev/revpiplclist.ui" line="30"/>
         <source>Display name:</source>
-        <translation type="unfinished">Anzeigename:</translation>
+        <translation>Anzeigename:</translation>
     </message>
     <message>
-        <location filename="../../../ui_dev/revpiplclist.ui" line="111"/>
+        <location filename="../../../ui_dev/revpiplclist.ui" line="102"/>
         <source>Sub folder:</source>
-        <translation type="unfinished">Unterordner:</translation>
+        <translation>Unterordner:</translation>
     </message>
     <message>
-        <location filename="../../../ui_dev/revpiplclist.ui" line="118"/>
+        <location filename="../../../ui_dev/revpiplclist.ui" line="40"/>
         <source>Address (DNS/IP):</source>
-        <translation type="unfinished">Adresse (DNS/IP):</translation>
+        <translation>Adresse (DNS/IP):</translation>
     </message>
     <message>
-        <location filename="../../../ui_dev/revpiplclist.ui" line="125"/>
+        <location filename="../../../ui_dev/revpiplclist.ui" line="50"/>
         <source>Port (Default {0}):</source>
-        <translation type="unfinished">Port (Standard {0}):</translation>
+        <translation>Port (Standard {0}):</translation>
     </message>
     <message>
-        <location filename="../../../ui_dev/revpiplclist.ui" line="169"/>
+        <location filename="../../../ui_dev/revpiplclist.ui" line="76"/>
         <source>Connection timeout:</source>
-        <translation type="unfinished">Verbindungs-Timeout:</translation>
+        <translation>Verbindungs-Timeout:</translation>
     </message>
     <message>
-        <location filename="../../../ui_dev/revpiplclist.ui" line="182"/>
+        <location filename="../../../ui_dev/revpiplclist.ui" line="89"/>
         <source> sec.</source>
-        <translation type="unfinished"> Sek.</translation>
+        <translation> Sek.</translation>
+    </message>
+    <message>
+        <location filename="../../../ui_dev/revpiplclist.ui" line="24"/>
+        <source>Connection</source>
+        <translation>Verbindung</translation>
+    </message>
+    <message>
+        <location filename="../../../ui_dev/revpiplclist.ui" line="122"/>
+        <source>Over SSH</source>
+        <translation>Über SSH</translation>
+    </message>
+    <message>
+        <location filename="../../../ui_dev/revpiplclist.ui" line="128"/>
+        <source>Connect over SSH tunnel:</source>
+        <translation>Über SSH Tunnel verbinden:</translation>
+    </message>
+    <message>
+        <location filename="../../../ui_dev/revpiplclist.ui" line="145"/>
+        <source>SSH port:</source>
+        <translation>SSH Port:</translation>
+    </message>
+    <message>
+        <location filename="../../../ui_dev/revpiplclist.ui" line="162"/>
+        <source>SSH user name:</source>
+        <translation>SSH Benutzername:</translation>
     </message>
 </context>
 <context>
@@ -1045,72 +1109,72 @@ Dies ist kein Fehler, wenn das SPS Startprogramm bereits auf dem Rev Pi ist. Pr�
     <message>
         <location filename="../../../ui_dev/mqttmanager.ui" line="14"/>
         <source>MQTT settings</source>
-        <translation type="unfinished">MQTT Einstellungen</translation>
+        <translation>MQTT Einstellungen</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/mqttmanager.ui" line="20"/>
         <source>Base topic</source>
-        <translation type="unfinished">Basistopic</translation>
+        <translation>Basistopic</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/mqttmanager.ui" line="44"/>
         <source>Base topic:</source>
-        <translation type="unfinished">Basistopic:</translation>
+        <translation>Basistopic:</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/mqttmanager.ui" line="57"/>
         <source>Publish settings</source>
-        <translation type="unfinished">Publish Einstellungen</translation>
+        <translation>Publish Einstellungen</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/mqttmanager.ui" line="63"/>
         <source>Publish all exported values every n seconds:</source>
-        <translation type="unfinished">Exportierte Werte all n Sekunden senden:</translation>
+        <translation>Exportierte Werte all n Sekunden senden:</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/mqttmanager.ui" line="87"/>
         <source>Send exported values immediately on value change</source>
-        <translation type="unfinished">Exportierte Werte sofort bei Änderung senden</translation>
+        <translation>Exportierte Werte sofort bei Änderung senden</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/mqttmanager.ui" line="104"/>
         <source>Set outputs</source>
-        <translation type="unfinished">Ausgänge setzen</translation>
+        <translation>Ausgänge setzen</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/mqttmanager.ui" line="128"/>
         <source>Allow MQTT to to set outputs on Revolution Pi</source>
-        <translation type="unfinished">Erlaube per MQTT Ausgänge auf dem RevPi zu setzen</translation>
+        <translation>Erlaube per MQTT Ausgänge auf dem RevPi zu setzen</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/mqttmanager.ui" line="144"/>
         <source>Broker address:</source>
-        <translation type="unfinished">Broker Adresse:</translation>
+        <translation>Broker Adresse:</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/mqttmanager.ui" line="154"/>
         <source>Broker port:</source>
-        <translation type="unfinished">Broker Port:</translation>
+        <translation>Broker Port:</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/mqttmanager.ui" line="161"/>
         <source>User name:</source>
-        <translation type="unfinished">Benutzername:</translation>
+        <translation>Benutzername:</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/mqttmanager.ui" line="168"/>
         <source>Password:</source>
-        <translation type="unfinished">Passwort:</translation>
+        <translation>Passwort:</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/mqttmanager.ui" line="203"/>
         <source>Use TLS</source>
-        <translation type="unfinished">TLS benutzen</translation>
+        <translation>TLS benutzen</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/mqttmanager.ui" line="138"/>
         <source>Broker settings</source>
-        <translation type="unfinished">Broker Einstellungen</translation>
+        <translation>Broker Einstellungen</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/mqttmanager.ui" line="32"/>
@@ -1122,12 +1186,12 @@ For example: revpi0000/data</source>
     <message>
         <location filename="../../../ui_dev/mqttmanager.ui" line="80"/>
         <source>Topic:    [basetopic]/io/[ioname]</source>
-        <translation type="unfinished"></translation>
+        <translation>Topic:    [basistopic]/io/[eaname]</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/mqttmanager.ui" line="94"/>
         <source>Topic:    [basetopic]/event/[ioname]</source>
-        <translation type="unfinished"></translation>
+        <translation>Topic:    [basistopic]/io/[eaname]</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/mqttmanager.ui" line="116"/>
@@ -1139,7 +1203,7 @@ Publish values with topic:    [basetopic]/set/[outputname]</source>
     <message>
         <location filename="../../../ui_dev/mqttmanager.ui" line="175"/>
         <source>Client ID:</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -1147,137 +1211,137 @@ Publish values with topic:    [basetopic]/set/[outputname]</source>
     <message>
         <location filename="../../../ui_dev/revpioption.ui" line="14"/>
         <source>RevPi Python PLC Options</source>
-        <translation type="unfinished">RevPi Python SPS Einstellungen</translation>
+        <translation>RevPi Python SPS Einstellungen</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/revpioption.ui" line="20"/>
         <source>Start / Stop behavior of PLC program</source>
-        <translation type="unfinished">Start- / Stopverhalten des SPS Programms</translation>
+        <translation>Start- / Stopverhalten des SPS Programms</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/revpioption.ui" line="26"/>
         <source>Replace IO file:</source>
-        <translation type="unfinished">EA Ersetzungsdatei:</translation>
+        <translation>EA Ersetzungsdatei:</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/revpioption.ui" line="104"/>
         <source>... sucessfully without error</source>
-        <translation type="unfinished">... erfolgreich beendet wird</translation>
+        <translation>... erfolgreich beendet wird</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/revpioption.ui" line="33"/>
         <source>... after exception and errors</source>
-        <translation type="unfinished">...durch Fehler abstürzt</translation>
+        <translation>...durch Fehler abstürzt</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/revpioption.ui" line="40"/>
         <source>Start PLC program automatically</source>
-        <translation type="unfinished">Starte SPS Programm automatisch</translation>
+        <translation>Starte SPS Programm automatisch</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/revpioption.ui" line="128"/>
         <source>Restart PLC program after exit or crash</source>
-        <translation type="unfinished">Starte SPS Programm nach Absturz neu</translation>
+        <translation>Starte SPS Programm nach Absturz neu</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/revpioption.ui" line="73"/>
         <source>Set process image to NULL if program terminates...</source>
-        <translation type="unfinished">Setze Prozessabbild auf NULL, wenn das Programm...</translation>
+        <translation>Setze Prozessabbild auf NULL, wenn das Programm...</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/revpioption.ui" line="81"/>
         <source>Do not use replace io file</source>
-        <translation type="unfinished">Keine Ersetzungsdatei verwenden</translation>
+        <translation>Keine Ersetzungsdatei verwenden</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/revpioption.ui" line="86"/>
         <source>Use static file from RevPiPyLoad</source>
-        <translation type="unfinished">Statische Datei von RevPiPyLoad</translation>
+        <translation>Statische Datei von RevPiPyLoad</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/revpioption.ui" line="91"/>
         <source>Use dynamic file from work directory</source>
-        <translation type="unfinished">Dynamisch aus Arbeitsverzeichnis</translation>
+        <translation>Dynamisch aus Arbeitsverzeichnis</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/revpioption.ui" line="96"/>
         <source>Give own path and filename</source>
-        <translation type="unfinished">Eigener Pfad und Dateiname</translation>
+        <translation>Eigener Pfad und Dateiname</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/revpioption.ui" line="111"/>
         <source>Restart delay in seconds:</source>
-        <translation type="unfinished">Neustartverzögerung in Sekunden:</translation>
+        <translation>Neustartverzögerung in Sekunden:</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/revpioption.ui" line="148"/>
         <source>RevPiPyLoad server services</source>
-        <translation type="unfinished">RevPiPyLoad Serverdienste</translation>
+        <translation>RevPiPyLoad Serverdienste</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/revpioption.ui" line="222"/>
         <source>Edit ACL</source>
-        <translation type="unfinished">ACL bearbeiten</translation>
+        <translation>ACL bearbeiten</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/revpioption.ui" line="161"/>
         <source>MQTT process image publisher</source>
-        <translation type="unfinished">MQTT Processabbild Publisher</translation>
+        <translation>MQTT Processabbild Publisher</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/revpioption.ui" line="168"/>
         <source>Start RevPi piControl server</source>
-        <translation type="unfinished">Starte RevPi piControl Server</translation>
+        <translation>Starte RevPi piControl Server</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/revpioption.ui" line="195"/>
         <source>status</source>
-        <translation type="unfinished">Status</translation>
+        <translation>Status</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/revpioption.ui" line="185"/>
         <source>piControl server is:</source>
-        <translation type="unfinished">piControl Serverstatus:</translation>
+        <translation>piControl Serverstatus:</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/revpioption.ui" line="205"/>
         <source>MQTT publish service is:</source>
-        <translation type="unfinished">MQTT Servicestatus:</translation>
+        <translation>MQTT Servicestatus:</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/revpioption.ui" line="215"/>
         <source>Settings</source>
-        <translation type="unfinished">Einstellungen</translation>
+        <translation>Einstellungen</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/revpioption.ui" line="48"/>
         <source>Do nothing</source>
-        <translation type="unfinished">Keine Aktion</translation>
+        <translation>Keine Aktion</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/revpioption.ui" line="53"/>
         <source>Restart after piCtory changed</source>
-        <translation type="unfinished">Neustart nach piCtory Änderungen</translation>
+        <translation>Neustart nach piCtory Änderungen</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/revpioption.ui" line="58"/>
         <source>Always restart the PLC program</source>
-        <translation type="unfinished">SPS Programm immer neu starten</translation>
+        <translation>SPS Programm immer neu starten</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/revpioption.ui" line="66"/>
         <source>Driver reset action:</source>
-        <translation type="unfinished">Aktion bei Treiberneustart:</translation>
+        <translation>Aktion bei Treiberneustart:</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/revpioption.ui" line="138"/>
         <source>PLC program behavior after piCtory driver reset clicked</source>
-        <translation type="unfinished">Aktion nach piCtory Neustart mit SPS Programm</translation>
+        <translation>Aktion nach piCtory Neustart mit SPS Programm</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/revpioption.ui" line="229"/>
         <source>Activate XML-RPC for RevPiCommander</source>
-        <translation type="unfinished">Aktiviere XML-RPC für RevPiCommander</translation>
+        <translation>Aktiviere XML-RPC für RevPiCommander</translation>
     </message>
 </context>
 <context>
@@ -1285,102 +1349,102 @@ Publish values with topic:    [basetopic]/set/[outputname]</source>
     <message>
         <location filename="../../../ui_dev/revpiprogram.ui" line="20"/>
         <source>PLC program</source>
-        <translation type="unfinished">PLC Programm</translation>
+        <translation>PLC Programm</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/revpiprogram.ui" line="43"/>
         <source>Python PLC start program:</source>
-        <translation type="unfinished">Python PLC Startprogramm:</translation>
+        <translation>Python PLC Startprogramm:</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/revpiprogram.ui" line="36"/>
         <source>Set write permissions for plc program to workdirectory</source>
-        <translation type="unfinished">Schreibberechtigung für Arbeitsverzeichnis auf RevPi setzen</translation>
+        <translation>Schreibberechtigung für Arbeitsverzeichnis auf RevPi setzen</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/revpiprogram.ui" line="50"/>
         <source>Python version:</source>
-        <translation type="unfinished">Python Version:</translation>
+        <translation>Python Version:</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/revpiprogram.ui" line="64"/>
         <source>Program arguments:</source>
-        <translation type="unfinished">Programargumente:</translation>
+        <translation>Programargumente:</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/revpiprogram.ui" line="94"/>
         <source>Transfair PLC program</source>
-        <translation type="unfinished">PLC Programm übertragen</translation>
+        <translation>PLC Programm übertragen</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/revpiprogram.ui" line="101"/>
         <source>ZIP archive</source>
-        <translation type="unfinished">ZIP Archiv</translation>
+        <translation>ZIP Archiv</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/revpiprogram.ui" line="106"/>
         <source>TGZ archive</source>
-        <translation type="unfinished">TGZ Archiv</translation>
+        <translation>TGZ Archiv</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/revpiprogram.ui" line="172"/>
         <source>Upload</source>
-        <translation type="unfinished">Hochladen</translation>
+        <translation>Hochladen</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/revpiprogram.ui" line="165"/>
         <source>Download</source>
-        <translation type="unfinished">Herunterladen</translation>
+        <translation>Herunterladen</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/revpiprogram.ui" line="128"/>
         <source>Transfair format:</source>
-        <translation type="unfinished">Übertragungsformat:</translation>
+        <translation>Übertragungsformat:</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/revpiprogram.ui" line="135"/>
         <source>Including piCtory configuration</source>
-        <translation type="unfinished">Inklusive piCtory Konfiguraiton</translation>
+        <translation>Inklusive piCtory Konfiguraiton</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/revpiprogram.ui" line="142"/>
         <source>Remove all files on Revolution Pi before upload</source>
-        <translation type="unfinished">Alle Dateien auf Revolution Pi vor dem Hochladen löschen</translation>
+        <translation>Alle Dateien auf Revolution Pi vor dem Hochladen löschen</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/revpiprogram.ui" line="152"/>
         <source>Control files</source>
-        <translation type="unfinished">Steuerdateien</translation>
+        <translation>Steuerdateien</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/revpiprogram.ui" line="179"/>
         <source>piCtory configuraiton</source>
-        <translation type="unfinished">piCtory Konfiguration</translation>
+        <translation>piCtory Konfiguration</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/revpiprogram.ui" line="186"/>
         <source>Process image from piControl0</source>
-        <translation type="unfinished">Prozessabbild von piControl0</translation>
+        <translation>Prozessabbild von piControl0</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/revpiprogram.ui" line="74"/>
         <source> sec.</source>
-        <translation type="unfinished"> Sek.</translation>
+        <translation> Sek.</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/revpiprogram.ui" line="84"/>
         <source>Software watchdog (0=disabled):</source>
-        <translation type="unfinished">Software watchdog (0=deaktiviert):</translation>
+        <translation>Software watchdog (0=deaktiviert):</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/revpiprogram.ui" line="29"/>
         <source>Python 3</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../../ui_dev/revpiprogram.ui" line="57"/>
         <source>Python 2</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -1388,17 +1452,17 @@ Publish values with topic:    [basetopic]/set/[outputname]</source>
     <message>
         <location filename="../../../ui_dev/revpiinfo.ui" line="43"/>
         <source>RevPiPyLoad version on RevPi:</source>
-        <translation type="unfinished">RevPiPyLoad Version auf RevPi:</translation>
+        <translation>RevPiPyLoad Version auf RevPi:</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/revpiinfo.ui" line="14"/>
         <source>Program information</source>
-        <translation type="unfinished">Programminformationen</translation>
+        <translation>Programminformationen</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/revpiinfo.ui" line="27"/>
         <source>RevPi Python PLC - Commander</source>
-        <translation type="unfinished">RevPi Python SPS - Commander</translation>
+        <translation>RevPi Python SPS - Commander</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/revpiinfo.ui" line="69"/>
@@ -1408,7 +1472,7 @@ Publish values with topic:    [basetopic]/set/[outputname]</source>
     <message>
         <location filename="../../../ui_dev/revpiinfo.ui" line="96"/>
         <source>Version:</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../../ui_dev/revpiinfo.ui" line="126"/>
@@ -1425,52 +1489,72 @@ applicable law.
     <message>
         <location filename="../../../ui_dev/avahisearch.ui" line="14"/>
         <source>Search Revolution Pi devices</source>
-        <translation type="unfinished">Revolution Pi Geräte suchen</translation>
+        <translation>Revolution Pi Geräte suchen</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/avahisearch.ui" line="22"/>
         <source>Searching for Revolution Pi devices in your network...</source>
-        <translation type="unfinished">Netzwerk nach Revolution Pi Geräten durchsuchen...</translation>
+        <translation>Netzwerk nach Revolution Pi Geräten durchsuchen...</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/avahisearch.ui" line="35"/>
         <source>Restart search</source>
-        <translation type="unfinished">Suche neu starten</translation>
+        <translation>Suche neu starten</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/avahisearch.ui" line="93"/>
         <source>IP address</source>
-        <translation type="unfinished">IP Adresse</translation>
+        <translation>IP Adresse</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/avahisearch.ui" line="101"/>
         <source>&amp;Connect to Revolution Pi</source>
-        <translation type="unfinished">Mit RevPi &amp;verbinden</translation>
+        <translation>Mit RevPi &amp;verbinden</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/avahisearch.ui" line="108"/>
         <source>&amp;Save connection</source>
-        <translation type="unfinished">Verbindung &amp;speichern</translation>
+        <translation>Verbindung &amp;speichern</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/avahisearch.ui" line="88"/>
         <source>Zero-conf name</source>
-        <translation type="unfinished">Zero-conf Name</translation>
+        <translation>Zero-conf Name</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/avahisearch.ui" line="125"/>
         <source>Copy host name</source>
-        <translation type="unfinished"></translation>
+        <translation>Hostnamen kopieren</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/avahisearch.ui" line="130"/>
         <source>Copy IP address</source>
-        <translation type="unfinished"></translation>
+        <translation>IP Adresse kopieren</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/avahisearch.ui" line="135"/>
         <source>Open piCtory</source>
-        <translation type="unfinished"></translation>
+        <translation>piCtory öffnen</translation>
+    </message>
+    <message>
+        <location filename="../../../ui_dev/avahisearch.ui" line="140"/>
+        <source>Connect via SSH (recommended)</source>
+        <translation>Über SSH verbinden (empfholen)</translation>
+    </message>
+    <message>
+        <location filename="../../../ui_dev/avahisearch.ui" line="143"/>
+        <source>Establish a connection via encrypted SSH tunnel</source>
+        <translation>Verbindung über verschlüsselten SSH Tunnel herstellen</translation>
+    </message>
+    <message>
+        <location filename="../../../ui_dev/avahisearch.ui" line="148"/>
+        <source>Connect via XML-RPC</source>
+        <translation>Über XML-RPC verbinden</translation>
+    </message>
+    <message>
+        <location filename="../../../ui_dev/avahisearch.ui" line="151"/>
+        <source>You have to configure your Revolution Pi to accept this connections</source>
+        <translation>Sie müssen den Revolution Pi für diese Art der Verbindung konfigurieren</translation>
     </message>
 </context>
 <context>
@@ -1478,82 +1562,100 @@ applicable law.
     <message>
         <location filename="../../../ui_dev/simulator.ui" line="14"/>
         <source>piControl simulator</source>
-        <translation type="unfinished">piControl Simulator</translation>
+        <translation>piControl Simulator</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/simulator.ui" line="20"/>
         <source>Simulator settings</source>
-        <translation type="unfinished">Simulatoreinstellungen</translation>
+        <translation>Simulatoreinstellungen</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/simulator.ui" line="26"/>
         <source>Last used:</source>
-        <translation type="unfinished">Zuletzt verwendet:</translation>
+        <translation>Zuletzt verwendet:</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/simulator.ui" line="33"/>
         <source>piCtory file:</source>
-        <translation type="unfinished">piCtory Datei:</translation>
+        <translation>piCtory Datei:</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/simulator.ui" line="50"/>
         <source>select...</source>
-        <translation type="unfinished">auswählen...</translation>
+        <translation>auswählen...</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/simulator.ui" line="57"/>
         <source>Process image:</source>
-        <translation type="unfinished">Prozessabbild:</translation>
+        <translation>Prozessabbild:</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/simulator.ui" line="74"/>
         <source>Stop action:</source>
-        <translation type="unfinished">Stopaktion:</translation>
+        <translation>Stopaktion:</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/simulator.ui" line="81"/>
         <source>Restart action:</source>
-        <translation type="unfinished">Neustartaktion:</translation>
+        <translation>Neustartaktion:</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/simulator.ui" line="102"/>
         <source>Restore piCtory default values</source>
-        <translation type="unfinished">piCtory Standardwerte setzen</translation>
+        <translation>piCtory Standardwerte setzen</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/simulator.ui" line="112"/>
         <source>Reset everything to ZERO</source>
-        <translation type="unfinished">Alles auf NULL setzen</translation>
+        <translation>Alles auf NULL setzen</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/simulator.ui" line="122"/>
         <source>RevPiModIO integration</source>
-        <translation type="unfinished">RevPiModIO Integration</translation>
+        <translation>RevPiModIO Integration</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/simulator.ui" line="154"/>
         <source>Start with piCtory default values</source>
-        <translation type="unfinished">Start mit piCtory Standardwerten</translation>
+        <translation>Start mit piCtory Standardwerten</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/simulator.ui" line="164"/>
         <source>Start with empty process image</source>
-        <translation type="unfinished">Start mit leerem Prozessabbild</translation>
+        <translation>Start mit leerem Prozessabbild</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/simulator.ui" line="174"/>
         <source>Start without changing actual process image</source>
-        <translation type="unfinished">Start ohne Veränderung des Prozessabbilds</translation>
+        <translation>Start ohne Veränderung des Prozessabbilds</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/simulator.ui" line="95"/>
         <source>Remove process image file</source>
-        <translation type="unfinished">Prozessabbilddatei löschen</translation>
+        <translation>Prozessabbilddatei löschen</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/simulator.ui" line="128"/>
         <source>You can work with this simulator if you call RevPiModIO with this additional parameters:</source>
-        <translation type="unfinished">Mit diesem Simulator kann gearbeitet werden, indem zum Aufruf von RevPiModIO folgende Parameter hinzugefügt werden:</translation>
+        <translation>Mit diesem Simulator kann gearbeitet werden, indem zum Aufruf von RevPiModIO folgende Parameter hinzugefügt werden:</translation>
+    </message>
+</context>
+<context>
+    <name>diag_sshauth</name>
+    <message>
+        <location filename="../../../ui_dev/sshauth.ui" line="17"/>
+        <source>SSH authentication</source>
+        <translation>SSH Authentifizierung</translation>
+    </message>
+    <message>
+        <location filename="../../../ui_dev/sshauth.ui" line="26"/>
+        <source>SSH username:</source>
+        <translation>SSH Benutzername:</translation>
+    </message>
+    <message>
+        <location filename="../../../ui_dev/sshauth.ui" line="33"/>
+        <source>SSH password:</source>
+        <translation>SSH Passwort:</translation>
     </message>
 </context>
 <context>
@@ -1561,72 +1663,57 @@ applicable law.
     <message>
         <location filename="../../../ui_dev/debugcontrol.ui" line="35"/>
         <source>Revolution Pi devices</source>
-        <translation type="unfinished">Revolution Pi Module</translation>
+        <translation>Revolution Pi Module</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/debugcontrol.ui" line="43"/>
         <source>Open to stay on top</source>
-        <translation type="unfinished">Immer im Vordergrund</translation>
+        <translation>Immer im Vordergrund</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/debugcontrol.ui" line="50"/>
         <source>IO Control</source>
-        <translation type="unfinished">EA Übertragung</translation>
+        <translation>EA Übertragung</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/debugcontrol.ui" line="56"/>
         <source>Read all IO values and discard local changes (F4)</source>
-        <translation type="unfinished">Alle EA Werte lesen und lokale Änderungen überschreiben (F4)</translation>
+        <translation>Alle EA Werte lesen und lokale Änderungen überschreiben (F4)</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/debugcontrol.ui" line="59"/>
         <source>Read &amp;all IO values</source>
-        <translation type="unfinished">&amp;Alle EA Werte lesen</translation>
+        <translation>&amp;Alle EA Werte lesen</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/debugcontrol.ui" line="69"/>
         <source>Refresh all IO values which are locally not changed (F5)</source>
-        <translation type="unfinished">Alle EA Werte aktualisieren, die lokal nicht geändert sind (F5)</translation>
+        <translation>Alle EA Werte aktualisieren, die lokal nicht geändert sind (F5)</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/debugcontrol.ui" line="72"/>
         <source>&amp;Refresh unchanged IOs</source>
-        <translation type="unfinished">Unve&amp;ränderte EAs lesen</translation>
+        <translation>Unve&amp;ränderte EAs lesen</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/debugcontrol.ui" line="82"/>
         <source>Write locally changed output values to process image (F6)</source>
-        <translation type="unfinished">Schreibe lokal veränderte Ausgangswerte in das Prozessabbild (F6)</translation>
+        <translation>Schreibe lokal veränderte Ausgangswerte in das Prozessabbild (F6)</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/debugcontrol.ui" line="85"/>
         <source>&amp;Write changed outputs</source>
-        <translation type="unfinished">Ausgänge &amp;schreiben</translation>
+        <translation>Ausgänge &amp;schreiben</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/debugcontrol.ui" line="95"/>
         <source>&amp;Auto refresh values</source>
-        <translation type="unfinished">&amp;Automatisch aktualisieren</translation>
+        <translation>&amp;Automatisch aktualisieren</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/debugcontrol.ui" line="102"/>
         <source>and write outputs</source>
-        <translation type="unfinished">und Ausgänge schreiben</translation>
-    </message>
-    <message>
-        <location filename="../../../ui_dev/debugcontrol.ui" line="62"/>
-        <source>F4</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../ui_dev/debugcontrol.ui" line="75"/>
-        <source>F5</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../ui_dev/debugcontrol.ui" line="88"/>
-        <source>F6</source>
-        <translation type="unfinished"></translation>
+        <translation>und Ausgänge schreiben</translation>
     </message>
 </context>
 <context>
@@ -1634,7 +1721,7 @@ applicable law.
     <message>
         <location filename="../../../ui_dev/debugios.ui" line="18"/>
         <source>{0}: Inputs | Outputs</source>
-        <translation type="unfinished">{0}: Eingänge | Ausgänge</translation>
+        <translation>{0}: Eingänge | Ausgänge</translation>
     </message>
 </context>
 <context>
@@ -1642,47 +1729,42 @@ applicable law.
     <message>
         <location filename="../../../ui_dev/files.ui" line="14"/>
         <source>File manager</source>
-        <translation type="unfinished">Dateimanager</translation>
+        <translation>Dateimanager</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/files.ui" line="31"/>
         <source>Local computer</source>
-        <translation type="unfinished">Lokaler Computer</translation>
+        <translation>Lokaler Computer</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/files.ui" line="37"/>
         <source>Path to development root:</source>
-        <translation type="unfinished">Entwicklerverzeichnis:</translation>
+        <translation>Entwicklerverzeichnis:</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/files.ui" line="44"/>
         <source>Open developer root directory</source>
-        <translation type="unfinished">Öffne Entwicklerverzeichnis</translation>
+        <translation>Öffne Entwicklerverzeichnis</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/files.ui" line="200"/>
         <source>Reload file list</source>
-        <translation type="unfinished">Dateiliste neu laden</translation>
+        <translation>Dateiliste neu laden</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/files.ui" line="193"/>
         <source>RevPiPyLoad working directory:</source>
-        <translation type="unfinished">RevPiPyLoad Arbeitsverzeichnis:</translation>
+        <translation>RevPiPyLoad Arbeitsverzeichnis:</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/files.ui" line="311"/>
         <source>Stop - Upload - Start</source>
-        <translation type="unfinished">Stoppen - Hochladen -Starten</translation>
-    </message>
-    <message>
-        <location filename="../../../ui_dev/files.ui" line="183"/>
-        <source>/</source>
-        <translation type="unfinished"></translation>
+        <translation>Stoppen - Hochladen -Starten</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/files.ui" line="171"/>
         <source>Revolution Pi</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -1690,152 +1772,117 @@ applicable law.
     <message>
         <location filename="../../../ui_dev/revpicommander.ui" line="56"/>
         <source>PLC &amp;start</source>
-        <translation type="unfinished">SPS &amp;start</translation>
+        <translation>SPS &amp;start</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/revpicommander.ui" line="67"/>
         <source>PLC s&amp;top</source>
-        <translation type="unfinished">SPS s&amp;top</translation>
+        <translation>SPS s&amp;top</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/revpicommander.ui" line="78"/>
         <source>PLC restart</source>
-        <translation type="unfinished">SPS Neustart</translation>
+        <translation>SPS Neustart</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/revpicommander.ui" line="89"/>
         <source>PLC &amp;logs</source>
-        <translation type="unfinished">SPS &amp;Logdateien</translation>
+        <translation>SPS &amp;Logdateien</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/revpicommander.ui" line="102"/>
         <source>Status:</source>
-        <translation type="unfinished">Status:</translation>
+        <translation>Status:</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/revpicommander.ui" line="133"/>
         <source>PLC watch &amp;mode</source>
-        <translation type="unfinished">SPS &amp;Monitor</translation>
+        <translation>SPS &amp;Monitor</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/revpicommander.ui" line="157"/>
         <source>&amp;File</source>
-        <translation type="unfinished">&amp;Datei</translation>
+        <translation>&amp;Datei</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/revpicommander.ui" line="168"/>
         <source>&amp;Help</source>
-        <translation type="unfinished">&amp;Hilfe</translation>
+        <translation>&amp;Hilfe</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/revpicommander.ui" line="176"/>
         <source>&amp;PLC</source>
-        <translation type="unfinished">S&amp;PS</translation>
+        <translation>S&amp;PS</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/revpicommander.ui" line="190"/>
         <source>&amp;Connections</source>
-        <translation type="unfinished">&amp;Verbindungen</translation>
+        <translation>&amp;Verbindungen</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/revpicommander.ui" line="205"/>
         <source>&amp;Connections...</source>
-        <translation type="unfinished">&amp;Verbindungen...</translation>
+        <translation>&amp;Verbindungen...</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/revpicommander.ui" line="213"/>
         <source>&amp;Search Revolution Pi...</source>
-        <translation type="unfinished">&amp;Suche Revolution Pi...</translation>
+        <translation>&amp;Suche Revolution Pi...</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/revpicommander.ui" line="221"/>
         <source>&amp;Quit</source>
-        <translation type="unfinished">&amp;Beenden</translation>
+        <translation>&amp;Beenden</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/revpicommander.ui" line="226"/>
         <source>Visit &amp;webpage...</source>
-        <translation type="unfinished">&amp;Webseite besuchen...</translation>
+        <translation>&amp;Webseite besuchen...</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/revpicommander.ui" line="236"/>
         <source>PLC &amp;logs...</source>
-        <translation type="unfinished">SPS &amp;Logdateien...</translation>
+        <translation>SPS &amp;Logdateien...</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/revpicommander.ui" line="244"/>
         <source>PLC &amp;options...</source>
-        <translation type="unfinished">SPS &amp;Optionen...</translation>
+        <translation>SPS &amp;Optionen...</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/revpicommander.ui" line="252"/>
         <source>PLC progra&amp;m...</source>
-        <translation type="unfinished">SPS Progra&amp;mm...</translation>
+        <translation>SPS Progra&amp;mm...</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/revpicommander.ui" line="260"/>
         <source>PLC de&amp;veloper...</source>
-        <translation type="unfinished">SPS Ent&amp;wickler...</translation>
+        <translation>SPS Ent&amp;wickler...</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/revpicommander.ui" line="268"/>
         <source>piCtory configuraiton...</source>
-        <translation type="unfinished">piCtory Konfiguration...</translation>
+        <translation>piCtory Konfiguration...</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/revpicommander.ui" line="273"/>
         <source>&amp;Disconnect</source>
-        <translation type="unfinished">&amp;Trennen</translation>
+        <translation>&amp;Trennen</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/revpicommander.ui" line="281"/>
         <source>Reset driver...</source>
-        <translation type="unfinished">Treiber zurücksetzen...</translation>
+        <translation>Treiber zurücksetzen...</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/revpicommander.ui" line="286"/>
         <source>RevPi si&amp;mulator...</source>
-        <translation type="unfinished">RevPi Si&amp;mulator...</translation>
-    </message>
-    <message>
-        <location filename="../../../ui_dev/revpicommander.ui" line="208"/>
-        <source>Ctrl+N</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../ui_dev/revpicommander.ui" line="216"/>
-        <source>Ctrl+F</source>
-        <translation type="unfinished"></translation>
+        <translation>RevPi Si&amp;mulator...</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/revpicommander.ui" line="231"/>
         <source>&amp;Info...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../ui_dev/revpicommander.ui" line="239"/>
-        <source>Ctrl+L</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../ui_dev/revpicommander.ui" line="247"/>
-        <source>Ctrl+O</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../ui_dev/revpicommander.ui" line="255"/>
-        <source>Ctrl+P</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../ui_dev/revpicommander.ui" line="263"/>
-        <source>Ctrl+D</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../ui_dev/revpicommander.ui" line="276"/>
-        <source>Ctrl+X</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -1843,32 +1890,32 @@ applicable law.
     <message>
         <location filename="../../../ui_dev/revpilogfile.ui" line="14"/>
         <source>RevPi Python PLC Logfiles</source>
-        <translation type="unfinished">RevPi Python PLC Logdateien</translation>
+        <translation>RevPi Python PLC Logdateien</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/revpilogfile.ui" line="21"/>
         <source>Stay on top of all windows</source>
-        <translation type="unfinished">Immer im Vordergrund bleiben</translation>
+        <translation>Immer im Vordergrund bleiben</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/revpilogfile.ui" line="28"/>
         <source>Linewrap</source>
-        <translation type="unfinished">Zeilenumbruch</translation>
+        <translation>Zeilenumbruch</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/revpilogfile.ui" line="45"/>
         <source>RevPiPyLoad - Logfile</source>
-        <translation type="unfinished">RevPiPyLoad - Logdatei</translation>
+        <translation>RevPiPyLoad - Logdatei</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/revpilogfile.ui" line="85"/>
         <source>Clear view</source>
-        <translation type="unfinished">Ansicht leeren</translation>
+        <translation>Ansicht leeren</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/revpilogfile.ui" line="92"/>
         <source>Python PLC program - Logfile</source>
-        <translation type="unfinished">Python PLC Programm - Logdatei</translation>
+        <translation>Python PLC Programm - Logdatei</translation>
     </message>
 </context>
 </TS>

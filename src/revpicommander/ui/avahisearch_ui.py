@@ -98,7 +98,7 @@ class Ui_diag_search(object):
         self.act_connect_ssh.setText(_translate("diag_search", "Connect via SSH (recommended)"))
         self.act_connect_ssh.setToolTip(_translate("diag_search", "Establish a connection via encrypted SSH tunnel"))
         self.act_connect_xmlrpc.setText(_translate("diag_search", "Connect via XML-RPC"))
-        self.act_connect_xmlrpc.setToolTip(_translate("diag_search", "You have to configure your Revolution Pi to accept this chonnections"))
+        self.act_connect_xmlrpc.setToolTip(_translate("diag_search", "You have to configure your Revolution Pi to accept this connections"))
 from . import ressources_rc
 
 

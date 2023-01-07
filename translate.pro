@@ -15,6 +15,7 @@ SOURCES       = src/revpicommander/aclmanager.py \
 
 FORMS         = ui_dev/aclmanager.ui \
                 ui_dev/avahisearch.ui \
+                ui_dev/backgroundworker.ui \
                 ui_dev/debugcontrol.ui \
                 ui_dev/debugios.ui \
                 ui_dev/files.ui \
@@ -25,6 +26,7 @@ FORMS         = ui_dev/aclmanager.ui \
                 ui_dev/revpiplclist.ui \
                 ui_dev/revpiprogram.ui \
                 ui_dev/simulator.ui \
+                ui_dev/sshauth.ui \
                 ui_dev/revpicommander.ui
 
 TRANSLATIONS  = src/revpicommander/locale/revpicommander_de.ts

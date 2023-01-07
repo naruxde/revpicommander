@@ -148,7 +148,7 @@
     <string>Connect via XML-RPC</string>
    </property>
    <property name="toolTip">
-    <string>You have to configure your Revolution Pi to accept this chonnections</string>
+    <string>You have to configure your Revolution Pi to accept this connections</string>
    </property>
   </action>
  </widget>
