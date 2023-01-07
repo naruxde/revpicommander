@@ -50,7 +50,7 @@ deps:
 .PHONY: venv deps
 
 ## Build, install
-build:
+build: build_ui build_rc
 	$(PYTHON) -m setup sdist
 	$(PYTHON) -m setup bdist_wheel
 
@@ -60,7 +60,7 @@ install:
 .PHONY: build install
 
 ## PyInstaller
-installer_mac:
+installer_mac: build
 	$(PYTHON) -m PyInstaller -n "RevPi Commander" \
 		--add-data="src/$(PACKAGE)/locale:./revpicommander/locale" \
 		--add-data="data/$(PACKAGE).icns:." \
