@@ -17,6 +17,28 @@ from .helper import WidgetData, settings
 from .ui.avahisearch_ui import Ui_diag_search
 
 
+def find_settings_index(address: str, port: int) -> int:
+    """
+    Search index of saved settings.
+
+    :param address: Host or IP address of Revolution Pi
+    :param port: Port to connect
+    :return: Index of settings array or -1, if not found
+    """
+    settings_index = -1
+    for i in range(settings.beginReadArray("connections")):
+        settings.setArrayIndex(i)
+
+        _address = settings.value("address", type=str)
+        _port = settings.value("port", type=int)
+        if address.lower() == _address.lower() and port == _port:
+            settings_index = i
+            break
+
+    settings.endArray()
+    return settings_index
+
+
 class AvahiSearchThread(QtCore.QThread):
     """Search thread for Revolution Pi with installed RevPiPyLoad."""
     added = QtCore.pyqtSignal(str, str, int, str, str)
@@ -109,17 +131,44 @@ class AvahiSearch(QtWidgets.QDialog, Ui_diag_search):
                 self.tb_revpi.setColumnWidth(i, int(column_sizes[i]))
 
         # Global context menus
+        self.cm_connect_actions = QtWidgets.QMenu(self)
+        self.cm_connect_actions.addAction(self.act_connect_ssh)
+        self.cm_connect_actions.addAction(self.act_connect_xmlrpc)
+
         self.cm_quick_actions = QtWidgets.QMenu(self)
         self.cm_quick_actions.addAction(self.act_open_pictory)
         self.cm_quick_actions.addSeparator()
         self.cm_quick_actions.addAction(self.act_copy_ip)
         self.cm_quick_actions.addAction(self.act_copy_host)
+        self.cm_quick_actions.addSeparator()
+        self.cm_quick_actions.addAction(self.act_connect_ssh)
+        self.cm_quick_actions.addAction(self.act_connect_xmlrpc)
 
         self.tb_revpi.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
-        self.tb_revpi.customContextMenuRequested.connect(self._context_menu)
+        self.tb_revpi.customContextMenuRequested.connect(self._cm_quick_exec)
 
     @QtCore.pyqtSlot(QtCore.QPoint)
-    def _context_menu(self, position: QtCore.QPoint) -> None:
+    def _cm_connect_exec(self, position: QtCore.QPoint) -> None:
+        row = self.tb_revpi.currentRow()
+        if row == -1:
+            return
+
+        item = self.tb_revpi.item(row, 0)
+        settings_index = find_settings_index(item.data(WidgetData.address), item.data(WidgetData.port))
+        if settings_index >= 0:
+            self.connect_index = settings_index
+            self.accept()
+            return
+
+        action = self.cm_connect_actions.exec(position)
+        if action:
+            action.trigger()
+
+    @QtCore.pyqtSlot(QtCore.QPoint)
+    def _cm_quick_exec(self, position: QtCore.QPoint) -> None:
+        if self.tb_revpi.currentItem() is None:
+            return
+
         sender = self.sender()
         action = self.cm_quick_actions.exec(sender.mapToGlobal(position))
         if action:
@@ -151,11 +200,12 @@ class AvahiSearch(QtWidgets.QDialog, Ui_diag_search):
         self.th_zero_conf.removed.connect(self.on_avahi_removed)
         self.th_zero_conf.start()
 
-    def _save_connection(self, row: int, no_warn=False) -> int:
+    def _save_connection(self, row: int, ssh_tunnel: bool, no_warn=False) -> int:
         """
         Save the connection from given row to settings.
 
         :param row: Row with connection data
+        :param ssh_tunnel: Save as SSH tunnel connection
         :param no_warn: If True, no message boxes will appear
         :return: Array index of connection (found or saved) or -1
         """
@@ -194,6 +244,10 @@ class AvahiSearch(QtWidgets.QDialog, Ui_diag_search):
         settings.setValue("name", selected_name)
         settings.setValue("port", selected_port)
 
+        settings.setValue("ssh_use_tunnel", ssh_tunnel)
+        settings.setValue("ssh_port", 22)
+        settings.setValue("ssh_user", "pi")
+
         settings.endArray()
 
         if not no_warn:
@@ -219,6 +273,24 @@ class AvahiSearch(QtWidgets.QDialog, Ui_diag_search):
         rc = super(AvahiSearch, self).exec()
         self.th_zero_conf.requestInterruption()
         return rc
+
+    @QtCore.pyqtSlot()
+    def on_act_connect_ssh_triggered(self) -> None:
+        """Copy ip address of selected item to clipboard."""
+        pi.logger.debug("AvahiSearch.on_act_connect_ssh_triggered")
+        if self.tb_revpi.currentRow() == -1:
+            return
+        self.connect_index = self._save_connection(self.tb_revpi.currentRow(), True, no_warn=True)
+        self.accept()
+
+    @QtCore.pyqtSlot()
+    def on_act_connect_xmlrpc_triggered(self) -> None:
+        """Copy ip address of selected item to clipboard."""
+        pi.logger.debug("AvahiSearch.on_act_connect_xmlrpc_triggered")
+        if self.tb_revpi.currentRow() == -1:
+            return
+        self.connect_index = self._save_connection(self.tb_revpi.currentRow(), False, no_warn=True)
+        self.accept()
 
     @QtCore.pyqtSlot()
     def on_act_copy_host_triggered(self) -> None:
@@ -299,10 +371,10 @@ class AvahiSearch(QtWidgets.QDialog, Ui_diag_search):
 
     @QtCore.pyqtSlot(int, int)
     def on_tb_revpi_cellDoubleClicked(self, row: int, column: int) -> None:
-        """Connect to double clicked Revolution Pi."""
+        """Connect to double-clicked Revolution Pi."""
         pi.logger.debug("AvahiSearch.on_tb_revpi_cellDoubleClicked")
-        self.connect_index = self._save_connection(row, no_warn=True)
-        self.accept()
+        cur = QtGui.QCursor()
+        self._cm_connect_exec(cur.pos())
 
     @QtCore.pyqtSlot(int, int, int, int)
     def on_tb_revpi_currentCellChanged(self, row: int, column: int, last_row: int, last_column: int) -> None:
@@ -311,23 +383,23 @@ class AvahiSearch(QtWidgets.QDialog, Ui_diag_search):
         self.btn_save.setEnabled(row >= 0)
 
     @QtCore.pyqtSlot()
-    def on_btn_connect_pressed(self) -> None:
+    def on_btn_connect_clicked(self) -> None:
         """Connect to selected Revolution Pi."""
-        pi.logger.debug("AvahiSearch.on_btn_connect_pressed")
-        if self.tb_revpi.currentRow() == -1:
-            return
-        self.connect_index = self._save_connection(self.tb_revpi.currentRow(), no_warn=True)
-        self.accept()
+        pi.logger.debug("AvahiSearch.on_btn_connect_clicked")
+        # Open context menu under the button
+        pos = self.btn_connect.pos()
+        pos.setY(pos.y() + self.btn_connect.height())
+        self._cm_connect_exec(self.mapToGlobal(pos))
 
     @QtCore.pyqtSlot()
-    def on_btn_save_pressed(self) -> None:
+    def on_btn_save_clicked(self) -> None:
         """Save selected Revolution Pi."""
-        pi.logger.debug("AvahiSearch.on_btn_save_pressed")
+        pi.logger.debug("AvahiSearch.on_btn_save_clicked")
         if self.tb_revpi.currentRow() == -1:
             return
-        self.connect_index = self._save_connection(self.tb_revpi.currentRow())
+        self.connect_index = self._save_connection(self.tb_revpi.currentRow(), ssh_tunnel=True)
 
     @QtCore.pyqtSlot()
-    def on_btn_restart_pressed(self) -> None:
-        """Clean up an restart search thread."""
+    def on_btn_restart_clicked(self) -> None:
+        """Clean up and restart search thread."""
         self._restart_search()

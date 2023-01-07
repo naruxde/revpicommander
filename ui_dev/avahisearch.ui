@@ -135,6 +135,22 @@
     <string>Open piCtory</string>
    </property>
   </action>
+  <action name="act_connect_ssh">
+   <property name="text">
+    <string>Connect via SSH (recommended)</string>
+   </property>
+   <property name="toolTip">
+    <string>Establish a connection via encrypted SSH tunnel</string>
+   </property>
+  </action>
+  <action name="act_connect_xmlrpc">
+   <property name="text">
+    <string>Connect via XML-RPC</string>
+   </property>
+   <property name="toolTip">
+    <string>You have to configure your Revolution Pi to accept this chonnections</string>
+   </property>
+  </action>
  </widget>
  <resources>
   <include location="ressources.qrc"/>

@@ -71,6 +71,10 @@ class Ui_diag_search(object):
         self.act_copy_ip.setObjectName("act_copy_ip")
         self.act_open_pictory = QtWidgets.QAction(diag_search)
         self.act_open_pictory.setObjectName("act_open_pictory")
+        self.act_connect_ssh = QtWidgets.QAction(diag_search)
+        self.act_connect_ssh.setObjectName("act_connect_ssh")
+        self.act_connect_xmlrpc = QtWidgets.QAction(diag_search)
+        self.act_connect_xmlrpc.setObjectName("act_connect_xmlrpc")
 
         self.retranslateUi(diag_search)
         self.btn_box.rejected.connect(diag_search.reject) # type: ignore
@@ -91,6 +95,10 @@ class Ui_diag_search(object):
         self.act_copy_host.setText(_translate("diag_search", "Copy host name"))
         self.act_copy_ip.setText(_translate("diag_search", "Copy IP address"))
         self.act_open_pictory.setText(_translate("diag_search", "Open piCtory"))
+        self.act_connect_ssh.setText(_translate("diag_search", "Connect via SSH (recommended)"))
+        self.act_connect_ssh.setToolTip(_translate("diag_search", "Establish a connection via encrypted SSH tunnel"))
+        self.act_connect_xmlrpc.setText(_translate("diag_search", "Connect via XML-RPC"))
+        self.act_connect_xmlrpc.setToolTip(_translate("diag_search", "You have to configure your Revolution Pi to accept this chonnections"))
 from . import ressources_rc
 
 
