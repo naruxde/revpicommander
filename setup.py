@@ -20,13 +20,12 @@ setup(
         "zeroconf"
     ],
     entry_points={
-        'console_scripts': [
-            'revpicommander = revpicommander.revpicommander:main',
-        ],
         'gui_scripts': [
-            'RevPiCommander = revpicommander.revpicommander:main',
+            'revpicommander-gui = revpicommander.revpicommander:main',
         ],
     },
+
+    platforms=["all"],
 
     url="https://revpimodio.org/revpipyplc/",
     license="GPLv3",
@@ -40,6 +39,7 @@ setup(
                      "of RevPiPyLoad and do IO checks on your local machine. Developing your\n"
                      "control program is very easy with the developer, upload and debug it\n"
                      "over the network.",
+    keywords=["revpi", "revolution pi", "revpimodio", "plc"],
     classifiers=[
         "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
     ],

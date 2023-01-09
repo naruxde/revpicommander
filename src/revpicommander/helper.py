@@ -58,7 +58,7 @@ class RevPiSettings:
         self.port = 55123
         self.timeout = 5
 
-        self.ssh_use_tunnel = False
+        self.ssh_use_tunnel = True
         self.ssh_port = 22
         self.ssh_user = "pi"
 
@@ -92,7 +92,7 @@ class RevPiSettings:
         self.port = self._settings.value("port", 55123, type=int)
         self.timeout = self._settings.value("timeout", 5, type=int)
 
-        self.ssh_use_tunnel = self._settings.value("ssh_use_tunnel", False, type=bool)
+        self.ssh_use_tunnel = self._settings.value("ssh_use_tunnel", True, type=bool)
         self.ssh_port = self._settings.value("ssh_port", 22, type=int)
         self.ssh_user = self._settings.value("ssh_user", "pi", type=str)
 
