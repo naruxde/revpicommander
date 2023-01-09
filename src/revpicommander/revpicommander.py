@@ -54,7 +54,7 @@ class RevPiCommander(QtWidgets.QMainWindow, Ui_win_revpicommander):
         self.win_files = RevPiFiles(self)
         self.win_log = revpilogfile.RevPiLogfile(self)
 
-        self.btn_plc_logs.pressed.connect(self.on_act_logs_triggered)
+        self.btn_plc_logs.clicked.connect(self.on_act_logs_triggered)
 
         helper.cm.connection_disconnected.connect(self.on_cm_connection_disconnected)
         helper.cm.connection_disconnecting.connect(self.on_cm_connection_disconnecting)

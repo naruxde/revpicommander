@@ -123,7 +123,7 @@ class RevPiPlcList(QtWidgets.QDialog, Ui_diag_connections):
         :return: Dialog status
         """
         self._load_settings()
-        self.on_btn_add_pressed(presets)
+        self.on_btn_add_clicked(presets)
         return super(RevPiPlcList, self).exec()
 
     @QtCore.pyqtSlot(QtWidgets.QAbstractButton)
@@ -231,15 +231,15 @@ class RevPiPlcList(QtWidgets.QDialog, Ui_diag_connections):
             self.cbb_folder.setCurrentText(current.text(0) if current else "")
 
     @QtCore.pyqtSlot()
-    def on_btn_up_pressed(self):
+    def on_btn_up_clicked(self):
         self._move_item(-1)
 
     @QtCore.pyqtSlot()
-    def on_btn_down_pressed(self):
+    def on_btn_down_clicked(self):
         self._move_item(1)
 
     @QtCore.pyqtSlot()
-    def on_btn_delete_pressed(self):
+    def on_btn_delete_clicked(self):
         """Remove selected entry."""
         item = self.tre_connections.currentItem()
         if item and item.type() == NodeType.CON:
@@ -253,7 +253,7 @@ class RevPiPlcList(QtWidgets.QDialog, Ui_diag_connections):
         self._edit_state()
 
     @QtCore.pyqtSlot()
-    def on_btn_add_pressed(self, settings_preset: RevPiSettings = None):
+    def on_btn_add_clicked(self, settings_preset: RevPiSettings = None):
         """Create new element."""
         settings = settings_preset or RevPiSettings()
         new_item = QtWidgets.QTreeWidgetItem(NodeType.CON)

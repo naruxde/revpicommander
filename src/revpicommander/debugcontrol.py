@@ -7,7 +7,7 @@ __license__ = "GPLv3"
 import pickle
 from xmlrpc.client import Binary, Fault, MultiCall, MultiCallIterator
 
-from PyQt5 import QtCore, QtWidgets
+from PyQt5 import QtCore, QtGui, QtWidgets
 
 from . import helper
 from . import proginit as pi
@@ -75,6 +75,16 @@ class DebugControl(QtWidgets.QWidget, Ui_wid_debugcontrol):
         )
         self.cbx_write.setEnabled(False)
         self.cbx_stay_on_top.setChecked(helper.settings.value("debugcontrol/stay_on_top", False, bool))
+
+        self.shc_read_io = QtWidgets.QShortcut(QtGui.QKeySequence("F4"), self)
+        self.shc_read_io.setContext(QtCore.Qt.ApplicationShortcut)
+        self.shc_read_io.activated.connect(self.on_btn_read_io_pressed)
+        self.shc_refresh_io = QtWidgets.QShortcut(QtGui.QKeySequence("F5"), self)
+        self.shc_refresh_io.setContext(QtCore.Qt.ApplicationShortcut)
+        self.shc_refresh_io.activated.connect(self.on_btn_refresh_io_pressed)
+        self.shc_write_o = QtWidgets.QShortcut(QtGui.QKeySequence("F6"), self)
+        self.shc_write_o.setContext(QtCore.Qt.ApplicationShortcut)
+        self.shc_write_o.activated.connect(self.on_btn_write_o_clicked)
 
     def __del__(self):
         pi.logger.debug("DebugControl.__del__")
@@ -323,8 +333,6 @@ class DebugControl(QtWidgets.QWidget, Ui_wid_debugcontrol):
                 dict_inps[position], dict_outs[position]
             )
             win.device_closed.connect(self.on_device_closed)
-            win.do_read.connect(self.btn_refresh_io.pressed)
-            win.do_write.connect(self.btn_write_o.pressed)
             self.dict_windows[position] = win
 
             btn = QtWidgets.QPushButton(self.gb_devices)
@@ -380,9 +388,9 @@ class DebugControl(QtWidgets.QWidget, Ui_wid_debugcontrol):
             self._work_values(refresh=True)
 
     @QtCore.pyqtSlot()
-    def on_btn_write_o_pressed(self):
+    def on_btn_write_o_clicked(self):
         """Write outputs."""
-        pi.logger.debug("DebugControl.on_btn_write_o_pressed")
+        pi.logger.debug("DebugControl.on_btn_write_o_clicked")
         if not self.cbx_write.isChecked() and (helper.cm.xml_mode >= 3 or helper.cm.simulating):
             for win in self.dict_windows.values():  # type: DebugIos
                 win.reset_label_colors()

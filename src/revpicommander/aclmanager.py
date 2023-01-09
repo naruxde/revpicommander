@@ -85,7 +85,7 @@ class AclManager(QtWidgets.QDialog, Ui_diag_aclmanager):
                 )
             ) == QtWidgets.QMessageBox.Yes
             if ask:
-                self.on_btn_add_pressed()
+                self.on_btn_add_clicked()
 
         if self.__check_load_error():
             return
@@ -252,11 +252,11 @@ class AclManager(QtWidgets.QDialog, Ui_diag_aclmanager):
         self.btn_remove.setEnabled(not self.__read_only and selected_rows > 0)
 
     @QtCore.pyqtSlot()
-    def on_btn_edit_pressed(self):
+    def on_btn_edit_clicked(self):
         self.__load_selected_entry()
 
     @QtCore.pyqtSlot()
-    def on_btn_remove_pressed(self):
+    def on_btn_remove_clicked(self):
         lst_selected_row_indexes = [mi.row() for mi in self.tb_acls.selectionModel().selectedRows(0)]
         if len(lst_selected_row_indexes) == 0:
             return
@@ -355,7 +355,7 @@ class AclManager(QtWidgets.QDialog, Ui_diag_aclmanager):
         self._check_all_filled()
 
     @QtCore.pyqtSlot()
-    def on_btn_add_pressed(self):
+    def on_btn_add_clicked(self):
         """Add a new entry to acl table."""
         ip_level = "{0}.{1}.{2}.{3},{4}".format(
             self.txt_ip_a.text(),
@@ -366,7 +366,7 @@ class AclManager(QtWidgets.QDialog, Ui_diag_aclmanager):
         )
         if self.__re_ipacl.match(ip_level):
             self.__table_add_acl(ip_level)
-            self.on_btn_clear_pressed()
+            self.on_btn_clear_clicked()
         else:
             QtWidgets.QMessageBox.critical(
                 self, self.tr("Error"), self.tr(
@@ -376,7 +376,7 @@ class AclManager(QtWidgets.QDialog, Ui_diag_aclmanager):
             )
 
     @QtCore.pyqtSlot()
-    def on_btn_clear_pressed(self):
+    def on_btn_clear_clicked(self):
         """Clear entry widgets."""
         self.txt_ip_a.clear()
         self.txt_ip_b.clear()

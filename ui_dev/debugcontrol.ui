@@ -53,26 +53,42 @@
       <item>
        <widget class="QPushButton" name="btn_read_io">
         <property name="toolTip">
-         <string>Read all IO values and discard local changes (F4)</string>
+         <string>Read all IO values and discard local changes (F4)
+
+Hold this button pressed and it will refresh the IOs every 200 ms.</string>
         </property>
         <property name="text">
          <string>Read &amp;all IO values</string>
         </property>
-        <property name="shortcut">
-         <string notr="true">F4</string>
+        <property name="autoRepeat">
+         <bool>true</bool>
+        </property>
+        <property name="autoRepeatDelay">
+         <number>100</number>
+        </property>
+        <property name="autoRepeatInterval">
+         <number>200</number>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QPushButton" name="btn_refresh_io">
         <property name="toolTip">
-         <string>Refresh all IO values which are locally not changed (F5)</string>
+         <string>Refresh all IO values which are locally not changed (F5)
+
+Hold this button pressed and it will refresh the IOs every 200 ms.</string>
         </property>
         <property name="text">
          <string>&amp;Refresh unchanged IOs</string>
         </property>
-        <property name="shortcut">
-         <string notr="true">F5</string>
+        <property name="autoRepeat">
+         <bool>true</bool>
+        </property>
+        <property name="autoRepeatDelay">
+         <number>100</number>
+        </property>
+        <property name="autoRepeatInterval">
+         <number>200</number>
         </property>
        </widget>
       </item>
@@ -83,9 +99,6 @@
         </property>
         <property name="text">
          <string>&amp;Write changed outputs</string>
-        </property>
-        <property name="shortcut">
-         <string notr="true">F6</string>
         </property>
        </widget>
       </item>

@@ -18,8 +18,7 @@ class DebugIos(QtWidgets.QMainWindow, Ui_win_debugios):
 
     device_closed = QtCore.pyqtSignal(int)
     """This window was closed."""
-    do_read = QtCore.pyqtSignal()
-    do_write = QtCore.pyqtSignal()
+
     search_class = (QtWidgets.QLineEdit, QtWidgets.QDoubleSpinBox, QtWidgets.QCheckBox)
 
     def __init__(self, position: int, name: str, inputs: list, outputs: list, parent=None):
@@ -47,11 +46,6 @@ class DebugIos(QtWidgets.QMainWindow, Ui_win_debugios):
         self._create_io(self.inputs, self.saw_inp, True)
         self._create_io(self.outputs, self.saw_out, False)
         self.style_sheet = "background-color: red;"
-
-        shc_read = QtWidgets.QShortcut(QtGui.QKeySequence("F5"), self)
-        shc_read.activated.connect(self.do_read)
-        shc_write = QtWidgets.QShortcut(QtGui.QKeySequence("F6"), self)
-        shc_write.activated.connect(self.do_write)
 
     def __del__(self):
         pi.logger.debug("DebugIos.__del__")

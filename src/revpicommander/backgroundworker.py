@@ -45,7 +45,7 @@ class BackgroundWorker(QtCore.QThread):
         while counter != 0:
             counter -= 1
             self.msleep(250)
-            if self._check_cancel():
+            if self.check_cancel():
                 break
 
     def run(self) -> None:
@@ -54,7 +54,7 @@ class BackgroundWorker(QtCore.QThread):
         self.status_message.emit("Started dummy thread...")
         self.wait_interruptable(5)
         self.status_message.emit("Completed dummy thread.")
-        self._save_wait(3)
+        self.wait_interruptable(2)
 
 
 class WorkerDialog(QtWidgets.QDialog, Ui_diag_backgroundworker):

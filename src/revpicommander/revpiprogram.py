@@ -318,7 +318,7 @@ class RevPiProgram(QtWidgets.QDialog, Ui_diag_program):
         self.cbx_pictory.setEnabled(index >= 1)
 
     @QtCore.pyqtSlot()
-    def on_btn_program_download_pressed(self):
+    def on_btn_program_download_clicked(self):
         """Download plc program from Revolution Pi."""
         if not helper.cm.connected:
             return
@@ -396,7 +396,7 @@ class RevPiProgram(QtWidgets.QDialog, Ui_diag_program):
                 )
 
     @QtCore.pyqtSlot()
-    def on_btn_program_upload_pressed(self):
+    def on_btn_program_upload_clicked(self):
         """Upload plc program to Revolution Pi."""
         if not helper.cm.connected:
             return
@@ -589,7 +589,7 @@ class RevPiProgram(QtWidgets.QDialog, Ui_diag_program):
     # region #      REGION: Control files
 
     @QtCore.pyqtSlot()
-    def on_btn_pictory_download_pressed(self):
+    def on_btn_pictory_download_clicked(self):
         """Download piCtory configuration."""
         if not helper.cm.connected:
             return
@@ -630,7 +630,7 @@ class RevPiProgram(QtWidgets.QDialog, Ui_diag_program):
             )
 
     @QtCore.pyqtSlot()
-    def on_btn_pictory_upload_pressed(self):
+    def on_btn_pictory_upload_clicked(self):
         if not helper.cm.connected:
             return
 
@@ -650,7 +650,7 @@ class RevPiProgram(QtWidgets.QDialog, Ui_diag_program):
         self._upload_pictory(diag_open.selectedFiles()[0])
 
     @QtCore.pyqtSlot()
-    def on_btn_procimg_download_pressed(self):
+    def on_btn_procimg_download_clicked(self):
         """Download process image."""
         if not helper.cm.connected:
             return

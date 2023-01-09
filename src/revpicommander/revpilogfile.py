@@ -166,12 +166,12 @@ class RevPiLogfile(QtWidgets.QMainWindow, Ui_win_revpilogfile):
             self.th_data.resume()
 
     @QtCore.pyqtSlot()
-    def on_btn_daemon_pressed(self):
+    def on_btn_daemon_clicked(self):
         """Clear the daemon log view."""
         self.txt_daemon.clear()
 
     @QtCore.pyqtSlot()
-    def on_btn_app_pressed(self):
+    def on_btn_app_clicked(self):
         """Clear the app log view."""
         self.txt_app.clear()
 

@@ -207,7 +207,7 @@ class RevPiFiles(QtWidgets.QMainWindow, Ui_win_files):
             elif item.type() == NodeType.FILE:
                 item.setSelected(value)
 
-    def __item_selection_changed(self, tree_view: QtWidgets.QTreeView):
+    def __item_selection_changed(self, tree_view: QtWidgets.QTreeWidget):
         """Manager vor item selection of three views."""
         item = tree_view.currentItem()
         if item is None:
@@ -434,14 +434,14 @@ class RevPiFiles(QtWidgets.QMainWindow, Ui_win_files):
     # endregion # # # # #
 
     @QtCore.pyqtSlot()
-    def on_btn_all_pressed(self):
-        pi.logger.debug("RevPiFiles.on_btn_all_pressed")
+    def on_btn_all_clicked(self):
+        pi.logger.debug("RevPiFiles.on_btn_all_clicked")
         self._do_my_job(True)
         self.file_list_revpi()
 
     @QtCore.pyqtSlot()
-    def on_btn_select_local_pressed(self):
-        pi.logger.debug("RevPiFiles.on_btn_select_pressed")
+    def on_btn_select_local_clicked(self):
+        pi.logger.debug("RevPiFiles.on_btn_select_clicked")
 
         diag_folder = QtWidgets.QFileDialog(
             self, self.tr("Select folder..."),
@@ -471,26 +471,26 @@ class RevPiFiles(QtWidgets.QMainWindow, Ui_win_files):
         self._load_files_local(False)
 
     @QtCore.pyqtSlot()
-    def on_btn_refresh_local_pressed(self):
-        pi.logger.debug("RevPiFiles.on_btn_refresh_pressed")
+    def on_btn_refresh_local_clicked(self):
+        pi.logger.debug("RevPiFiles.on_btn_refresh_clicked")
         self._load_files_local(False)
 
     @QtCore.pyqtSlot()
-    def on_btn_refresh_revpi_pressed(self):
-        pi.logger.debug("RevPiFiles.on_btn_refresh_revpi_pressed")
+    def on_btn_refresh_revpi_clicked(self):
+        pi.logger.debug("RevPiFiles.on_btn_refresh_revpi_clicked")
         self._load_files_revpi(False)
 
     @QtCore.pyqtSlot()
-    def on_btn_to_right_pressed(self):
+    def on_btn_to_right_clicked(self):
         """Upload selected files to revolution pi."""
-        pi.logger.debug("RevPiFiles.on_btn_to_right_pressed")
+        pi.logger.debug("RevPiFiles.on_btn_to_right_clicked")
         self._do_my_job(False)
         self._load_files_revpi(True)
 
     @QtCore.pyqtSlot()
-    def on_btn_to_left_pressed(self):
+    def on_btn_to_left_clicked(self):
         """Download selected file."""
-        pi.logger.debug("RevPiFiles.on_btn_to_left_pressed")
+        pi.logger.debug("RevPiFiles.on_btn_to_left_clicked")
 
         override = None
         for item in self.tree_files_revpi.selectedItems():
@@ -535,9 +535,9 @@ class RevPiFiles(QtWidgets.QMainWindow, Ui_win_files):
         self._load_files_local()
 
     @QtCore.pyqtSlot()
-    def on_btn_delete_revpi_pressed(self):
+    def on_btn_delete_revpi_clicked(self):
         """Remove selected files from working directory on revolution pi."""
-        pi.logger.debug("RevPiFiles.btn_delete_revpi_pressed")
+        pi.logger.debug("RevPiFiles.btn_delete_revpi_clicked")
 
         lst_delete = []
         for item in self.tree_files_revpi.selectedItems():
