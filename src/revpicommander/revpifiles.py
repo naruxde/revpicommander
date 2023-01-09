@@ -43,13 +43,12 @@ class UploadFiles(BackgroundWorker):
             progress_counter += 1
 
             # Remove base dir of file to set relative for PyLoad
-            send_name = file_name.replace(helper.cm.develop_watch_path, "")[1:]
+            send_name = file_name.replace(helper.cm.settings.watch_path, "")[1:]
             self.status_message.emit(send_name)
 
             # Check whether this is the auto start program
             if send_name == opt_program:
                 self.plc_program_included = True
-
 
             # Transfer file
             try:
@@ -83,7 +82,7 @@ class RevPiFiles(QtWidgets.QMainWindow, Ui_win_files):
         self.dc_settings = {}
         self.tree_files_counter = 0
         self.tree_files_counter_max = 10000
-        self.lbl_path_local.setText(helper.cm.develop_watch_path or self.tr("Please select..."))
+        self.lbl_path_local.setText(helper.cm.settings.watch_path or self.tr("Please select..."))
         self.lbl_path_local.setToolTip(self.lbl_path_local.text())
 
         self.btn_all.setEnabled(False)
@@ -91,7 +90,7 @@ class RevPiFiles(QtWidgets.QMainWindow, Ui_win_files):
         self.btn_to_right.setEnabled(False)
         self.btn_delete_revpi.setEnabled(False)
 
-        if helper.cm.develop_watch_path:
+        if helper.cm.settings.watch_path:
             self._load_files_local(True)
         if helper.cm.connected:
             self._load_files_revpi(True)
@@ -176,7 +175,7 @@ class RevPiFiles(QtWidgets.QMainWindow, Ui_win_files):
         if "plcdownload_file" not in helper.cm.xml_funcs:
             self.btn_to_left.setEnabled(False)
             self.btn_to_left.setToolTip(self.tr("The RevPiPyLoad version on the Revolution Pi is to old."))
-        elif not helper.cm.develop_watch_path:
+        elif not helper.cm.settings.watch_path:
             self.btn_to_left.setEnabled(False)
             self.btn_to_left.setToolTip(self.tr("Choose a local directory first."))
         else:
@@ -231,7 +230,7 @@ class RevPiFiles(QtWidgets.QMainWindow, Ui_win_files):
     @QtCore.pyqtSlot()
     def on_tree_files_local_itemSelectionChanged(self):
         self.__item_selection_changed(self.tree_files_local)
-        helper.cm.develop_watch_files = self.file_list_local()
+        helper.cm.settings.watch_files = self.file_list_local()
 
     @QtCore.pyqtSlot()
     def on_tree_files_revpi_itemSelectionChanged(self):
@@ -288,7 +287,7 @@ class RevPiFiles(QtWidgets.QMainWindow, Ui_win_files):
                 else:
                     self.tree_files_local.addTopLevelItem(item)
 
-                item.setSelected(de.path in helper.cm.develop_watch_files)
+                item.setSelected(de.path in helper.cm.settings.watch_files)
                 self._parent_selection_state(item)
 
     def _load_files_local(self, silent=False):
@@ -302,7 +301,7 @@ class RevPiFiles(QtWidgets.QMainWindow, Ui_win_files):
         self.tree_files_counter = 0
         self.tree_files_local.blockSignals(True)
         self.tree_files_local.clear()
-        self.__insert_files_local(helper.cm.develop_watch_path)
+        self.__insert_files_local(helper.cm.settings.watch_path)
         self.tree_files_local.sortItems(0, QtCore.Qt.AscendingOrder)
         self.tree_files_local.blockSignals(False)
 
@@ -446,7 +445,7 @@ class RevPiFiles(QtWidgets.QMainWindow, Ui_win_files):
 
         diag_folder = QtWidgets.QFileDialog(
             self, self.tr("Select folder..."),
-            helper.cm.develop_watch_path,
+            helper.cm.settings.watch_path,
         )
         diag_folder.setFileMode(QtWidgets.QFileDialog.DirectoryOnly)
         if diag_folder.exec() != QtWidgets.QFileDialog.Accepted:
@@ -460,14 +459,14 @@ class RevPiFiles(QtWidgets.QMainWindow, Ui_win_files):
                     "Can not access the folder '{0}' to read files."
                 )
             )
-            helper.cm.develop_watch_files = []
-            helper.cm.develop_watch_path = ""
+            helper.cm.settings.watch_files = []
+            helper.cm.settings.watch_path = ""
             return
 
         self.lbl_path_local.setText(selected_dir)
         self.lbl_path_local.setToolTip(self.lbl_path_local.text())
-        helper.cm.develop_watch_path = selected_dir
-        helper.cm.develop_watch_files = []
+        helper.cm.settings.watch_path = selected_dir
+        helper.cm.settings.watch_files = []
 
         self._load_files_local(False)
 
@@ -511,7 +510,7 @@ class RevPiFiles(QtWidgets.QMainWindow, Ui_win_files):
                     ).format(file_name)
                 )
             else:
-                file_name = os.path.join(helper.cm.develop_watch_path, file_name)
+                file_name = os.path.join(helper.cm.settings.watch_path, file_name)
                 if override is None and os.path.exists(file_name):
                     rc_diag = QtWidgets.QMessageBox.question(
                         self, self.tr("Override files..."), self.tr(
@@ -530,7 +529,7 @@ class RevPiFiles(QtWidgets.QMainWindow, Ui_win_files):
 
                 os.makedirs(os.path.dirname(file_name), exist_ok=True)
                 file_data = gzip.decompress(rc)
-                with open(os.path.join(helper.cm.develop_watch_path, file_name), "wb") as fh:
+                with open(os.path.join(helper.cm.settings.watch_path, file_name), "wb") as fh:
                     fh.write(file_data)
 
         self._load_files_local()

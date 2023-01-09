@@ -8,7 +8,7 @@ from setuptools import find_namespace_packages, setup
 
 setup(
     name="revpicommander",
-    version="0.9.10rc1",
+    version="0.9.10rc2",
 
     packages=find_namespace_packages("src"),
     package_dir={'': 'src'},

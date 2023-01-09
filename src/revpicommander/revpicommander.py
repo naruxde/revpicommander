@@ -5,10 +5,10 @@
 __author__ = "Sven Sager"
 __copyright__ = "Copyright (C) 2018 Sven Sager"
 __license__ = "GPLv3"
-__version__ = "0.9.10rc1"
+__version__ = "0.9.10rc2"
 
 import webbrowser
-from os.path import basename, dirname, join
+from os.path import dirname, join
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
@@ -17,6 +17,7 @@ from . import proginit as pi
 from . import revpilogfile
 from .avahisearch import AvahiSearch
 from .debugcontrol import DebugControl
+from .helper import RevPiSettings
 from .revpifiles import RevPiFiles
 from .revpiinfo import RevPiInfo
 from .revpioption import RevPiOption
@@ -61,14 +62,14 @@ class RevPiCommander(QtWidgets.QMainWindow, Ui_win_revpicommander):
         helper.cm.connection_error_observed.connect(self.on_cm_connection_error_observed)
         helper.cm.status_changed.connect(self.on_cm_status_changed)
 
-        self.restoreGeometry(helper.settings.value("geo", b''))
+        self.restoreGeometry(helper.settings.value("revpicommander/geo", b''))
 
         self.setWindowFlag(QtCore.Qt.WindowMaximizeButtonHint, False)
 
     def closeEvent(self, a0: QtGui.QCloseEvent) -> None:
         pi.logger.debug("RevPiCommander.closeEvent")
         helper.cm.pyload_disconnect()
-        helper.settings.setValue("geo", self.saveGeometry())
+        helper.settings.setValue("revpicommander/geo", self.saveGeometry())
 
     def _set_gui_control_states(self):
         """Setup states of actions and buttons."""
@@ -95,9 +96,6 @@ class RevPiCommander(QtWidgets.QMainWindow, Ui_win_revpicommander):
 
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
     # region #      REGION: Connection management
-
-    def _pyload_connect(self, settings_index: int) -> None:
-        helper.cm.pyload_connect(settings_index, self)
 
     @QtCore.pyqtSlot(str)
     def on_cm_connection_error_observed(self, message: str):
@@ -148,8 +146,8 @@ class RevPiCommander(QtWidgets.QMainWindow, Ui_win_revpicommander):
                 helper.cm.simulating_procimg,
             ))
         else:
-            self.txt_host.setText(helper.cm.name)
-            self.txt_connection.setText(helper.cm.address)
+            self.txt_host.setText(helper.cm.settings.name)
+            self.txt_connection.setText(helper.cm.settings.address)
         self.win_files = RevPiFiles(self)
 
     @QtCore.pyqtSlot(str, str)
@@ -169,33 +167,26 @@ class RevPiCommander(QtWidgets.QMainWindow, Ui_win_revpicommander):
         self.men_connections.clear()
         self.dict_men_connections_subfolder.clear()
 
-        for i in range(helper.settings.beginReadArray("connections")):
-            helper.settings.setArrayIndex(i)
-
-            if helper.settings.value("folder"):
-                if helper.settings.value("folder") not in self.dict_men_connections_subfolder:
+        for settings in helper.all_revpi_settings():  # type: RevPiSettings
+            if settings.folder:
+                if settings.folder not in self.dict_men_connections_subfolder:
                     men_sub = QtWidgets.QMenu(self.men_connections)
-                    men_sub.setTitle(helper.settings.value("folder"))
-                    self.dict_men_connections_subfolder[helper.settings.value("folder")] = men_sub
+                    men_sub.setTitle(settings.folder)
+                    self.dict_men_connections_subfolder[settings.folder] = men_sub
                     self.men_connections.addMenu(men_sub)
-                parent_menu = self.dict_men_connections_subfolder[helper.settings.value("folder")]
+                parent_menu = self.dict_men_connections_subfolder[settings.folder]
             else:
                 parent_menu = self.men_connections
 
-            display_name = helper.settings.value("name")
-            if helper.settings.value("ssh_use_tunnel", False, bool):
+            display_name = settings.name
+            if settings.ssh_use_tunnel:
                 display_name += " (SSH)"
 
             act = QtWidgets.QAction(parent_menu)
             act.setText(display_name)
-            act.setData(i)
-            act.setToolTip("{0}:{1}".format(
-                helper.settings.value("address"),
-                helper.settings.value("port"),
-            ))
+            act.setData(settings)
+            act.setToolTip("{0}:{1}".format(settings.address, settings.port))
             parent_menu.addAction(act)
-
-        helper.settings.endArray()
 
     @QtCore.pyqtSlot()
     def on_act_connections_triggered(self):
@@ -207,8 +198,11 @@ class RevPiCommander(QtWidgets.QMainWindow, Ui_win_revpicommander):
     def on_act_search_triggered(self):
         """Search for Revolution Pi with zero conf."""
         if self.diag_search.exec() == QtWidgets.QDialog.Accepted:
-            if self.diag_search.connect_index >= 0:
-                self._pyload_connect(self.diag_search.connect_index)
+            if self.diag_search.connect_settings:
+                if self.diag_search.just_save:
+                    self.diag_connections.exec_with_presets(self.diag_search.connect_settings)
+                else:
+                    helper.cm.pyload_connect(self.diag_search.connect_settings, self)
 
         self._load_men_connections()
 
@@ -367,7 +361,7 @@ class RevPiCommander(QtWidgets.QMainWindow, Ui_win_revpicommander):
     @QtCore.pyqtSlot(QtWidgets.QAction)
     def on_men_connections_triggered(self, action: QtWidgets.QAction):
         """A connection is selected in the men_connections menu."""
-        self._pyload_connect(action.data())
+        helper.cm.pyload_connect(action.data(), self)
 
     @QtCore.pyqtSlot()
     def on_act_webpage_triggered(self):
@@ -506,4 +500,5 @@ def main() -> int:
 
 if __name__ == "__main__":
     import sys
+
     sys.exit(main())

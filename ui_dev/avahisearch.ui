@@ -151,6 +151,14 @@
     <string>You have to configure your Revolution Pi to accept this connections</string>
    </property>
   </action>
+  <action name="act_connect">
+   <property name="text">
+    <string>Connect</string>
+   </property>
+   <property name="toolTip">
+    <string>Connect to Revoluton Pi</string>
+   </property>
+  </action>
  </widget>
  <resources>
   <include location="ressources.qrc"/>

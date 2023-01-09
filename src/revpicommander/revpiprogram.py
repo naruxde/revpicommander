@@ -58,8 +58,7 @@ class RevPiProgram(QtWidgets.QDialog, Ui_diag_program):
 
         :return: True, if unsaved changes was found
         """
-        return \
-            self.cbb_plcprogram.currentText() != self.dc.get("plcprogram", "") or \
+        return self.cbb_plcprogram.currentText() != self.dc.get("plcprogram", "") or \
             self.txt_plcarguments.text() != self.dc.get("plcarguments", "") or \
             self.rbn_pythonversion_2.isChecked() != (self.dc.get("pythonversion", 3) == 2) or \
             self.rbn_pythonversion_3.isChecked() != (self.dc.get("pythonversion", 3) == 3) or \
@@ -213,7 +212,7 @@ class RevPiProgram(QtWidgets.QDialog, Ui_diag_program):
                 )
             )
         elif ec == 0:
-            helper.cm.program_last_pictory_file = filename
+            helper.cm.settings.last_pictory_file = filename
             if ask == QtWidgets.QMessageBox.Yes:
                 QtWidgets.QMessageBox.information(
                     self, self.tr("Success"), self.tr(
@@ -324,16 +323,11 @@ class RevPiProgram(QtWidgets.QDialog, Ui_diag_program):
         if not helper.cm.connected:
             return
 
-        selected_dir = ""
-
         if self.cbb_format.currentIndex() == 0:
             # Save files as zip archive
             diag_save = QtWidgets.QFileDialog(
                 self, self.tr("Save ZIP archive..."),
-                os.path.join(
-                    helper.cm.program_last_zip_file,
-                    "{0}.zip".format(helper.cm.name)
-                ),
+                helper.cm.settings.last_zip_file or "{0}.zip".format(helper.cm.settings.name),
                 self.tr("ZIP archive (*.zip);;All files (*.*)")
             )
             diag_save.setAcceptMode(QtWidgets.QFileDialog.AcceptSave)
@@ -345,16 +339,13 @@ class RevPiProgram(QtWidgets.QDialog, Ui_diag_program):
             filename = diag_save.selectedFiles()[0]
             fh = open(filename, "wb")
 
-            helper.cm.program_last_zip_file = filename
+            helper.cm.settings.last_zip_file = filename
 
         elif self.cbb_format.currentIndex() == 1:
             # Save files as TarGz archive
             diag_save = QtWidgets.QFileDialog(
                 self, self.tr("Save TGZ archive..."),
-                os.path.join(
-                    helper.cm.program_last_tar_file,
-                    "{0}.tgz".format(helper.cm.name)
-                ),
+                helper.cm.settings.last_tar_file or "{0}.tgz".format(helper.cm.settings.name),
                 self.tr("TGZ archive (*.tgz);;All files (*.*)")
             )
             diag_save.setAcceptMode(QtWidgets.QFileDialog.AcceptSave)
@@ -366,7 +357,7 @@ class RevPiProgram(QtWidgets.QDialog, Ui_diag_program):
             filename = diag_save.selectedFiles()[0]
             fh = open(filename, "wb")
 
-            helper.cm.program_last_tar_file = filename
+            helper.cm.settings.last_tar_file = filename
 
         else:
             # Other indexes are not allowed for download
@@ -426,7 +417,7 @@ class RevPiProgram(QtWidgets.QDialog, Ui_diag_program):
             # Upload zip archive content
             diag_open = QtWidgets.QFileDialog(
                 self, self.tr("Upload content of ZIP archive..."),
-                helper.cm.program_last_file_upload,
+                helper.cm.settings.last_file_upload,
                 self.tr("ZIP archive (*.zip);;All files (*.*)")
             )
             diag_open.setAcceptMode(QtWidgets.QFileDialog.AcceptOpen)
@@ -438,7 +429,7 @@ class RevPiProgram(QtWidgets.QDialog, Ui_diag_program):
                 return
 
             filename = diag_open.selectedFiles()[0]
-            helper.cm.program_last_file_upload = filename
+            helper.cm.settings.last_file_upload = filename
             if zipfile.is_zipfile(filename):
                 dirtmp = mkdtemp()
                 fhz = zipfile.ZipFile(filename)
@@ -460,7 +451,7 @@ class RevPiProgram(QtWidgets.QDialog, Ui_diag_program):
             # Upload TarGz content
             diag_open = QtWidgets.QFileDialog(
                 self, self.tr("Upload content of TAR archive..."),
-                helper.cm.program_last_file_upload,
+                helper.cm.settings.last_file_upload,
                 self.tr("TAR archive (*.tgz);;All files (*.*)")
             )
             diag_open.setAcceptMode(QtWidgets.QFileDialog.AcceptOpen)
@@ -472,7 +463,7 @@ class RevPiProgram(QtWidgets.QDialog, Ui_diag_program):
                 return
 
             filename = diag_open.selectedFiles()[0]
-            helper.cm.program_last_file_upload = filename
+            helper.cm.settings.last_file_upload = filename
             if tarfile.is_tarfile(filename):
                 dirtmp = mkdtemp()
                 fht = tarfile.open(filename)
@@ -606,8 +597,8 @@ class RevPiProgram(QtWidgets.QDialog, Ui_diag_program):
         diag_save = QtWidgets.QFileDialog(
             self, self.tr("Save piCtory file..."),
             os.path.join(
-                helper.cm.program_last_dir_pictory,
-                "{0}.rsc".format(helper.cm.name)
+                helper.cm.settings.last_dir_pictory,
+                "{0}.rsc".format(helper.cm.settings.name)
             ),
             self.tr("piCtory file (*.rsc);;All files (*.*)")
         )
@@ -619,7 +610,7 @@ class RevPiProgram(QtWidgets.QDialog, Ui_diag_program):
             return
 
         filename = diag_save.selectedFiles()[0]
-        helper.cm.program_last_dir_pictory = os.path.dirname(filename)
+        helper.cm.settings.last_dir_pictory = os.path.dirname(filename)
         bin_buffer = helper.cm.call_remote_function("get_pictoryrsc")  # type: Binary
         if bin_buffer is None:
             QtWidgets.QMessageBox.critical(
@@ -645,7 +636,7 @@ class RevPiProgram(QtWidgets.QDialog, Ui_diag_program):
 
         diag_open = QtWidgets.QFileDialog(
             self, self.tr("Upload piCtory file..."),
-            helper.cm.program_last_pictory_file,
+            helper.cm.settings.last_pictory_file or "{0}.rsc".format(helper.cm.settings.name),
             self.tr("piCtory file (*.rsc);;All files (*.*)")
         )
         diag_open.setAcceptMode(QtWidgets.QFileDialog.AcceptOpen)
@@ -668,8 +659,8 @@ class RevPiProgram(QtWidgets.QDialog, Ui_diag_program):
             self,
             self.tr("Save piControl file..."),
             os.path.join(
-                helper.cm.program_last_dir_picontrol,
-                "{0}.img".format(helper.cm.name)
+                helper.cm.settings.last_dir_picontrol,
+                "{0}.img".format(helper.cm.settings.name)
             ),
             self.tr("Process image file (*.img);;All files (*.*)")
         )
@@ -681,7 +672,7 @@ class RevPiProgram(QtWidgets.QDialog, Ui_diag_program):
             return
 
         filename = diag_save.selectedFiles()[0]
-        helper.cm.program_last_dir_picontrol = os.path.dirname(filename)
+        helper.cm.settings.last_dir_picontrol = os.path.dirname(filename)
         bin_buffer = helper.cm.call_remote_function("get_procimg")  # type: Binary
 
         if bin_buffer is None:

@@ -5,38 +5,16 @@ __copyright__ = "Copyright (C) 2023 Sven Sager"
 __license__ = "GPLv3"
 
 import webbrowser
-from os import name as osname
 from re import compile
 from sys import platform
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from zeroconf import IPVersion, ServiceBrowser, Zeroconf
 
+from . import helper
 from . import proginit as pi
-from .helper import WidgetData, settings
+from .helper import RevPiSettings, WidgetData, all_revpi_settings
 from .ui.avahisearch_ui import Ui_diag_search
-
-
-def find_settings_index(address: str, port: int) -> int:
-    """
-    Search index of saved settings.
-
-    :param address: Host or IP address of Revolution Pi
-    :param port: Port to connect
-    :return: Index of settings array or -1, if not found
-    """
-    settings_index = -1
-    for i in range(settings.beginReadArray("connections")):
-        settings.setArrayIndex(i)
-
-        _address = settings.value("address", type=str)
-        _port = settings.value("port", type=int)
-        if address.lower() == _address.lower() and port == _port:
-            settings_index = i
-            break
-
-    settings.endArray()
-    return settings_index
 
 
 class AvahiSearchThread(QtCore.QThread):
@@ -49,29 +27,10 @@ class AvahiSearchThread(QtCore.QThread):
         super(AvahiSearchThread, self).__init__(parent)
         self._cycle_wait_ms = 1000
 
-        self.__dict_arp = {}
         self.re_posix = compile(
             r"(?P<ip>(\d{1,3}\.){3}\d{1,3}).*"
             r"(?P<mac>([0-9a-fA-F]{2}:){5}[0-9a-fA-F]{2})"
         )
-
-    def _update_arp(self) -> None:
-        """Find mac address in arp table."""
-        if osname == "posix":
-            with open("/proc/net/arp") as fh:
-                for line in fh.readlines():
-                    ip_mac = self.re_posix.search(line)
-                    if ip_mac:
-                        self.__dict_arp[ip_mac.group("ip")] = ip_mac.group("mac")
-
-    def get_mac(self, ip: str) -> dict:
-        """
-        Get mac address of ip, if known.
-
-        :param ip: IP address to find mac address
-        :return: MAC address as string or empty string, if unknown
-        """
-        return self.__dict_arp.get(ip, "")
 
     def remove_service(self, zeroconf: Zeroconf, conf_type: str, name: str) -> None:
         """Revolution Pi disappeared."""
@@ -115,17 +74,20 @@ class AvahiSearch(QtWidgets.QDialog, Ui_diag_search):
         super(AvahiSearch, self).__init__(parent)
         self.setupUi(self)
 
+        # Global variables to let parent decide other actions
+        self.connect_settings = None
+        self.just_save = False
+
+        # Local variables
         self.clipboard = QtGui.QGuiApplication.clipboard()
-        self.connect_index = -1
-        self.known_hosts = {}
-        self.th_zero_conf = AvahiSearchThread(self)
+        self._th_zero_conf = AvahiSearchThread(self)
 
         self.tb_revpi.setColumnWidth(0, 250)
         self.btn_connect.setEnabled(False)
         self.btn_save.setEnabled(False)
 
-        self.restoreGeometry(settings.value("avahisearch/geo", b''))
-        column_sizes = settings.value("avahisearch/column_sizes", [], type=list)
+        self.restoreGeometry(helper.settings.value("avahisearch/geo", b''))
+        column_sizes = helper.settings.value("avahisearch/column_sizes", [], type=list)
         if len(column_sizes) == self.tb_revpi.columnCount():
             for i in range(self.tb_revpi.columnCount()):
                 self.tb_revpi.setColumnWidth(i, int(column_sizes[i]))
@@ -136,160 +98,133 @@ class AvahiSearch(QtWidgets.QDialog, Ui_diag_search):
         self.cm_connect_actions.addAction(self.act_connect_xmlrpc)
 
         self.cm_quick_actions = QtWidgets.QMenu(self)
-        self.cm_quick_actions.addAction(self.act_open_pictory)
-        self.cm_quick_actions.addSeparator()
-        self.cm_quick_actions.addAction(self.act_copy_ip)
-        self.cm_quick_actions.addAction(self.act_copy_host)
-        self.cm_quick_actions.addSeparator()
+        self.cm_quick_actions.addAction(self.act_connect)
         self.cm_quick_actions.addAction(self.act_connect_ssh)
         self.cm_quick_actions.addAction(self.act_connect_xmlrpc)
+        self.cm_quick_actions.addSeparator()
+        self.cm_quick_actions.addAction(self.act_open_pictory)
+        self.cm_quick_actions.addSeparator()
+        self.cm_quick_actions.addAction(self.act_copy_host)
+        self.cm_quick_actions.addAction(self.act_copy_ip)
 
         self.tb_revpi.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
         self.tb_revpi.customContextMenuRequested.connect(self._cm_quick_exec)
 
     @QtCore.pyqtSlot(QtCore.QPoint)
-    def _cm_connect_exec(self, position: QtCore.QPoint) -> None:
-        row = self.tb_revpi.currentRow()
-        if row == -1:
-            return
-
-        item = self.tb_revpi.item(row, 0)
-        settings_index = find_settings_index(item.data(WidgetData.address), item.data(WidgetData.port))
-        if settings_index >= 0:
-            self.connect_index = settings_index
-            self.accept()
-            return
-
-        action = self.cm_connect_actions.exec(position)
-        if action:
-            action.trigger()
-
-    @QtCore.pyqtSlot(QtCore.QPoint)
     def _cm_quick_exec(self, position: QtCore.QPoint) -> None:
-        if self.tb_revpi.currentItem() is None:
+        selected_items = self.tb_revpi.selectedItems()
+        if not selected_items:
             return
+        item = selected_items[0]
+
+        revpi_settings = bool(item.data(WidgetData.revpi_settings))
+        self.act_connect.setVisible(revpi_settings)
+        self.act_connect_ssh.setVisible(not revpi_settings)
+        self.act_connect_xmlrpc.setVisible(not revpi_settings)
 
         sender = self.sender()
-        action = self.cm_quick_actions.exec(sender.mapToGlobal(position))
-        if action:
-            action.trigger()
+        self.cm_quick_actions.exec(sender.mapToGlobal(position))
 
-    def _load_known_hosts(self) -> None:
-        """Load existing connections to show hostname of existing ip addresses"""
-        self.known_hosts.clear()
+        self.act_connect.setVisible(True)
+        self.act_connect_ssh.setVisible(True)
+        self.act_connect_xmlrpc.setVisible(True)
 
-        for i in range(settings.beginReadArray("connections")):
-            settings.setArrayIndex(i)
-
-            name = settings.value("name", type=str)
-            folder = settings.value("folder", type=str)
-            address = settings.value("address", type=str)
-            self.known_hosts[address] = "{0}/{1}".format(folder, name) if folder else name
-
-        settings.endArray()
+    @staticmethod
+    def _find_settings(address: str) -> list[RevPiSettings]:
+        """Find all settings with known avahi_id."""
+        return [
+            revpi_setting
+            for revpi_setting in all_revpi_settings()
+            if revpi_setting.address.lower() == address.lower()
+        ]
 
     def _restart_search(self) -> None:
         """Clean up and restart search thread."""
         while self.tb_revpi.rowCount() > 0:
+            # Remove each row, a .clean would destroy the columns
             self.tb_revpi.removeRow(0)
-        self.th_zero_conf.requestInterruption()
 
-        self.th_zero_conf = AvahiSearchThread(self)
-        self.th_zero_conf.added.connect(self.on_avahi_added)
-        self.th_zero_conf.updated.connect(self.on_avahi_added)
-        self.th_zero_conf.removed.connect(self.on_avahi_removed)
-        self.th_zero_conf.start()
+        self._th_zero_conf.requestInterruption()
 
-    def _save_connection(self, row: int, ssh_tunnel: bool, no_warn=False) -> int:
+        self._th_zero_conf = AvahiSearchThread(self)
+        self._th_zero_conf.added.connect(self.on_avahi_added)
+        self._th_zero_conf.updated.connect(self.on_avahi_added)
+        self._th_zero_conf.removed.connect(self.on_avahi_removed)
+        self._th_zero_conf.start()
+
+    def _create_settings_object(self, row: int, ssh_tunnel: bool) -> RevPiSettings or None:
         """
-        Save the connection from given row to settings.
+        Create settings object from given row to settings.
 
         :param row: Row with connection data
         :param ssh_tunnel: Save as SSH tunnel connection
-        :param no_warn: If True, no message boxes will appear
-        :return: Array index of connection (found or saved) or -1
+        :return: RevPi settings with data from avahi search and default values
         """
         item = self.tb_revpi.item(row, 0)
         if not item:
-            return -1
+            return None
 
-        folder_name = self.tr("Auto discovered")
-        selected_name = item.text()
-        selected_address = item.data(WidgetData.address)
-        selected_port = item.data(WidgetData.port)
-        i = 0
-        for i in range(settings.beginReadArray("connections")):
-            settings.setArrayIndex(i)
+        settings = RevPiSettings()
+        settings.folder = self.tr("Auto discovered")
+        settings.name = item.data(WidgetData.host_name)
+        settings.address = item.data(WidgetData.address)
+        settings.port = item.data(WidgetData.port)
+        settings.ssh_use_tunnel = ssh_tunnel
 
-            name = settings.value("name", type=str)
-            address = settings.value("address", type=str)
-            port = settings.value("port", type=int)
-            if address.lower() == selected_address.lower() and port == selected_port:
-                if not no_warn:
-                    QtWidgets.QMessageBox.information(
-                        self, self.tr("Already in list..."), self.tr(
-                            "The selected Revolution Pi is already saved in your "
-                            "connection list as '{0}'."
-                        ).format(name)
-                    )
-                settings.endArray()
-                return i
-
-        settings.endArray()
-        settings.beginWriteArray("connections")
-
-        settings.setArrayIndex(i + 1)
-        settings.setValue("address", selected_address)
-        settings.setValue("folder", folder_name)
-        settings.setValue("name", selected_name)
-        settings.setValue("port", selected_port)
-
-        settings.setValue("ssh_use_tunnel", ssh_tunnel)
-        settings.setValue("ssh_port", 22)
-        settings.setValue("ssh_user", "pi")
-
-        settings.endArray()
-
-        if not no_warn:
-            QtWidgets.QMessageBox.information(
-                self, self.tr("Success"), self.tr(
-                    "The connection with the name '{0}' was successfully saved "
-                    "to folder '{1}' in your connections."
-                ).format(selected_name, folder_name)
-            )
-
-        return i + 1
+        return settings
 
     def closeEvent(self, a0: QtGui.QCloseEvent) -> None:
-        settings.setValue("avahisearch/geo", self.saveGeometry())
-        settings.setValue("avahisearch/column_sizes", [
+        helper.settings.setValue("avahisearch/geo", self.saveGeometry())
+        helper.settings.setValue("avahisearch/column_sizes", [
             self.tb_revpi.columnWidth(i)
             for i in range(self.tb_revpi.columnCount())
         ])
 
     def exec(self) -> int:
-        self._load_known_hosts()
+        self.connect_settings = None
+        self.just_save = False
         self._restart_search()
         rc = super(AvahiSearch, self).exec()
-        self.th_zero_conf.requestInterruption()
+        self._th_zero_conf.requestInterruption()
         return rc
 
     @QtCore.pyqtSlot()
+    def on_act_connect_triggered(self) -> None:
+        """Connect via existing settings or ask for type."""
+        pi.logger.debug("AvahiSearch.on_act_connect_triggered")
+        selected_items = self.tb_revpi.selectedItems()
+        if not selected_items:
+            return
+        item = selected_items[0]
+
+        revpi_settings = item.data(WidgetData.revpi_settings)  # type: RevPiSettings
+        if not revpi_settings:
+            return
+        self.connect_settings = revpi_settings
+        self.accept()
+
+    @QtCore.pyqtSlot()
     def on_act_connect_ssh_triggered(self) -> None:
-        """Copy ip address of selected item to clipboard."""
+        """Create new revpi settings with ssh, save and connect."""
         pi.logger.debug("AvahiSearch.on_act_connect_ssh_triggered")
         if self.tb_revpi.currentRow() == -1:
             return
-        self.connect_index = self._save_connection(self.tb_revpi.currentRow(), True, no_warn=True)
+
+        revpi_settings = self._create_settings_object(self.tb_revpi.currentRow(), True)
+        revpi_settings.save_settings()
+        self.connect_settings = revpi_settings
         self.accept()
 
     @QtCore.pyqtSlot()
     def on_act_connect_xmlrpc_triggered(self) -> None:
-        """Copy ip address of selected item to clipboard."""
+        """Create new revpi settings with XML-RPC, save and connect."""
         pi.logger.debug("AvahiSearch.on_act_connect_xmlrpc_triggered")
         if self.tb_revpi.currentRow() == -1:
             return
-        self.connect_index = self._save_connection(self.tb_revpi.currentRow(), False, no_warn=True)
+
+        revpi_settings = self._create_settings_object(self.tb_revpi.currentRow(), False)
+        revpi_settings.save_settings()
+        self.connect_settings = revpi_settings
         self.accept()
 
     @QtCore.pyqtSlot()
@@ -327,45 +262,64 @@ class AvahiSearch(QtWidgets.QDialog, Ui_diag_search):
             webbrowser.open("http://{0}/".format(item.data(WidgetData.host_name)))
 
     @QtCore.pyqtSlot(str, str, int, str, str)
-    def on_avahi_added(self, name: str, server: str, port: int, conf_type: str, ip: str) -> None:
+    def on_avahi_added(self, avahi_id: str, server: str, port: int, conf_type: str, ip: str) -> None:
         """New Revolution Pi found."""
-        index = -1
+
+        def update_tb_revpi_row(row_index: int):
+            host_name = server[:-1]
+
+            item_name = self.tb_revpi.item(row_index, 0)
+            item_name.setData(WidgetData.address, ip)
+            item_name.setData(WidgetData.port, port)
+            item_name.setData(WidgetData.host_name, host_name)
+
+            revpi_settings = item_name.data(WidgetData.revpi_settings)  # type: RevPiSettings
+            if revpi_settings:
+                # Generate the name of saved revpi and show the avahi-name in brackets
+                settings_text = "{0}/{1}".format(revpi_settings.folder, revpi_settings.name) \
+                    if revpi_settings.folder \
+                    else revpi_settings.name
+                if revpi_settings.ssh_use_tunnel:
+                    settings_text += self.tr(" over SSH")
+                item_name.setText("{0} ({1})".format(settings_text, host_name))
+            else:
+                item_name.setText(host_name)
+            item_name.setToolTip(item_name.text())
+
+            item_ip = self.tb_revpi.item(row_index, 1)
+            item_ip.setText(ip)
+            item_ip.setToolTip(item_name.text())
+
+        lst_existing = self._find_settings(ip)
+
+        exists = False
         for i in range(self.tb_revpi.rowCount()):
-            if self.tb_revpi.item(i, 0).data(WidgetData.object_name) == name:
-                index = i
-                break
+            item_tb_revpi = self.tb_revpi.item(i, 0)
+            if item_tb_revpi.data(WidgetData.object_name) == avahi_id:
+                # Object already discovered
+                update_tb_revpi_row(i)
+                exists = True
 
-        if index == -1:
-            # New Row
-            item_name = QtWidgets.QTableWidgetItem()
-            item_ip = QtWidgets.QTableWidgetItem()
+        if not exists:
+            for known_settings in lst_existing or [None]:
+                item_name = QtWidgets.QTableWidgetItem()
 
-            index = self.tb_revpi.rowCount()
-            self.tb_revpi.insertRow(index)
-            self.tb_revpi.setItem(index, 0, item_name)
-            self.tb_revpi.setItem(index, 1, item_ip)
-        else:
-            # Update row
-            item_name = self.tb_revpi.item(index, 0)
-            item_ip = self.tb_revpi.item(index, 1)
+                item_name.setIcon(QtGui.QIcon(":/main/ico/cpu.ico"))
+                item_name.setData(WidgetData.object_name, avahi_id)
+                item_name.setData(WidgetData.revpi_settings, known_settings)
 
-        host_name = server[:-1]
-        item_name.setIcon(QtGui.QIcon(":/main/ico/cpu.ico"))
-        if ip in self.known_hosts:
-            item_name.setText("{0} ({1})".format(host_name, self.known_hosts[ip]))
-        else:
-            item_name.setText(host_name)
-        item_name.setData(WidgetData.object_name, name)
-        item_name.setData(WidgetData.address, ip)
-        item_name.setData(WidgetData.port, port)
-        item_name.setData(WidgetData.host_name, host_name)
-        item_ip.setText(ip)
+                index = self.tb_revpi.rowCount()
+                self.tb_revpi.insertRow(index)
+                self.tb_revpi.setItem(index, 0, item_name)
+                self.tb_revpi.setItem(index, 1, QtWidgets.QTableWidgetItem())
+
+                update_tb_revpi_row(index)
 
     @QtCore.pyqtSlot(str, str)
-    def on_avahi_removed(self, name: str, conf_type: str) -> None:
+    def on_avahi_removed(self, avahi_id: str, conf_type: str) -> None:
         """Revolution Pi disappeared."""
         for i in range(self.tb_revpi.rowCount()):
-            if self.tb_revpi.item(i, 0).data(WidgetData.object_name) == name:
+            if self.tb_revpi.item(i, 0).data(WidgetData.object_name) == avahi_id:
                 self.tb_revpi.removeRow(i)
                 break
 
@@ -373,8 +327,17 @@ class AvahiSearch(QtWidgets.QDialog, Ui_diag_search):
     def on_tb_revpi_cellDoubleClicked(self, row: int, column: int) -> None:
         """Connect to double-clicked Revolution Pi."""
         pi.logger.debug("AvahiSearch.on_tb_revpi_cellDoubleClicked")
-        cur = QtGui.QCursor()
-        self._cm_connect_exec(cur.pos())
+        selected_items = self.tb_revpi.selectedItems()
+        if not selected_items:
+            return
+        item = selected_items[0]
+
+        revpi_settings = bool(item.data(WidgetData.revpi_settings))
+        if revpi_settings:
+            self.act_connect.trigger()
+        else:
+            cur = QtGui.QCursor()
+            self.cm_connect_actions.exec(cur.pos())
 
     @QtCore.pyqtSlot(int, int, int, int)
     def on_tb_revpi_currentCellChanged(self, row: int, column: int, last_row: int, last_column: int) -> None:
@@ -386,18 +349,29 @@ class AvahiSearch(QtWidgets.QDialog, Ui_diag_search):
     def on_btn_connect_clicked(self) -> None:
         """Connect to selected Revolution Pi."""
         pi.logger.debug("AvahiSearch.on_btn_connect_clicked")
-        # Open context menu under the button
-        pos = self.btn_connect.pos()
-        pos.setY(pos.y() + self.btn_connect.height())
-        self._cm_connect_exec(self.mapToGlobal(pos))
+        selected_items = self.tb_revpi.selectedItems()
+        if not selected_items:
+            return
+        item = selected_items[0]
+
+        revpi_settings = bool(item.data(WidgetData.revpi_settings))
+        if revpi_settings:
+            self.act_connect.trigger()
+        else:
+            pos_context_menu = self.btn_connect.pos()
+            pos_context_menu.setY(pos_context_menu.y() + self.btn_connect.height())
+            self.cm_connect_actions.exec(self.mapToGlobal(pos_context_menu))
 
     @QtCore.pyqtSlot()
     def on_btn_save_clicked(self) -> None:
         """Save selected Revolution Pi."""
         pi.logger.debug("AvahiSearch.on_btn_save_clicked")
-        if self.tb_revpi.currentRow() == -1:
+        row_index = self.tb_revpi.currentRow()
+        if row_index == -1:
             return
-        self.connect_index = self._save_connection(self.tb_revpi.currentRow(), ssh_tunnel=True)
+        self.connect_settings = self._create_settings_object(row_index, True)
+        self.just_save = True
+        self.accept()
 
     @QtCore.pyqtSlot()
     def on_btn_restart_clicked(self) -> None:

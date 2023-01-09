@@ -15,6 +15,7 @@ class SSHAuthType(Enum):
     PASS = "pass"
     KEYS = "keys"
 
+
 class SSHAuth(QtWidgets.QDialog, Ui_diag_sshauth):
     """Version information window."""
 

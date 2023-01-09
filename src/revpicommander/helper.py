@@ -12,6 +12,7 @@ from os import environ, remove
 from os.path import exists
 from queue import Queue
 from threading import Lock
+from uuid import uuid4
 from xmlrpc.client import Binary, ServerProxy
 
 from PyQt5 import QtCore, QtWidgets
@@ -21,31 +22,166 @@ from . import proginit as pi
 from .ssh_tunneling.server import SSHLocalTunnel
 from .sshauth import SSHAuth, SSHAuthType
 
+settings = QtCore.QSettings("revpimodio.org", "RevPiCommander")
+"""Global application settings."""
+
+homedir = environ.get("HOME", "") or environ.get("APPDATA", "")
+"""Home dir of user."""
+
 
 class WidgetData(IntEnum):
     address = 260
-    replace_ios_config = 261
     acl_level = 262
     has_error = 263
     port = 264
     object_name = 265
-    timeout = 266
     host_name = 267
-    last_dir_upload = 301
-    last_file_upload = 302
-    last_dir_pictory = 303
-    last_dir_picontrol = 304
-    last_dir_selected = 305
-    last_pictory_file = 306
-    last_tar_file = 307
-    last_zip_file = 308
     file_name = 309
-    watch_files = 310
-    watch_path = 311
-    debug_geos = 312
-    ssh_use_tunnel = 313
-    ssh_port = 315
-    ssh_user = 316
+    revpi_settings = 320
+
+
+class RevPiSettings:
+
+    def __init__(self, load_index: int = None, settings_storage: QtCore.QSettings = None):
+        """
+        Revolution Pi saved settings.
+
+        :param load_index: Load settings from index, same as .load_from_index
+        :param settings_storage: Change QSettings object to work on from default to this one
+        """
+        self._settings = settings_storage or settings
+        self.internal_id = ""
+
+        self.name = "New connection"
+        self.folder = ""
+        self.address = "127.0.0.1"
+        self.port = 55123
+        self.timeout = 5
+
+        self.ssh_use_tunnel = False
+        self.ssh_port = 22
+        self.ssh_user = "pi"
+
+        self.last_dir_upload = "."
+        self.last_file_upload = "."
+        self.last_dir_pictory = "."
+        self.last_dir_picontrol = "."
+        self.last_dir_selected = "."
+        self.last_pictory_file = ""
+        self.last_tar_file = ""
+        self.last_zip_file = ""
+        self.watch_files = []
+        self.watch_path = ""
+
+        self.debug_geos = {}
+
+        if load_index is not None:
+            self.load_from_index(load_index)
+
+    def load_from_index(self, settings_index: int) -> None:
+        """Load settings from 'connections' index."""
+        self._settings.beginReadArray("connections")
+        self._settings.setArrayIndex(settings_index)
+
+        # Flag as "legacy" connection to generate missing internal_id on save_settings()
+        self.internal_id = self._settings.value("internal_id", "legacy", type=str)
+
+        self.name = self._settings.value("name", type=str)
+        self.folder = self._settings.value("folder", "", type=str)
+        self.address = self._settings.value("address", type=str)
+        self.port = self._settings.value("port", 55123, type=int)
+        self.timeout = self._settings.value("timeout", 5, type=int)
+
+        self.ssh_use_tunnel = self._settings.value("ssh_use_tunnel", False, type=bool)
+        self.ssh_port = self._settings.value("ssh_port", 22, type=int)
+        self.ssh_user = self._settings.value("ssh_user", "pi", type=str)
+
+        self.last_dir_upload = self._settings.value("last_dir_upload", ".", type=str)
+        self.last_file_upload = self._settings.value("last_file_upload", ".", type=str)
+        self.last_dir_pictory = self._settings.value("last_dir_pictory", ".", type=str)
+        self.last_dir_picontrol = self._settings.value("last_dir_picontrol", ".", type=str)
+        self.last_dir_selected = self._settings.value("last_dir_selected", ".", type=str)
+        self.last_pictory_file = self._settings.value("last_pictory_file", "", type=str)
+        self.last_tar_file = self._settings.value("last_tar_file", "", type=str)
+        self.last_zip_file = self._settings.value("last_zip_file", "", type=str)
+        self.watch_files = self._settings.value("watch_files", [], type=list)
+        self.watch_path = self._settings.value("watch_path", "", type=str)
+
+        try:
+            # Bytes with QSettings are a little difficult sometimes
+            self.debug_geos = self._settings.value("debug_geos", {}, type=dict)
+        except Exception:
+            # Just drop the geos of IO windows
+            pass
+
+        # These values must exists
+        if not (self.name and self.address and self.port):
+            raise ValueError("Could not geht all required values from saved settings")
+
+        self._settings.endArray()
+
+    def save_settings(self):
+        """Save all settings."""
+
+        count_settings = self._settings.beginReadArray("connections")
+
+        def create_new_array_member():
+            """Insert a new setting at the end of the array."""
+
+            # Close the active array action to reopen a write action to expand the array
+            self._settings.endArray()
+            self._settings.beginWriteArray("connections")
+            self._settings.setArrayIndex(count_settings)
+
+            self.internal_id = uuid4().hex
+
+        if not self.internal_id:
+            create_new_array_member()
+
+        else:
+            # Always search setting in array, because connection manager could reorganize array indexes
+            index = -1
+            for index in range(count_settings):
+                self._settings.setArrayIndex(index)
+
+                if self.internal_id == "legacy":
+                    # Legacy connection without internal_id
+                    if self._settings.value("address") == self.address:
+                        # Set missing internal_id
+                        self.internal_id = uuid4().hex
+                        break
+                else:
+                    if self._settings.value("internal_id") == self.internal_id:
+                        break
+
+            if index == count_settings - 1:
+                # On this point, we iterate all settings and found none, so create new one
+                create_new_array_member()
+
+        self._settings.setValue("internal_id", self.internal_id)
+        self._settings.setValue("name", self.name)
+        self._settings.setValue("folder", self.folder)
+        self._settings.setValue("address", self.address)
+        self._settings.setValue("port", self.port)
+        self._settings.setValue("timeout", self.timeout)
+
+        self._settings.setValue("ssh_use_tunnel", self.ssh_use_tunnel)
+        self._settings.setValue("ssh_port", self.ssh_port)
+        self._settings.setValue("ssh_user", self.ssh_user)
+
+        self._settings.setValue("last_dir_upload", self.last_dir_upload)
+        self._settings.setValue("last_file_upload", self.last_file_upload)
+        self._settings.setValue("last_dir_pictory", self.last_dir_pictory)
+        self._settings.setValue("last_dir_picontrol", self.last_dir_picontrol)
+        self._settings.setValue("last_dir_selected", self.last_dir_selected)
+        self._settings.setValue("last_pictory_file", self.last_pictory_file)
+        self._settings.setValue("last_tar_file", self.last_tar_file)
+        self._settings.setValue("last_zip_file", self.last_zip_file)
+        self._settings.setValue("watch_files", self.watch_files)
+        self._settings.setValue("watch_path", self.watch_path)
+        self._settings.setValue("debug_geos", self.debug_geos)
+
+        self._settings.endArray()
 
 
 class ConnectionManager(QtCore.QThread):
@@ -75,28 +211,10 @@ class ConnectionManager(QtCore.QThread):
         self._revpi = None
         self._revpi_output = None
 
-        self.address = ""
-        self.name = ""
-        self.port = 55123
+        self.settings = RevPiSettings()
 
         self.ssh_tunnel_server = None  # type: SSHLocalTunnel
-        self.ssh_use_tunnel = False
-        self.ssh_port = 22
-        self.ssh_user = "pi"
         self.ssh_pass = ""
-
-        # Sync this with revpiplclist to preserve settings
-        self.program_last_dir_upload = ""
-        self.program_last_file_upload = ""
-        self.program_last_dir_pictory = ""
-        self.program_last_dir_picontrol = ""
-        self.program_last_dir_selected = ""
-        self.program_last_pictory_file = ""
-        self.program_last_tar_file = ""
-        self.program_last_zip_file = ""
-        self.develop_watch_files = []
-        self.develop_watch_path = ""
-        self.debug_geos = {}
 
         self.pyload_version = (0, 0, 0)
         """Version number of RevPiPyLoad 0.0.0 with <class 'int'> values."""
@@ -178,60 +296,19 @@ class ConnectionManager(QtCore.QThread):
 
     def _clear_settings(self):
         """Clear connection settings."""
-        self.address = ""
-        self.name = ""
-        self.port = 55123
+        self.settings = RevPiSettings()
 
-        self.ssh_use_tunnel = False
-        self.ssh_port = 22
-        self.ssh_user = "pi"
         self.ssh_pass = ""
 
         self.pyload_version = (0, 0, 0)
         self.xml_funcs.clear()
         self.xml_mode = -1
 
-        self.program_last_dir_upload = ""
-        self.program_last_file_upload = ""
-        self.program_last_dir_pictory = ""
-        self.program_last_dir_picontrol = ""
-        self.program_last_dir_selected = ""
-        self.program_last_pictory_file = ""
-        self.program_last_tar_file = ""
-        self.program_last_zip_file = ""
-        self.develop_watch_files = []
-        self.develop_watch_path = ""
-        self.debug_geos = {}
-
-    def _save_settings(self):
-        """Save settings to named Revolution Pi."""
-        for i in range(settings.beginReadArray("connections")):
-            settings.setArrayIndex(i)
-            if settings.value("address") != self.address:
-                # Search used connection, because connection manager could reorganize array
-                continue
-
-            settings.setValue("last_dir_upload", self.program_last_dir_upload)
-            settings.setValue("last_file_upload", self.program_last_file_upload)
-            settings.setValue("last_dir_pictory", self.program_last_dir_pictory)
-            settings.setValue("last_dir_picontrol", self.program_last_dir_picontrol)
-            settings.setValue("last_dir_selected", self.program_last_dir_selected)
-            settings.setValue("last_pictory_file", self.program_last_pictory_file)
-            settings.setValue("last_tar_file", self.program_last_tar_file)
-            settings.setValue("last_zip_file", self.program_last_zip_file)
-            settings.setValue("watch_files", self.develop_watch_files)
-            settings.setValue("watch_path", self.develop_watch_path)
-            settings.setValue("debug_geos", self.debug_geos)
-
-            break
-
-        settings.endArray()
-
-    def pyload_connect(self, settings_index: int, parent=None) -> bool:
+    def pyload_connect(self, settings: RevPiSettings, parent=None) -> bool:
         """
         Create a new connection from settings object.
 
-        :param settings_index: Index of settings array 'connections'
+        :param settings: Revolution Pi saved connection settings
         :param parent: Qt parent window for dialog positioning
         :return: True, if the connection was successfully established
         """
@@ -239,48 +316,27 @@ class ConnectionManager(QtCore.QThread):
         # First disconnect to send signal and clean up values
         self.pyload_disconnect()
 
-        settings.beginReadArray("connections")
-        settings.setArrayIndex(settings_index)
-
-        address = settings.value("address", str)
-        name = settings.value("name", str)
-        port = settings.value("port", 55123, int)
-        timeout = settings.value("timeout", 5, int)
-
         ssh_tunnel_server = None
-        ssh_use_tunnel = settings.value("ssh_use_tunnel", False, bool)
-        ssh_port = settings.value("ssh_port", 22, int)
-        ssh_user = settings.value("ssh_user", "pi", str)
         ssh_tunnel_port = 0
         ssh_pass = ""
 
-        self.program_last_dir_upload = settings.value("last_dir_upload", ".", str)
-        self.program_last_file_upload = settings.value("last_file_upload", ".", str)
-        self.program_last_dir_pictory = settings.value("last_dir_pictory", ".", str)
-        self.program_last_dir_picontrol = settings.value("last_dir_picontrol", ".", str)
-        self.program_last_dir_selected = settings.value("last_dir_selected", ".", str)
-        self.program_last_pictory_file = settings.value("last_pictory_file", "{0}.rsc".format(name), str)
-        self.program_last_tar_file = settings.value("last_tar_file", "{0}.tgz".format(name), str)
-        self.program_last_zip_file = settings.value("last_zip_file", "{0}.zip".format(name), str)
-        self.develop_watch_files = settings.value("watch_files", [], list)
-        self.develop_watch_path = settings.value("watch_path", "", str)
-        self.debug_geos = settings.value("debug_geos", {}, dict)
-
-        settings.endArray()
-
         socket.setdefaulttimeout(2)
 
-        if ssh_use_tunnel:
+        if settings.ssh_use_tunnel:
             while True:
                 diag_ssh_auth = SSHAuth(SSHAuthType.PASS, parent)
-                diag_ssh_auth.username = ssh_user
+                diag_ssh_auth.username = settings.ssh_user
                 if not diag_ssh_auth.exec() == QtWidgets.QDialog.Accepted:
                     self._clear_settings()
                     return False
 
                 ssh_user = diag_ssh_auth.username
                 ssh_pass = diag_ssh_auth.password
-                ssh_tunnel_server = SSHLocalTunnel(port, address, ssh_port)
+                ssh_tunnel_server = SSHLocalTunnel(
+                    settings.port,
+                    settings.address,
+                    settings.ssh_port
+                )
                 try:
                     ssh_tunnel_port = ssh_tunnel_server.connect_by_credentials(ssh_user, ssh_pass)
                     break
@@ -304,7 +360,7 @@ class ConnectionManager(QtCore.QThread):
             sp = ServerProxy("http://127.0.0.1:{0}".format(ssh_tunnel_port))
 
         else:
-            sp = ServerProxy("http://{0}:{1}".format(address, port))
+            sp = ServerProxy("http://{0}:{1}".format(settings.address, settings.port))
 
         # Load values and test connection to Revolution Pi
         try:
@@ -315,7 +371,7 @@ class ConnectionManager(QtCore.QThread):
             pi.logger.exception(e)
             self.connection_error_observed.emit(str(e))
 
-            if not self.ssh_use_tunnel:
+            if not settings.ssh_use_tunnel:
                 # todo: Change message, that user can use ssh
                 QtWidgets.QMessageBox.critical(
                     parent, self.tr("Error"), self.tr(
@@ -330,24 +386,19 @@ class ConnectionManager(QtCore.QThread):
 
             return False
 
-        self.address = address
-        self.name = name
-        self.port = port
-        self.ssh_use_tunnel = ssh_use_tunnel
-        self.ssh_port = ssh_port
-        self.ssh_user = ssh_user
+        self.settings = settings
         self.ssh_pass = ssh_pass
         self.pyload_version = pyload_version
         self.xml_funcs = xml_funcs
         self.xml_mode = xml_mode
 
         with self._lck_cli:
-            socket.setdefaulttimeout(timeout)
+            socket.setdefaulttimeout(settings.timeout)
             self.ssh_tunnel_server = ssh_tunnel_server
             self._cli = sp
             self._cli_connect.put_nowait((
-                "127.0.0.1" if ssh_use_tunnel else address,
-                ssh_tunnel_port if ssh_use_tunnel else port
+                "127.0.0.1" if settings.ssh_use_tunnel else settings.address,
+                ssh_tunnel_port if settings.ssh_use_tunnel else settings.port
             ))
 
         self.connection_established.emit()
@@ -371,9 +422,9 @@ class ConnectionManager(QtCore.QThread):
 
         elif self._cli is not None:
 
-            # Tell all widget, that we want to disconnect, to save the settings
+            # Tell all widget, that we want to disconnect
             self.connection_disconnecting.emit()
-            self._save_settings()
+            self.settings.save_settings()
 
             with self._lck_cli:
                 if self._ps_started:
@@ -475,10 +526,14 @@ class ConnectionManager(QtCore.QThread):
 
                     if self.ssh_tunnel_server and not self.ssh_tunnel_server.connected:
                         self.ssh_tunnel_server.disconnect()
-                        ssh_tunnel_server = SSHLocalTunnel(self.port, self.address, self.ssh_port)
+                        ssh_tunnel_server = SSHLocalTunnel(
+                            self.settings.port,
+                            self.settings.address,
+                            self.settings.ssh_port
+                        )
                         try:
                             ssh_tunnel_port = self.ssh_tunnel_server.connect_by_credentials(
-                                self.ssh_user,
+                                self.settings.ssh_user,
                                 self.ssh_pass
                             )
                             sp = ServerProxy("http://127.0.0.1:{0}".format(ssh_tunnel_port))
@@ -563,9 +618,9 @@ class ConnectionManager(QtCore.QThread):
 
         Use connection_recovered signal to figure out new parameters.
         """
-        if not self.ssh_use_tunnel and self.address and self.port:
-            return ServerProxy("http://{0}:{1}".format(self.address, self.port))
-        if self.ssh_use_tunnel and self.ssh_tunnel_server and self.ssh_tunnel_server.connected:
+        if not self.settings.ssh_use_tunnel and self.settings.address and self.settings.port:
+            return ServerProxy("http://{0}:{1}".format(self.settings.address, self.settings.port))
+        if self.settings.ssh_use_tunnel and self.ssh_tunnel_server and self.ssh_tunnel_server.connected:
             return ServerProxy("http://127.0.0.1:{0}".format(self.ssh_tunnel_server.local_tunnel_port))
 
         return None
@@ -592,8 +647,27 @@ class ConnectionManager(QtCore.QThread):
 cm = ConnectionManager()
 """Clobal connection manager instance."""
 
-settings = QtCore.QSettings("revpipyplc", "revpipyload")
-"""Global application settings."""
 
-homedir = environ.get("HOME", "") or environ.get("APPDATA", "")
-"""Home dir of user."""
+def all_revpi_settings() -> [RevPiSettings]:
+    """Get all revpi settings objects."""
+    # Get length of array and close it, the RevPiSettings-class need it
+    count_settings = settings.beginReadArray("connections")
+    settings.endArray()
+    return [RevPiSettings(i) for i in range(count_settings)]
+
+
+def import_old_settings():
+    if not settings.value("revpicommander/imported_settings", False, type=bool):
+        settings.setValue("revpicommander/imported_settings", True)
+
+        old_settings = QtCore.QSettings("revpipyplc", "revpipyload")
+        count_settings = old_settings.beginReadArray("connections")
+        old_settings.endArray()
+
+        lst_revpi_settings = [RevPiSettings(i, settings_storage=old_settings) for i in range(count_settings)]
+        for revpi_setting in lst_revpi_settings:
+            revpi_setting._settings = settings
+            revpi_setting.save_settings()
+
+
+import_old_settings()

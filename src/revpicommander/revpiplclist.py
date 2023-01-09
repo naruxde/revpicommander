@@ -8,8 +8,9 @@ from enum import IntEnum
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
+from . import helper
 from . import proginit as pi
-from .helper import WidgetData, settings
+from .helper import RevPiSettings, WidgetData
 from .ui.revpiplclist_ui import Ui_diag_connections
 
 
@@ -41,38 +42,22 @@ class RevPiPlcList(QtWidgets.QDialog, Ui_diag_connections):
         self.tre_connections.clear()
         self.cbb_folder.clear()
         self.cbb_folder.addItem("")
-        for i in range(settings.beginReadArray("connections")):
-            settings.setArrayIndex(i)
+
+        # Get length of array and close it, the RevPiSettings-class need it
+        count_settings = helper.settings.beginReadArray("connections")
+        helper.settings.endArray()
+
+        for i in range(count_settings):
+            settings = RevPiSettings(i)
 
             con_item = QtWidgets.QTreeWidgetItem(NodeType.CON)
             con_item.setIcon(0, QtGui.QIcon(":/main/ico/cpu.ico"))
-            con_item.setText(0, settings.value("name", "Revolution Pi", str))
-            con_item.setText(1, settings.value("address", "127.0.0.1", str))
-            con_item.setData(0, WidgetData.port, settings.value("port", self.__default_port, int))
-            con_item.setData(0, WidgetData.timeout, settings.value("timeout", 5, int))
+            con_item.setText(0, settings.name)
+            con_item.setText(1, settings.address)
 
-            con_item.setData(0, WidgetData.ssh_use_tunnel, settings.value("ssh_use_tunnel", False, bool))
-            con_item.setData(0, WidgetData.ssh_port, settings.value("ssh_port", 22, int))
-            con_item.setData(0, WidgetData.ssh_user, settings.value("ssh_user", "pi", str))
+            con_item.setData(0, WidgetData.revpi_settings, settings)
 
-            con_item.setData(0, WidgetData.last_dir_upload, settings.value("last_dir_upload"))
-            con_item.setData(0, WidgetData.last_file_upload, settings.value("last_file_upload"))
-            con_item.setData(0, WidgetData.last_dir_pictory, settings.value("last_dir_pictory"))
-            con_item.setData(0, WidgetData.last_dir_picontrol, settings.value("last_dir_picontrol"))
-            con_item.setData(0, WidgetData.last_dir_selected, settings.value("last_dir_selected"))
-            con_item.setData(0, WidgetData.last_pictory_file, settings.value("last_pictory_file"))
-            con_item.setData(0, WidgetData.last_tar_file, settings.value("last_tar_file"))
-            con_item.setData(0, WidgetData.last_zip_file, settings.value("last_zip_file"))
-            con_item.setData(0, WidgetData.watch_files, settings.value("watch_files"))
-            con_item.setData(0, WidgetData.watch_path, settings.value("watch_path"))
-            try:
-                # Bytes with QSettings are a little difficult sometimes
-                con_item.setData(0, WidgetData.debug_geos, settings.value("debug_geos"))
-            except Exception:
-                # Just drop the geos of IO windows
-                pass
-
-            folder = settings.value("folder", "", str)
+            folder = settings.folder
             if folder:
                 sub_folder = self._get_folder_item(folder)
                 if sub_folder is None:
@@ -86,10 +71,8 @@ class RevPiPlcList(QtWidgets.QDialog, Ui_diag_connections):
             else:
                 self.tre_connections.addTopLevelItem(con_item)
 
-        settings.endArray()
-
         self.tre_connections.expandAll()
-        self.changes = True
+        self.changes = False
 
         if self.tre_connections.topLevelItemCount() == 0:
             self._edit_state()
@@ -97,57 +80,19 @@ class RevPiPlcList(QtWidgets.QDialog, Ui_diag_connections):
     def accept(self) -> None:
         pi.logger.debug("RevPiPlcList.accept")
 
-        def set_settings(node: QtWidgets.QTreeWidgetItem):
-            parent = node.parent()
-            settings.setValue("address", node.text(1))
-            settings.setValue("folder", parent.text(0) if parent else "")
-            settings.setValue("name", node.text(0))
-            settings.setValue("port", node.data(0, WidgetData.port))
-            settings.setValue("timeout", node.data(0, WidgetData.timeout))
-            settings.setValue("ssh_use_tunnel", node.data(0, WidgetData.ssh_use_tunnel))
-            settings.setValue("ssh_port", node.data(0, WidgetData.ssh_port))
-            settings.setValue("ssh_user", node.data(0, WidgetData.ssh_user))
+        helper.settings.remove("connections")
 
-            if node.data(0, WidgetData.last_dir_upload):
-                settings.setValue("last_dir_upload", node.data(0, WidgetData.last_dir_upload))
-            if node.data(0, WidgetData.last_file_upload):
-                settings.setValue("last_file_upload", node.data(0, WidgetData.last_file_upload))
-            if node.data(0, WidgetData.last_dir_pictory):
-                settings.setValue("last_dir_pictory", node.data(0, WidgetData.last_dir_pictory))
-            if node.data(0, WidgetData.last_dir_picontrol):
-                settings.setValue("last_dir_picontrol", node.data(0, WidgetData.last_dir_picontrol))
-            if node.data(0, WidgetData.last_dir_selected):
-                settings.setValue("last_dir_selected", node.data(0, WidgetData.last_dir_selected))
-            if node.data(0, WidgetData.last_pictory_file):
-                settings.setValue("last_pictory_file", node.data(0, WidgetData.last_pictory_file))
-            if node.data(0, WidgetData.last_tar_file):
-                settings.setValue("last_tar_file", node.data(0, WidgetData.last_tar_file))
-            if node.data(0, WidgetData.last_zip_file):
-                settings.setValue("last_zip_file", node.data(0, WidgetData.last_zip_file))
-            if node.data(0, WidgetData.watch_files):
-                settings.setValue("watch_files", node.data(0, WidgetData.watch_files))
-            if node.data(0, WidgetData.watch_path):
-                settings.setValue("watch_path", node.data(0, WidgetData.watch_path))
-            if node.data(0, WidgetData.debug_geos):
-                settings.setValue("debug_geos", node.data(0, WidgetData.debug_geos))
-
-        settings.remove("connections")
-        settings.beginWriteArray("connections")
-
-        counter_index = 0
         for i in range(self.tre_connections.topLevelItemCount()):
             root_item = self.tre_connections.topLevelItem(i)
             if root_item.type() == NodeType.DIR:
                 for k in range(root_item.childCount()):
-                    settings.setArrayIndex(counter_index)
-                    set_settings(root_item.child(k))
-                    counter_index += 1
+                    revpi_settings = root_item.child(k).data(0, WidgetData.revpi_settings)  # type: RevPiSettings
+                    revpi_settings.folder = root_item.text(0)
+                    revpi_settings.save_settings()
             elif root_item.type() == NodeType.CON:
-                settings.setArrayIndex(counter_index)
-                set_settings(root_item)
-                counter_index += 1
-
-        settings.endArray()
+                revpi_settings = root_item.data(0, WidgetData.revpi_settings)  # type: RevPiSettings
+                revpi_settings.folder = ""
+                revpi_settings.save_settings()
 
         self.changes = False
         super(RevPiPlcList, self).accept()
@@ -170,6 +115,17 @@ class RevPiPlcList(QtWidgets.QDialog, Ui_diag_connections):
         self._load_settings()
         return super(RevPiPlcList, self).exec()
 
+    def exec_with_presets(self, presets: RevPiSettings) -> int:
+        """
+        Start dialog with new created settings object and presets.
+
+        :param presets: Use these settings as preset
+        :return: Dialog status
+        """
+        self._load_settings()
+        self.on_btn_add_pressed(presets)
+        return super(RevPiPlcList, self).exec()
+
     @QtCore.pyqtSlot(QtWidgets.QAbstractButton)
     def on_btn_box_clicked(self, button: QtWidgets.QAbstractButton):
         if self.btn_box.buttonRole(button) == QtWidgets.QDialogButtonBox.DestructiveRole:
@@ -179,6 +135,7 @@ class RevPiPlcList(QtWidgets.QDialog, Ui_diag_connections):
     # region #      REGION: Connection management
 
     def _edit_state(self):
+        """Set enabled status of all controls, depending on selected item."""
         item = self.tre_connections.currentItem()
         if item is None:
             up_ok = False
@@ -232,6 +189,7 @@ class RevPiPlcList(QtWidgets.QDialog, Ui_diag_connections):
             if 0 <= new_index < dir_item.childCount():
                 item = dir_item.takeChild(index)
                 dir_item.insertChild(new_index, item)
+            self.tre_connections.expandItem(dir_item)
         else:
             index = self.tre_connections.indexOfTopLevelItem(item)
             new_index = index + count
@@ -249,22 +207,25 @@ class RevPiPlcList(QtWidgets.QDialog, Ui_diag_connections):
         self._edit_state()
         if current and current.type() == NodeType.CON:
             self.__current_item = current
-            self.txt_name.setText(current.text(0))
-            self.txt_address.setText(current.text(1))
-            self.sbx_port.setValue(current.data(0, WidgetData.port))
-            self.sbx_timeout.setValue(current.data(0, WidgetData.timeout))
+
+            settings = current.data(0, WidgetData.revpi_settings)  # type: RevPiSettings
+            self.txt_name.setText(settings.name)
+            self.txt_address.setText(settings.address)
+            self.sbx_port.setValue(settings.port)
+            self.sbx_timeout.setValue(settings.timeout)
             if current.parent() is None:
                 self.cbb_folder.setCurrentIndex(0)
             else:
                 self.cbb_folder.setCurrentText(current.parent().text(0))
 
-            self.cbx_ssh_use_tunnel.setChecked(current.data(0, WidgetData.ssh_use_tunnel))
-            self.sbx_ssh_port.setValue(current.data(0, WidgetData.ssh_port))
-            self.txt_ssh_user.setText(current.data(0, WidgetData.ssh_user))
+            self.cbx_ssh_use_tunnel.setChecked(settings.ssh_use_tunnel)
+            self.sbx_ssh_port.setValue(settings.ssh_port)
+            self.txt_ssh_user.setText(settings.ssh_user)
 
         elif current and current.type() == NodeType.DIR:
             self.__current_item = current
             self.cbb_folder.setCurrentText(current.text(0))
+
         else:
             self.__current_item = QtWidgets.QTreeWidgetItem()
             self.cbb_folder.setCurrentText(current.text(0) if current else "")
@@ -292,23 +253,21 @@ class RevPiPlcList(QtWidgets.QDialog, Ui_diag_connections):
         self._edit_state()
 
     @QtCore.pyqtSlot()
-    def on_btn_add_pressed(self):
+    def on_btn_add_pressed(self, settings_preset: RevPiSettings = None):
         """Create new element."""
-        self.__current_item = QtWidgets.QTreeWidgetItem(NodeType.CON)
-        self.__current_item.setIcon(0, QtGui.QIcon(":/main/ico/cpu.ico"))
-        self.__current_item.setText(0, self.__default_name)
-        self.__current_item.setData(0, WidgetData.port, self.__default_port)
-        self.__current_item.setData(0, WidgetData.timeout, 5)
-        self.__current_item.setData(0, WidgetData.ssh_use_tunnel, False)
-        self.__current_item.setData(0, WidgetData.ssh_port, 22)
-        self.__current_item.setData(0, WidgetData.ssh_user, "pi")
+        settings = settings_preset or RevPiSettings()
+        new_item = QtWidgets.QTreeWidgetItem(NodeType.CON)
+        new_item.setIcon(0, QtGui.QIcon(":/main/ico/cpu.ico"))
+        new_item.setText(0, settings.name)
+        new_item.setData(0, WidgetData.revpi_settings, settings)
         sub_folder = self._get_folder_item(self.cbb_folder.currentText())
         if sub_folder:
-            sub_folder.addChild(self.__current_item)
+            sub_folder.addChild(new_item)
         else:
-            self.tre_connections.addTopLevelItem(self.__current_item)
+            self.tre_connections.addTopLevelItem(new_item)
 
-        self.tre_connections.setCurrentItem(self.__current_item)
+        # This will load all settings and prepare widgets
+        self.tre_connections.setCurrentItem(new_item)
         self.txt_name.setFocus()
         self.txt_name.selectAll()
 
@@ -317,42 +276,58 @@ class RevPiPlcList(QtWidgets.QDialog, Ui_diag_connections):
         if self.__current_item.type() != NodeType.CON:
             return
         self.__current_item.setText(0, text)
+        settings = self.__current_item.data(0, WidgetData.revpi_settings)  # type: RevPiSettings
+        settings.name = text
+        self.changes = True
 
     @QtCore.pyqtSlot(str)
     def on_txt_address_textEdited(self, text):
         if self.__current_item.type() != NodeType.CON:
             return
         self.__current_item.setText(1, text)
+        settings = self.__current_item.data(0, WidgetData.revpi_settings)  # type: RevPiSettings
+        settings.address = text
+        self.changes = True
 
     @QtCore.pyqtSlot(int)
     def on_sbx_port_valueChanged(self, value: int):
         if self.__current_item.type() != NodeType.CON:
             return
-        self.__current_item.setData(0, WidgetData.port, value)
+        settings = self.__current_item.data(0, WidgetData.revpi_settings)  # type: RevPiSettings
+        settings.port = value
+        self.changes = True
 
     @QtCore.pyqtSlot(int)
     def on_sbx_timeout_valueChanged(self, value: int):
         if self.__current_item.type() != NodeType.CON:
             return
-        self.__current_item.setData(0, WidgetData.timeout, value)
+        settings = self.__current_item.data(0, WidgetData.revpi_settings)  # type: RevPiSettings
+        settings.timeout = value
+        self.changes = True
 
     @QtCore.pyqtSlot(int)
     def on_cbx_ssh_use_tunnel_stateChanged(self, check_state: int):
         if self.__current_item.type() != NodeType.CON:
             return
-        self.__current_item.setData(0, WidgetData.ssh_use_tunnel, check_state == QtCore.Qt.CheckState.Checked)
+        settings = self.__current_item.data(0, WidgetData.revpi_settings)  # type: RevPiSettings
+        settings.ssh_use_tunnel = check_state == QtCore.Qt.CheckState.Checked
+        self.changes = True
 
     @QtCore.pyqtSlot(int)
     def on_sbx_ssh_port_valueChanged(self, value: int):
         if self.__current_item.type() != NodeType.CON:
             return
-        self.__current_item.setData(0, WidgetData.ssh_port, value)
+        settings = self.__current_item.data(0, WidgetData.revpi_settings)  # type: RevPiSettings
+        settings.ssh_port = value
+        self.changes = True
 
     @QtCore.pyqtSlot(str)
     def on_txt_ssh_user_textEdited(self, text):
         if self.__current_item.type() != NodeType.CON:
             return
-        self.__current_item.setData(0, WidgetData.ssh_user, text)
+        settings = self.__current_item.data(0, WidgetData.revpi_settings)  # type: RevPiSettings
+        settings.ssh_user = text
+        self.changes = True
 
     @QtCore.pyqtSlot(str)
     def on_cbb_folder_editTextChanged(self, text: str):

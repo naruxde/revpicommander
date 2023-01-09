@@ -9,7 +9,7 @@ from xmlrpc.client import Binary, Fault, MultiCall, MultiCallIterator
 
 from PyQt5 import QtCore, QtWidgets
 
-from .import helper
+from . import helper
 from . import proginit as pi
 from .debugios import DebugIos
 from .ui.debugcontrol_ui import Ui_wid_debugcontrol
@@ -74,7 +74,7 @@ class DebugControl(QtWidgets.QWidget, Ui_wid_debugcontrol):
             QtWidgets.QSpacerItem(20, 1, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         )
         self.cbx_write.setEnabled(False)
-        self.cbx_stay_on_top.setChecked(helper.settings.value("stay_on_top", False, bool))
+        self.cbx_stay_on_top.setChecked(helper.settings.value("debugcontrol/stay_on_top", False, bool))
 
     def __del__(self):
         pi.logger.debug("DebugControl.__del__")
@@ -342,7 +342,7 @@ class DebugControl(QtWidgets.QWidget, Ui_wid_debugcontrol):
         self._work_values(refresh=True)
         self._set_gui_control_states()
 
-        self.cbx_refresh.setChecked(helper.settings.value("auto_refresh", False, bool))
+        self.cbx_refresh.setChecked(helper.settings.value("debugcontrol/auto_refresh", False, bool))
 
         return True
 
@@ -415,12 +415,12 @@ class DebugControl(QtWidgets.QWidget, Ui_wid_debugcontrol):
     @QtCore.pyqtSlot(bool)
     def on_cbx_refresh_clicked(self, state: bool):
         """Save the state on user action."""
-        helper.settings.setValue("auto_refresh", state)
+        helper.settings.setValue("debugcontrol/auto_refresh", state)
 
     @QtCore.pyqtSlot(bool)
     def on_cbx_stay_on_top_clicked(self, state: bool):
         """Save the state on user action."""
-        helper.settings.setValue("stay_on_top", state)
+        helper.settings.setValue("debugcontrol/stay_on_top", state)
 
     @QtCore.pyqtSlot(int)
     def on_cbx_write_stateChanged(self, state: int):

@@ -26,7 +26,7 @@ class DebugIos(QtWidgets.QMainWindow, Ui_win_debugios):
         super(DebugIos, self).__init__(parent)
         self.setupUi(self)
 
-        self.restoreGeometry(helper.cm.debug_geos.get(position, b''))
+        self.restoreGeometry(helper.cm.settings.debug_geos.get(position, b''))
         self.setWindowTitle("{0} - {1}".format(position, name))
         self.gb_io.setTitle(self.gb_io.title().format(name))
 
@@ -58,7 +58,7 @@ class DebugIos(QtWidgets.QMainWindow, Ui_win_debugios):
 
     def closeEvent(self, a0: QtGui.QCloseEvent):
         pi.logger.debug("DebugIos.closeEvent")
-        helper.cm.debug_geos[self.position] = self.saveGeometry()
+        helper.cm.settings.debug_geos[self.position] = self.saveGeometry()
         self.device_closed.emit(self.position)
 
     @staticmethod
