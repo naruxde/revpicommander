@@ -15,6 +15,7 @@ setup(
     include_package_data=True,
 
     install_requires=[
+        "keyring",
         "PyQt5",
         "revpimodio2",
         "zeroconf"

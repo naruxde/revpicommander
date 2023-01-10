@@ -20,7 +20,7 @@ from paramiko.ssh_exception import AuthenticationException
 
 from . import proginit as pi
 from .ssh_tunneling.server import SSHLocalTunnel
-from .sshauth import SSHAuth, SSHAuthType
+from .sshauth import SSHAuth
 
 settings = QtCore.QSettings("revpimodio.org", "RevPiCommander")
 """Global application settings."""
@@ -304,11 +304,11 @@ class ConnectionManager(QtCore.QThread):
         self.xml_funcs.clear()
         self.xml_mode = -1
 
-    def pyload_connect(self, settings: RevPiSettings, parent=None) -> bool:
+    def pyload_connect(self, revpi_settings: RevPiSettings, parent=None) -> bool:
         """
         Create a new connection from settings object.
 
-        :param settings: Revolution Pi saved connection settings
+        :param revpi_settings: Revolution Pi saved connection settings
         :param parent: Qt parent window for dialog positioning
         :return: True, if the connection was successfully established
         """
@@ -322,10 +322,16 @@ class ConnectionManager(QtCore.QThread):
 
         socket.setdefaulttimeout(2)
 
-        if settings.ssh_use_tunnel:
+        if revpi_settings.ssh_use_tunnel:
             while True:
-                diag_ssh_auth = SSHAuth(SSHAuthType.PASS, parent)
-                diag_ssh_auth.username = settings.ssh_user
+                diag_ssh_auth = SSHAuth(
+                    revpi_settings.ssh_user,
+                    "{0}.{1}_{2}".format(
+                        settings.applicationName(),
+                        settings.organizationName(),
+                        revpi_settings.internal_id),
+                    parent,
+                )
                 if not diag_ssh_auth.exec() == QtWidgets.QDialog.Accepted:
                     self._clear_settings()
                     return False
@@ -333,14 +339,15 @@ class ConnectionManager(QtCore.QThread):
                 ssh_user = diag_ssh_auth.username
                 ssh_pass = diag_ssh_auth.password
                 ssh_tunnel_server = SSHLocalTunnel(
-                    settings.port,
-                    settings.address,
-                    settings.ssh_port
+                    revpi_settings.port,
+                    revpi_settings.address,
+                    revpi_settings.ssh_port
                 )
                 try:
                     ssh_tunnel_port = ssh_tunnel_server.connect_by_credentials(ssh_user, ssh_pass)
                     break
                 except AuthenticationException:
+                    diag_ssh_auth.remove_saved_password()
                     QtWidgets.QMessageBox.critical(
                         parent, self.tr("Error"), self.tr(
                             "The combination of username and password was rejected from the SSH server.\n\n"
@@ -360,7 +367,7 @@ class ConnectionManager(QtCore.QThread):
             sp = ServerProxy("http://127.0.0.1:{0}".format(ssh_tunnel_port))
 
         else:
-            sp = ServerProxy("http://{0}:{1}".format(settings.address, settings.port))
+            sp = ServerProxy("http://{0}:{1}".format(revpi_settings.address, revpi_settings.port))
 
         # Load values and test connection to Revolution Pi
         try:
@@ -371,7 +378,7 @@ class ConnectionManager(QtCore.QThread):
             pi.logger.exception(e)
             self.connection_error_observed.emit(str(e))
 
-            if not settings.ssh_use_tunnel:
+            if not revpi_settings.ssh_use_tunnel:
                 # todo: Change message, that user can use ssh
                 QtWidgets.QMessageBox.critical(
                     parent, self.tr("Error"), self.tr(
@@ -386,19 +393,19 @@ class ConnectionManager(QtCore.QThread):
 
             return False
 
-        self.settings = settings
+        self.settings = revpi_settings
         self.ssh_pass = ssh_pass
         self.pyload_version = pyload_version
         self.xml_funcs = xml_funcs
         self.xml_mode = xml_mode
 
         with self._lck_cli:
-            socket.setdefaulttimeout(settings.timeout)
+            socket.setdefaulttimeout(revpi_settings.timeout)
             self.ssh_tunnel_server = ssh_tunnel_server
             self._cli = sp
             self._cli_connect.put_nowait((
-                "127.0.0.1" if settings.ssh_use_tunnel else settings.address,
-                ssh_tunnel_port if settings.ssh_use_tunnel else settings.port
+                "127.0.0.1" if revpi_settings.ssh_use_tunnel else revpi_settings.address,
+                ssh_tunnel_port if revpi_settings.ssh_use_tunnel else revpi_settings.port
             ))
 
         self.connection_established.emit()

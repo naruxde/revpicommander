@@ -101,62 +101,62 @@ Nicht gespeicherte Änderunen gehen verloren</translation>
 <context>
     <name>ConnectionManager</name>
     <message>
-        <location filename="../helper.py" line="504"/>
+        <location filename="../helper.py" line="511"/>
         <source>SIMULATING</source>
         <translation>SIMULATION</translation>
     </message>
     <message>
-        <location filename="../helper.py" line="507"/>
+        <location filename="../helper.py" line="514"/>
         <source>NOT CONNECTED</source>
         <translation>NICHT VERBUNDEN</translation>
     </message>
     <message>
-        <location filename="../helper.py" line="524"/>
+        <location filename="../helper.py" line="531"/>
         <source>SERVER ERROR</source>
         <translation>SERVER FEHLER</translation>
     </message>
     <message>
-        <location filename="../helper.py" line="549"/>
+        <location filename="../helper.py" line="556"/>
         <source>RUNNING</source>
         <translation>LÄUFT</translation>
     </message>
     <message>
-        <location filename="../helper.py" line="551"/>
+        <location filename="../helper.py" line="558"/>
         <source>PLC FILE NOT FOUND</source>
         <translation>SPS PROGRAMM NICHT GEFUNDEN</translation>
     </message>
     <message>
-        <location filename="../helper.py" line="553"/>
+        <location filename="../helper.py" line="560"/>
         <source>NOT RUNNING (NO STATUS)</source>
         <translation>LÄUFT NICHT (KEIN STATUS)</translation>
     </message>
     <message>
-        <location filename="../helper.py" line="555"/>
+        <location filename="../helper.py" line="562"/>
         <source>PROGRAM KILLED</source>
         <translation>PROGRAMM GETÖTET</translation>
     </message>
     <message>
-        <location filename="../helper.py" line="557"/>
+        <location filename="../helper.py" line="564"/>
         <source>PROGRAM TERMED</source>
         <translation>PROGRAMM BEENDET</translation>
     </message>
     <message>
-        <location filename="../helper.py" line="559"/>
+        <location filename="../helper.py" line="566"/>
         <source>NOT RUNNING</source>
         <translation>LÄUFT NICHT</translation>
     </message>
     <message>
-        <location filename="../helper.py" line="561"/>
+        <location filename="../helper.py" line="568"/>
         <source>FINISHED WITH CODE {0}</source>
         <translation>BEENDET MIT CODE {0}</translation>
     </message>
     <message>
-        <location filename="../helper.py" line="376"/>
+        <location filename="../helper.py" line="383"/>
         <source>Error</source>
         <translation>Fehler</translation>
     </message>
     <message>
-        <location filename="../helper.py" line="344"/>
+        <location filename="../helper.py" line="351"/>
         <source>The combination of username and password was rejected from the SSH server.
 
 Try again.</source>
@@ -165,7 +165,7 @@ Try again.</source>
 Bitte erneut versuchen.</translation>
     </message>
     <message>
-        <location filename="../helper.py" line="353"/>
+        <location filename="../helper.py" line="360"/>
         <source>Could not establish a SSH connection to server:
 
 {0}</source>
@@ -174,7 +174,7 @@ Bitte erneut versuchen.</translation>
 {0}</translation>
     </message>
     <message>
-        <location filename="../helper.py" line="376"/>
+        <location filename="../helper.py" line="383"/>
         <source>Can not connect to RevPi XML-RPC Service! 
 
 This could have the following reasons: The RevPi is not online, the XML-RPC service is not running / bind to localhost or the ACL permission is not set for your IP!!!
@@ -401,7 +401,7 @@ Dies kann aus der Textbox oben kopiert werden.</translation>
     <message>
         <location filename="../revpicommander.py" line="231"/>
         <source>Can not start the simulator! Maybe the piCtory file is corrupt or you have no write permissions for &apos;{0}&apos;.</source>
-        <translation>Kann Simulator nicht starten! Vielleicht ist die piCtory Datei defekt oder es gibt keine Schreibberechtigung für &apos;{0}`.</translation>
+        <translation>Kann Simulator nicht starten! Vielleicht ist die piCtory Datei defekt oder es gibt keine Schreibberechtigung für &apos;{0}&apos;.</translation>
     </message>
     <message>
         <location filename="../revpicommander.py" line="398"/>
@@ -950,6 +950,27 @@ Dies ist kein Fehler, wenn das SPS Startprogramm bereits auf dem Rev Pi ist. Pr�
 {0}.</source>
         <translation>Prozessabbild erfolgreich geladen und gespeichert als:
 {0}.</translation>
+    </message>
+</context>
+<context>
+    <name>SSHAuth</name>
+    <message>
+        <location filename="../sshauth.py" line="49"/>
+        <source>Could not save password</source>
+        <translation>Konnte Kennwort nicht speichern</translation>
+    </message>
+    <message>
+        <location filename="../sshauth.py" line="49"/>
+        <source>Could not save password to operating systems password save.
+
+Maybe your operating system does not support saving passwords. This could be due to missing libraries or programs.
+
+This is not an error of RevPi Commander.</source>
+        <translation>Konnte das Kennwort nicht im Kennwortspeicher des Betriebssystems speichern.
+
+Vielleicht untersützt das Betriebssystem keine Kennwortspeicherung. Dies könnte an fehlenden Bibliotheken oder Programmen liegen.
+
+Dies ist kein Fehler von RevPi Commander.</translation>
     </message>
 </context>
 <context>
@@ -1671,6 +1692,16 @@ applicable law.
         <location filename="../../../ui_dev/sshauth.ui" line="33"/>
         <source>SSH password:</source>
         <translation>SSH Passwort:</translation>
+    </message>
+    <message>
+        <location filename="../../../ui_dev/sshauth.ui" line="53"/>
+        <source>Username and password will be saved in secured operating systems&apos;s password storage.</source>
+        <translation>Benutzername und Kennwort werden im Passwortspeicher vom Betriebssystem gesichert.</translation>
+    </message>
+    <message>
+        <location filename="../../../ui_dev/sshauth.ui" line="56"/>
+        <source>Save username and password</source>
+        <translation>Benutzername und Kennwort merken</translation>
     </message>
 </context>
 <context>

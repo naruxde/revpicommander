@@ -11,6 +11,7 @@ SOURCES       = src/revpicommander/aclmanager.py \
                 src/revpicommander/revpiplclist.py \
                 src/revpicommander/revpiprogram.py \
                 src/revpicommander/simulator.py \
+                src/revpicommander/sshauth.py \
                 src/revpicommander/revpicommander.py
 
 FORMS         = ui_dev/aclmanager.ui \

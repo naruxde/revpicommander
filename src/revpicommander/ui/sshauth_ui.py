@@ -15,7 +15,7 @@ class Ui_diag_sshauth(object):
     def setupUi(self, diag_sshauth):
         diag_sshauth.setObjectName("diag_sshauth")
         diag_sshauth.setWindowModality(QtCore.Qt.ApplicationModal)
-        diag_sshauth.resize(275, 170)
+        diag_sshauth.resize(363, 163)
         self.verticalLayout = QtWidgets.QVBoxLayout(diag_sshauth)
         self.verticalLayout.setObjectName("verticalLayout")
         self.wid_password = QtWidgets.QWidget(diag_sshauth)
@@ -36,18 +36,18 @@ class Ui_diag_sshauth(object):
         self.txt_username.setObjectName("txt_username")
         self.formLayout.setWidget(0, QtWidgets.QFormLayout.FieldRole, self.txt_username)
         self.verticalLayout.addWidget(self.wid_password)
-        self.wid_keys = QtWidgets.QWidget(diag_sshauth)
-        self.wid_keys.setObjectName("wid_keys")
-        self.verticalLayout.addWidget(self.wid_keys)
-        self.buttonBox = QtWidgets.QDialogButtonBox(diag_sshauth)
-        self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
-        self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel|QtWidgets.QDialogButtonBox.Ok)
-        self.buttonBox.setObjectName("buttonBox")
-        self.verticalLayout.addWidget(self.buttonBox)
+        self.cbx_save_password = QtWidgets.QCheckBox(diag_sshauth)
+        self.cbx_save_password.setObjectName("cbx_save_password")
+        self.verticalLayout.addWidget(self.cbx_save_password)
+        self.btn_box = QtWidgets.QDialogButtonBox(diag_sshauth)
+        self.btn_box.setOrientation(QtCore.Qt.Horizontal)
+        self.btn_box.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel|QtWidgets.QDialogButtonBox.Ok)
+        self.btn_box.setObjectName("btn_box")
+        self.verticalLayout.addWidget(self.btn_box)
 
         self.retranslateUi(diag_sshauth)
-        self.buttonBox.accepted.connect(diag_sshauth.accept) # type: ignore
-        self.buttonBox.rejected.connect(diag_sshauth.reject) # type: ignore
+        self.btn_box.accepted.connect(diag_sshauth.accept) # type: ignore
+        self.btn_box.rejected.connect(diag_sshauth.reject) # type: ignore
         QtCore.QMetaObject.connectSlotsByName(diag_sshauth)
 
     def retranslateUi(self, diag_sshauth):
@@ -55,6 +55,8 @@ class Ui_diag_sshauth(object):
         diag_sshauth.setWindowTitle(_translate("diag_sshauth", "SSH authentication"))
         self.lbl_username.setText(_translate("diag_sshauth", "SSH username:"))
         self.lbl_password.setText(_translate("diag_sshauth", "SSH password:"))
+        self.cbx_save_password.setToolTip(_translate("diag_sshauth", "Username and password will be saved in secured operating systems\'s password storage."))
+        self.cbx_save_password.setText(_translate("diag_sshauth", "Save username and password"))
 
 
 if __name__ == "__main__":

@@ -9,5 +9,4 @@ include README.md
 include requirements.txt
 include setup.iss
 include setup.py
-include stdeb.cfg
 include translate.pro
