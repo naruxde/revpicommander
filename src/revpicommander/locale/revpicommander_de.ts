@@ -101,62 +101,62 @@ Nicht gespeicherte Änderunen gehen verloren</translation>
 <context>
     <name>ConnectionManager</name>
     <message>
-        <location filename="../helper.py" line="511"/>
+        <location filename="../helper.py" line="512"/>
         <source>SIMULATING</source>
         <translation>SIMULATION</translation>
     </message>
     <message>
-        <location filename="../helper.py" line="514"/>
+        <location filename="../helper.py" line="515"/>
         <source>NOT CONNECTED</source>
         <translation>NICHT VERBUNDEN</translation>
     </message>
     <message>
-        <location filename="../helper.py" line="531"/>
+        <location filename="../helper.py" line="532"/>
         <source>SERVER ERROR</source>
         <translation>SERVER FEHLER</translation>
     </message>
     <message>
-        <location filename="../helper.py" line="556"/>
+        <location filename="../helper.py" line="557"/>
         <source>RUNNING</source>
         <translation>LÄUFT</translation>
     </message>
     <message>
-        <location filename="../helper.py" line="558"/>
+        <location filename="../helper.py" line="559"/>
         <source>PLC FILE NOT FOUND</source>
         <translation>SPS PROGRAMM NICHT GEFUNDEN</translation>
     </message>
     <message>
-        <location filename="../helper.py" line="560"/>
+        <location filename="../helper.py" line="561"/>
         <source>NOT RUNNING (NO STATUS)</source>
         <translation>LÄUFT NICHT (KEIN STATUS)</translation>
     </message>
     <message>
-        <location filename="../helper.py" line="562"/>
+        <location filename="../helper.py" line="563"/>
         <source>PROGRAM KILLED</source>
         <translation>PROGRAMM GETÖTET</translation>
     </message>
     <message>
-        <location filename="../helper.py" line="564"/>
+        <location filename="../helper.py" line="565"/>
         <source>PROGRAM TERMED</source>
         <translation>PROGRAMM BEENDET</translation>
     </message>
     <message>
-        <location filename="../helper.py" line="566"/>
+        <location filename="../helper.py" line="567"/>
         <source>NOT RUNNING</source>
         <translation>LÄUFT NICHT</translation>
     </message>
     <message>
-        <location filename="../helper.py" line="568"/>
+        <location filename="../helper.py" line="569"/>
         <source>FINISHED WITH CODE {0}</source>
         <translation>BEENDET MIT CODE {0}</translation>
     </message>
     <message>
-        <location filename="../helper.py" line="383"/>
+        <location filename="../helper.py" line="384"/>
         <source>Error</source>
         <translation>Fehler</translation>
     </message>
     <message>
-        <location filename="../helper.py" line="351"/>
+        <location filename="../helper.py" line="352"/>
         <source>The combination of username and password was rejected from the SSH server.
 
 Try again.</source>
@@ -165,7 +165,7 @@ Try again.</source>
 Bitte erneut versuchen.</translation>
     </message>
     <message>
-        <location filename="../helper.py" line="360"/>
+        <location filename="../helper.py" line="361"/>
         <source>Could not establish a SSH connection to server:
 
 {0}</source>
@@ -174,7 +174,7 @@ Bitte erneut versuchen.</translation>
 {0}</translation>
     </message>
     <message>
-        <location filename="../helper.py" line="383"/>
+        <location filename="../helper.py" line="384"/>
         <source>Can not connect to RevPi XML-RPC Service! 
 
 This could have the following reasons: The RevPi is not online, the XML-RPC service is not running / bind to localhost or the ACL permission is not set for your IP!!!
@@ -665,15 +665,15 @@ Ungesicherte Änderungen gehen verloren.</translation>
     <message>
         <location filename="../revpiplclist.py" line="28"/>
         <source>New connection</source>
-        <translation>Neue Verbindung</translation>
+        <translation type="obsolete">Neue Verbindung</translation>
     </message>
     <message>
-        <location filename="../revpiplclist.py" line="103"/>
+        <location filename="../revpiplclist.py" line="102"/>
         <source>Question</source>
         <translation>Frage</translation>
     </message>
     <message>
-        <location filename="../revpiplclist.py" line="103"/>
+        <location filename="../revpiplclist.py" line="102"/>
         <source>Do you really want to quit? 
 Unsaved changes will be lost.</source>
         <translation>Soll das Fenster wirklich geschlossen werden?

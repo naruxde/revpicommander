@@ -134,14 +134,15 @@ class RevPiSettings:
             self._settings.beginWriteArray("connections")
             self._settings.setArrayIndex(count_settings)
 
-            self.internal_id = uuid4().hex
+            if not self.internal_id:
+                self.internal_id = uuid4().hex
 
         if not self.internal_id:
             create_new_array_member()
 
         else:
             # Always search setting in array, because connection manager could reorganize array indexes
-            index = -1
+            new_setting = True
             for index in range(count_settings):
                 self._settings.setArrayIndex(index)
 
@@ -150,12 +151,14 @@ class RevPiSettings:
                     if self._settings.value("address") == self.address:
                         # Set missing internal_id
                         self.internal_id = uuid4().hex
+                        new_setting = False
                         break
                 else:
                     if self._settings.value("internal_id") == self.internal_id:
+                        new_setting = False
                         break
 
-            if index == count_settings - 1:
+            if new_setting:
                 # On this point, we iterate all settings and found none, so create new one
                 create_new_array_member()
 
@@ -665,17 +668,21 @@ def all_revpi_settings() -> [RevPiSettings]:
 
 
 def import_old_settings():
-    if not settings.value("revpicommander/imported_settings", False, type=bool):
-        settings.setValue("revpicommander/imported_settings", True)
+    """Try to import saved connections from old storage to new setting object."""
+    if settings.value("revpicommander/imported_settings", False, type=bool):
+        return
+    settings.setValue("revpicommander/imported_settings", True)
 
-        old_settings = QtCore.QSettings("revpipyplc", "revpipyload")
-        count_settings = old_settings.beginReadArray("connections")
-        old_settings.endArray()
+    old_settings = QtCore.QSettings("revpipyplc", "revpipyload")
+    count_settings = old_settings.beginReadArray("connections")
+    old_settings.endArray()
 
-        lst_revpi_settings = [RevPiSettings(i, settings_storage=old_settings) for i in range(count_settings)]
-        for revpi_setting in lst_revpi_settings:
+    for i in range(count_settings):
+        try:
+            revpi_setting = RevPiSettings(i, settings_storage=old_settings)
             revpi_setting._settings = settings
             revpi_setting.save_settings()
-
+        except Exception as e:
+            pi.logger.warning("Could not import saved connection {0}".format(i))
 
 import_old_settings()

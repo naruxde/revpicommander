@@ -25,7 +25,6 @@ class RevPiPlcList(QtWidgets.QDialog, Ui_diag_connections):
     def __init__(self, parent=None):
         super(RevPiPlcList, self).__init__(parent)
         self.setupUi(self)
-        self.__default_name = self.tr("New connection")
         self.__default_port = 55123
 
         self.__current_item = QtWidgets.QTreeWidgetItem()  # type: QtWidgets.QTreeWidgetItem
