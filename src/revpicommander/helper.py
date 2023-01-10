@@ -62,6 +62,7 @@ class RevPiSettings:
         self.ssh_use_tunnel = True
         self.ssh_port = 22
         self.ssh_user = "pi"
+        self.ssh_saved_password = False
 
         self.last_dir_upload = "."
         self.last_file_upload = "."
@@ -96,6 +97,7 @@ class RevPiSettings:
         self.ssh_use_tunnel = self._settings.value("ssh_use_tunnel", True, type=bool)
         self.ssh_port = self._settings.value("ssh_port", 22, type=int)
         self.ssh_user = self._settings.value("ssh_user", "pi", type=str)
+        self.ssh_saved_password = self._settings.value("ssh_saved_password", False, type=bool)
 
         self.last_dir_upload = self._settings.value("last_dir_upload", ".", type=str)
         self.last_file_upload = self._settings.value("last_file_upload", ".", type=str)
@@ -172,6 +174,7 @@ class RevPiSettings:
         self._settings.setValue("ssh_use_tunnel", self.ssh_use_tunnel)
         self._settings.setValue("ssh_port", self.ssh_port)
         self._settings.setValue("ssh_user", self.ssh_user)
+        self._settings.setValue("ssh_saved_password", self.ssh_saved_password)
 
         self._settings.setValue("last_dir_upload", self.last_dir_upload)
         self._settings.setValue("last_file_upload", self.last_file_upload)
@@ -347,6 +350,7 @@ class ConnectionManager(QtCore.QThread):
                     revpi_settings.address,
                     revpi_settings.ssh_port
                 )
+                revpi_settings.ssh_saved_password = diag_ssh_auth.in_keyring
                 try:
                     ssh_tunnel_port = ssh_tunnel_server.connect_by_credentials(ssh_user, ssh_pass)
                     break

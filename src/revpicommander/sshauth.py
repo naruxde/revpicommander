@@ -34,6 +34,7 @@ class SSHAuth(QtWidgets.QDialog, Ui_diag_sshauth):
         super(SSHAuth, self).__init__(parent)
         self.setupUi(self)
 
+        self._in_keyring = False
         self._service_name = service_name
         self.cbx_save_password.setVisible(bool(service_name))
         self.txt_username.setText(user_name)
@@ -46,6 +47,7 @@ class SSHAuth(QtWidgets.QDialog, Ui_diag_sshauth):
                 keyring.set_password(self._service_name, self.username, self.password)
             except KeyringError as e:
                 log.error(e)
+                self._in_keyring = False
                 QtWidgets.QMessageBox.warning(
                     self, self.tr("Could not save password"), self.tr(
                         "Could not save password to operating systems password save.\n\n"
@@ -54,6 +56,9 @@ class SSHAuth(QtWidgets.QDialog, Ui_diag_sshauth):
                         "This is not an error of RevPi Commander."
                     )
                 )
+            else:
+                self._in_keyring = True
+
         super().accept()
 
     def exec(self) -> int:
@@ -62,11 +67,14 @@ class SSHAuth(QtWidgets.QDialog, Ui_diag_sshauth):
         if self._service_name:
             try:
                 saved_password = keyring.get_password(self._service_name, self.username)
-                if saved_password:
-                    self.txt_password.setText(saved_password)
-                    return QtWidgets.QDialog.Accepted
             except KeyringError as e:
                 log.error(e)
+                self._in_keyring = False
+            else:
+                if saved_password:
+                    self._in_keyring = True
+                    self.txt_password.setText(saved_password)
+                    return QtWidgets.QDialog.Accepted
 
         return super().exec()
 
@@ -79,6 +87,11 @@ class SSHAuth(QtWidgets.QDialog, Ui_diag_sshauth):
                 keyring.delete_password(self._service_name, self.username)
             except KeyringError as e:
                 log.error(e)
+
+    @property
+    def in_keyring(self) -> bool:
+        """True, if password is in keyring."""
+        return self._in_keyring
 
     @property
     def password(self) -> str:

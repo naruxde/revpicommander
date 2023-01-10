@@ -6,7 +6,9 @@ __license__ = "GPLv3"
 
 from enum import IntEnum
 
+import keyring
 from PyQt5 import QtCore, QtGui, QtWidgets
+from keyring.errors import KeyringError
 
 from . import helper
 from . import proginit as pi
@@ -29,6 +31,7 @@ class RevPiPlcList(QtWidgets.QDialog, Ui_diag_connections):
 
         self.__current_item = QtWidgets.QTreeWidgetItem()  # type: QtWidgets.QTreeWidgetItem
         self.changes = True
+        self._keyring_cleanup_id_user = []
 
         self.tre_connections.setColumnWidth(0, 250)
         self.lbl_port.setText(self.lbl_port.text().format(self.__default_port))
@@ -78,6 +81,18 @@ class RevPiPlcList(QtWidgets.QDialog, Ui_diag_connections):
 
     def accept(self) -> None:
         pi.logger.debug("RevPiPlcList.accept")
+
+        for internal_id, ssh_user in self._keyring_cleanup_id_user:
+            service_name = "{0}.{1}_{2}".format(
+                helper.settings.applicationName(),
+                helper.settings.organizationName(),
+                internal_id
+            )
+            try:
+                # Remove information from os keyring, which we collected on_btn_delete_clicked
+                keyring.delete_password(service_name, ssh_user)
+            except KeyringError as e:
+                pi.logger.error(e)
 
         helper.settings.remove("connections")
 
@@ -242,6 +257,12 @@ class RevPiPlcList(QtWidgets.QDialog, Ui_diag_connections):
         """Remove selected entry."""
         item = self.tre_connections.currentItem()
         if item and item.type() == NodeType.CON:
+
+            revpi_settings = item.data(0, WidgetData.revpi_settings)  # type: RevPiSettings
+            if revpi_settings.ssh_saved_password:
+                # Cleans up keyring in save function
+                self._keyring_cleanup_id_user.append((revpi_settings.internal_id, revpi_settings.ssh_user))
+
             dir_node = item.parent()
             if dir_node:
                 dir_node.removeChild(item)
