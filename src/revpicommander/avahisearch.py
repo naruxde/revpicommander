@@ -229,16 +229,17 @@ class AvahiSearch(QtWidgets.QDialog, Ui_diag_search):
 
     @QtCore.pyqtSlot()
     def on_act_copy_host_triggered(self) -> None:
-        """Copy ip address of selected item to clipboard."""
+        """Copy hostname of selected item to clipboard."""
         selected_items = self.tb_revpi.selectedItems()
         if not selected_items:
             return
         item = selected_items[0]
-        host_name = item.data(WidgetData.host_name)
-        if platform == "win32":
-            # Strip hostname on Windows systems, it can not resolve .local addresses
-            host_name = host_name[:host_name.find(".")]
-        self.clipboard.setText(host_name)
+
+        # Use just the hostname on Windows systems, it can not resolve .local addresses
+        self.clipboard.setText(
+            item.data(WidgetData.host_name) if platform == "win32"
+            else item.data(WidgetData.host_name_full)
+        )
 
     @QtCore.pyqtSlot()
     def on_act_copy_ip_triggered(self) -> None:
@@ -256,21 +257,22 @@ class AvahiSearch(QtWidgets.QDialog, Ui_diag_search):
         if not selected_items:
             return
         item = selected_items[0]
-        if platform == "win32":
-            webbrowser.open("http://{0}/".format(item.data(WidgetData.address)))
-        else:
-            webbrowser.open("http://{0}/".format(item.data(WidgetData.host_name)))
+
+        # Till we could not choose https / http we are using the ip address
+        webbrowser.open("http://{0}/".format(item.data(WidgetData.address)))
 
     @QtCore.pyqtSlot(str, str, int, str, str)
     def on_avahi_added(self, avahi_id: str, server: str, port: int, conf_type: str, ip: str) -> None:
         """New Revolution Pi found."""
 
         def update_tb_revpi_row(row_index: int):
-            host_name = server[:-1]
+            host_name_full = server[:-1]
+            host_name = host_name_full[:host_name_full.find(".")]
 
             item_name = self.tb_revpi.item(row_index, 0)
             item_name.setData(WidgetData.address, ip)
             item_name.setData(WidgetData.port, port)
+            item_name.setData(WidgetData.host_name_full, host_name_full)
             item_name.setData(WidgetData.host_name, host_name)
 
             revpi_settings = item_name.data(WidgetData.revpi_settings)  # type: RevPiSettings

@@ -36,6 +36,7 @@ class WidgetData(IntEnum):
     port = 264
     object_name = 265
     host_name = 267
+    host_name_full = 268
     file_name = 309
     revpi_settings = 320
 
