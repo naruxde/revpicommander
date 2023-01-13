@@ -8,7 +8,7 @@ from setuptools import find_namespace_packages, setup
 
 setup(
     name="revpicommander",
-    version="0.9.10rc2",
+    version="0.9.10rc3",
 
     packages=find_namespace_packages("src"),
     package_dir={'': 'src'},
@@ -35,7 +35,7 @@ setup(
     maintainer="Sven Sager",
     maintainer_email="akira@revpimodio.org",
     description="GUI for Revolution Pi to upload programs and do IO-Checks",
-    long_description="The RevPiCommander is a GUI tool to manage your revolution Pi over the\n"
+    long_description="The RevPiCommander is a GUI tool to manage your Revolution Pi over the\n"
                      "network. You can search for RevPis in your network, manage the settings\n"
                      "of RevPiPyLoad and do IO checks on your local machine. Developing your\n"
                      "control program is very easy with the developer, upload and debug it\n"
