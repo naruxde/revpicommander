@@ -11,20 +11,40 @@ from os.path import dirname, join
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
+from revpicommander.backgroundworker import BackgroundWaiter
 from . import __version__
 from . import helper
 from . import proginit as pi
 from . import revpilogfile
 from .avahisearch import AvahiSearch
 from .debugcontrol import DebugControl
-from .helper import RevPiSettings
+from .helper import ConnectionFail, RevPiSettings
 from .revpifiles import RevPiFiles
 from .revpiinfo import RevPiInfo
 from .revpioption import RevPiOption
 from .revpiplclist import RevPiPlcList
 from .revpiprogram import RevPiProgram
 from .simulator import Simulator
+from .sshauth import SSHAuth
 from .ui.revpicommander_ui import Ui_win_revpicommander
+
+
+class ConnectingPyload(QtCore.QThread):
+    """
+    Try to establish a connection in background.
+
+    The pyload_connect function will emit signals for error or successful connect. This
+    signals will be used to show error messages and return to this function, if the
+    authentication failed.
+    """
+
+    def __init__(self, revpi_settings: RevPiSettings, ssh_password="", parent=None):
+        super().__init__(parent)
+        self._revpi_settings = revpi_settings
+        self._ssh_password = ssh_password
+
+    def run(self) -> None:
+        helper.cm.pyload_connect(self._revpi_settings, self._ssh_password)
 
 
 class RevPiCommander(QtWidgets.QMainWindow, Ui_win_revpicommander):
@@ -56,6 +76,7 @@ class RevPiCommander(QtWidgets.QMainWindow, Ui_win_revpicommander):
 
         self.btn_plc_logs.clicked.connect(self.on_act_logs_triggered)
 
+        helper.cm.connect_error.connect(self.on_cm_connect_error)
         helper.cm.connection_disconnected.connect(self.on_cm_connection_disconnected)
         helper.cm.connection_disconnecting.connect(self.on_cm_connection_disconnecting)
         helper.cm.connection_established.connect(self.on_cm_connection_established)
@@ -96,6 +117,21 @@ class RevPiCommander(QtWidgets.QMainWindow, Ui_win_revpicommander):
 
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
     # region #      REGION: Connection management
+
+    @QtCore.pyqtSlot(str, str, ConnectionFail, RevPiSettings)
+    def on_cm_connect_error(self, title: str, text: str, fail_code: ConnectionFail, revpi_settings: RevPiSettings):
+        """
+        Slot to get information of pyload_connect connection errors.
+
+        :param title: Title of error message
+        :param text: Text of error message
+        :param fail_code: Type of error
+        :param revpi_settings: Settings of the revpi with the error
+        """
+        QtWidgets.QMessageBox.critical(self, title, text)
+        if fail_code is ConnectionFail.SSH_AUTH:
+            # On failed credentials, we try to connect again and remove password form keychain, if exists
+            self._pyload_connect(revpi_settings, True)
 
     @QtCore.pyqtSlot(str)
     def on_cm_connection_error_observed(self, message: str):
@@ -188,6 +224,54 @@ class RevPiCommander(QtWidgets.QMainWindow, Ui_win_revpicommander):
             act.setToolTip("{0}:{1}".format(settings.address, settings.port))
             parent_menu.addAction(act)
 
+    def _pyload_connect(self, revpi_settings: RevPiSettings, remove_saved_ssh_password=False):
+        """
+        Try to async establish a connection to Revolution Pi.
+
+        :param revpi_settings: RevPi settings object
+        :param remove_saved_ssh_password: Remove password from keychain
+        """
+        ssh_password = ""
+
+        diag_connecting = BackgroundWaiter(
+            revpi_settings.timeout,
+            self.tr("Establish a connection to the Revolution Pi..."),
+            self,
+            self.tr("Revolution Pi connected!"),
+        )
+        helper.cm.connection_established.connect(diag_connecting.requestInterruption)
+
+        if revpi_settings.ssh_use_tunnel:
+            diag_ssh_auth = SSHAuth(
+                revpi_settings.ssh_user,
+                "{0}.{1}_{2}".format(
+                    helper.settings.applicationName(),
+                    helper.settings.organizationName(),
+                    revpi_settings.internal_id),
+                self,
+            )
+
+            if remove_saved_ssh_password and revpi_settings.ssh_saved_password:
+                diag_ssh_auth.remove_saved_password()
+                revpi_settings.ssh_saved_password = False
+
+            # Doesn't matter what user selects, we have to save settings to sync keychain and values
+            if diag_ssh_auth.exec() != QtWidgets.QDialog.Accepted:
+                revpi_settings.save_settings()
+                return
+
+            revpi_settings.ssh_saved_password = diag_ssh_auth.in_keyring
+            revpi_settings.ssh_user = diag_ssh_auth.username
+            ssh_password = diag_ssh_auth.password
+            revpi_settings.save_settings()
+
+        # Connect in background and show the connecting dialog to user
+        th_connecting = ConnectingPyload(revpi_settings, ssh_password, self)
+        th_connecting.finished.connect(diag_connecting.requestInterruption)
+        th_connecting.start()
+
+        diag_connecting.exec_dialog(self.tr("Connecting..."), False)
+
     @QtCore.pyqtSlot()
     def on_act_connections_triggered(self):
         """Edit saved connections to Revolution Pi devices."""
@@ -202,7 +286,7 @@ class RevPiCommander(QtWidgets.QMainWindow, Ui_win_revpicommander):
                 if self.diag_search.just_save:
                     self.diag_connections.exec_with_presets(self.diag_search.connect_settings)
                 else:
-                    helper.cm.pyload_connect(self.diag_search.connect_settings, self)
+                    self._pyload_connect(self.diag_search.connect_settings)
 
         self._load_men_connections()
 
@@ -361,7 +445,7 @@ class RevPiCommander(QtWidgets.QMainWindow, Ui_win_revpicommander):
     @QtCore.pyqtSlot(QtWidgets.QAction)
     def on_men_connections_triggered(self, action: QtWidgets.QAction):
         """A connection is selected in the men_connections menu."""
-        helper.cm.pyload_connect(action.data(), self)
+        self._pyload_connect(action.data())
 
     @QtCore.pyqtSlot()
     def on_act_webpage_triggered(self):

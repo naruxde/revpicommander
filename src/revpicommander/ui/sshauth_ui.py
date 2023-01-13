@@ -15,8 +15,9 @@ class Ui_diag_sshauth(object):
     def setupUi(self, diag_sshauth):
         diag_sshauth.setObjectName("diag_sshauth")
         diag_sshauth.setWindowModality(QtCore.Qt.ApplicationModal)
-        diag_sshauth.resize(363, 163)
+        diag_sshauth.resize(331, 225)
         self.verticalLayout = QtWidgets.QVBoxLayout(diag_sshauth)
+        self.verticalLayout.setSizeConstraint(QtWidgets.QLayout.SetFixedSize)
         self.verticalLayout.setObjectName("verticalLayout")
         self.wid_password = QtWidgets.QWidget(diag_sshauth)
         self.wid_password.setObjectName("wid_password")
@@ -44,6 +45,16 @@ class Ui_diag_sshauth(object):
         self.btn_box.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel|QtWidgets.QDialogButtonBox.Ok)
         self.btn_box.setObjectName("btn_box")
         self.verticalLayout.addWidget(self.btn_box)
+        self.lbl_info = QtWidgets.QLabel(diag_sshauth)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.lbl_info.sizePolicy().hasHeightForWidth())
+        self.lbl_info.setSizePolicy(sizePolicy)
+        self.lbl_info.setWordWrap(True)
+        self.lbl_info.setObjectName("lbl_info")
+        self.verticalLayout.addWidget(self.lbl_info)
+        self.verticalLayout.setStretch(3, 1)
 
         self.retranslateUi(diag_sshauth)
         self.btn_box.accepted.connect(diag_sshauth.accept) # type: ignore
@@ -57,6 +68,7 @@ class Ui_diag_sshauth(object):
         self.lbl_password.setText(_translate("diag_sshauth", "SSH password:"))
         self.cbx_save_password.setToolTip(_translate("diag_sshauth", "Username and password will be saved in secured operating systems\'s password storage."))
         self.cbx_save_password.setText(_translate("diag_sshauth", "Save username and password"))
+        self.lbl_info.setText(_translate("diag_sshauth", "Note: The default user for SSH is \"pi\" which differs from the web configuration. You can find the password on the sticker on the device."))
 
 
 if __name__ == "__main__":

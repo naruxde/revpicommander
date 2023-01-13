@@ -6,12 +6,9 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>418</width>
-    <height>97</height>
+    <width>424</width>
+    <height>104</height>
    </rect>
-  </property>
-  <property name="windowTitle">
-   <string>File transfer...</string>
   </property>
   <property name="modal">
    <bool>true</bool>

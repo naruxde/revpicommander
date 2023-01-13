@@ -18,7 +18,8 @@ class BackgroundWorker(QtCore.QThread):
     steps_done = QtCore.pyqtSignal(int)
     status_message = QtCore.pyqtSignal(str)
 
-    def __init__(self, parent=None):
+    def __init__(self, parent=None, interruption_text: str = None):
+        self._interruption_text = interruption_text or self.tr("User requested cancellation...")
         super(BackgroundWorker, self).__init__(parent)
 
     def check_cancel(self) -> bool:
@@ -28,33 +29,67 @@ class BackgroundWorker(QtCore.QThread):
         :return: True, if interruption was requested
         """
         if self.isInterruptionRequested():
-            self.status_message.emit(self.tr("User requested cancellation..."))
+            self.status_message.emit(self._interruption_text)
             self.msleep(750)
             return True
         return False
 
-    def exec_dialog(self) -> int:
+    def exec_dialog(self, window_title="", can_cancel=True) -> int:
+        """
+        Show dialog with progress bar.
+
+        :param window_title: Title of Dialog window
+        :param can_cancel: If False, the cancel button is deactivated
+        :return: Dialog result
+        """
         diag = WorkerDialog(self, self.parent())
+        diag.setWindowTitle(window_title)
+        diag.btn_box.setEnabled(can_cancel)
         rc = diag.exec()
         diag.deleteLater()
         return rc
 
-    def wait_interruptable(self, seconds=-1) -> None:
-        """Save function to wait and get the cancel buttons."""
+    def wait_interruptable(self, seconds=-1) -> bool:
+        """
+        Save function to wait and get the cancel buttons.
+
+        :param seconds: Wait this amount of seconds
+        :return: True, if interruption was requested
+        """
         counter = seconds * 4
         while counter != 0:
             counter -= 1
             self.msleep(250)
             if self.check_cancel():
-                break
+                return True
+        return False
 
     def run(self) -> None:
-        """Worker thread to import pictures from camera."""
-        log.debug("BackgroundWorker.run")
-        self.status_message.emit("Started dummy thread...")
-        self.wait_interruptable(5)
-        self.status_message.emit("Completed dummy thread.")
-        self.wait_interruptable(2)
+        """Override this function with your logic."""
+        raise NotImplementedError()
+
+
+class BackgroundWaiter(BackgroundWorker):
+    """Just wait an amount of time and show progress bar."""
+
+    def __init__(self, seconds: int, status_message: str, parent=None, interruption_text: str = None):
+        self._status_message = status_message
+        self._wait_steps = seconds * 4
+        super().__init__(parent, interruption_text)
+
+    def run(self) -> None:
+        log.debug("BackgroundWaiter.run")
+        self.steps_todo.emit(self._wait_steps)
+        self.status_message.emit(self._status_message)
+        counter = 0
+        while counter <= self._wait_steps:
+            counter += 1
+            self.msleep(250)
+            if self.isInterruptionRequested():
+                self.steps_done.emit(self._wait_steps)
+            if self.check_cancel():
+                return
+            self.steps_done.emit(counter)
 
 
 class WorkerDialog(QtWidgets.QDialog, Ui_diag_backgroundworker):

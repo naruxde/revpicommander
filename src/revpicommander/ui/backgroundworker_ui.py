@@ -14,7 +14,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_diag_backgroundworker(object):
     def setupUi(self, diag_backgroundworker):
         diag_backgroundworker.setObjectName("diag_backgroundworker")
-        diag_backgroundworker.resize(418, 97)
+        diag_backgroundworker.resize(424, 104)
         diag_backgroundworker.setModal(True)
         self.verticalLayout = QtWidgets.QVBoxLayout(diag_backgroundworker)
         self.verticalLayout.setObjectName("verticalLayout")
@@ -37,8 +37,7 @@ class Ui_diag_backgroundworker(object):
         QtCore.QMetaObject.connectSlotsByName(diag_backgroundworker)
 
     def retranslateUi(self, diag_backgroundworker):
-        _translate = QtCore.QCoreApplication.translate
-        diag_backgroundworker.setWindowTitle(_translate("diag_backgroundworker", "File transfer..."))
+        pass
 
 
 if __name__ == "__main__":

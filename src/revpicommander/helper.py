@@ -15,18 +15,23 @@ from threading import Lock
 from uuid import uuid4
 from xmlrpc.client import Binary, ServerProxy
 
-from PyQt5 import QtCore, QtWidgets
+from PyQt5 import QtCore
 from paramiko.ssh_exception import AuthenticationException
 
 from . import proginit as pi
 from .ssh_tunneling.server import SSHLocalTunnel
-from .sshauth import SSHAuth
 
 settings = QtCore.QSettings("revpimodio.org", "RevPiCommander")
 """Global application settings."""
 
 homedir = environ.get("HOME", "") or environ.get("APPDATA", "")
 """Home dir of user."""
+
+
+class ConnectionFail(IntEnum):
+    NO_XML_RPC = 1
+    SSH_CONNECT = 2
+    SSH_AUTH = 4
 
 
 class WidgetData(IntEnum):
@@ -194,6 +199,8 @@ class RevPiSettings:
 class ConnectionManager(QtCore.QThread):
     """Check connection and status for PLC program on Revolution Pi."""
 
+    connect_error = QtCore.pyqtSignal(str, str, ConnectionFail, RevPiSettings)
+    """Error header, message and reason (ConnectionFail) of a new connection after pyload_connect call."""
     connection_established = QtCore.pyqtSignal()
     """New connection established successfully with <class 'ServerProxy'>."""
     connection_disconnected = QtCore.pyqtSignal()
@@ -311,12 +318,12 @@ class ConnectionManager(QtCore.QThread):
         self.xml_funcs.clear()
         self.xml_mode = -1
 
-    def pyload_connect(self, revpi_settings: RevPiSettings, parent=None) -> bool:
+    def pyload_connect(self, revpi_settings: RevPiSettings, ssh_pass="") -> bool:
         """
         Create a new connection from settings object.
 
         :param revpi_settings: Revolution Pi saved connection settings
-        :param parent: Qt parent window for dialog positioning
+        :param ssh_pass: Use this ssh password, if revpi_settings.ssh_use_tunnel is true
         :return: True, if the connection was successfully established
         """
 
@@ -325,52 +332,38 @@ class ConnectionManager(QtCore.QThread):
 
         ssh_tunnel_server = None
         ssh_tunnel_port = 0
-        ssh_pass = ""
 
-        socket.setdefaulttimeout(2)
+        socket.setdefaulttimeout(revpi_settings.timeout)
 
         if revpi_settings.ssh_use_tunnel:
-            while True:
-                diag_ssh_auth = SSHAuth(
-                    revpi_settings.ssh_user,
-                    "{0}.{1}_{2}".format(
-                        settings.applicationName(),
-                        settings.organizationName(),
-                        revpi_settings.internal_id),
-                    parent,
+            ssh_tunnel_server = SSHLocalTunnel(
+                revpi_settings.port,
+                revpi_settings.address,
+                revpi_settings.ssh_port
+            )
+            try:
+                ssh_tunnel_port = ssh_tunnel_server.connect_by_credentials(revpi_settings.ssh_user, ssh_pass)
+            except AuthenticationException:
+                self.connect_error.emit(
+                    self.tr("Error"), self.tr(
+                        "The combination of username and password was rejected from the SSH server.\n\n"
+                        "Try again."
+                    ),
+                    ConnectionFail.SSH_AUTH,
+                    revpi_settings,
                 )
-                if not diag_ssh_auth.exec() == QtWidgets.QDialog.Accepted:
-                    self._clear_settings()
-                    return False
-
-                ssh_user = diag_ssh_auth.username
-                ssh_pass = diag_ssh_auth.password
-                ssh_tunnel_server = SSHLocalTunnel(
-                    revpi_settings.port,
-                    revpi_settings.address,
-                    revpi_settings.ssh_port
+                return False
+            except Exception as e:
+                # todo: Check some more kinds of exceptions and nice user info
+                self._clear_settings()
+                self.connect_error.emit(
+                    self.tr("Error"), self.tr(
+                        "Could not establish a SSH connection to server:\n\n{0}"
+                    ).format(str(e)),
+                    ConnectionFail.SSH_CONNECT,
+                    revpi_settings,
                 )
-                revpi_settings.ssh_saved_password = diag_ssh_auth.in_keyring
-                try:
-                    ssh_tunnel_port = ssh_tunnel_server.connect_by_credentials(ssh_user, ssh_pass)
-                    break
-                except AuthenticationException:
-                    diag_ssh_auth.remove_saved_password()
-                    QtWidgets.QMessageBox.critical(
-                        parent, self.tr("Error"), self.tr(
-                            "The combination of username and password was rejected from the SSH server.\n\n"
-                            "Try again."
-                        )
-                    )
-                except Exception as e:
-                    # todo: Check some more kinds of exceptions and nice user info
-                    self._clear_settings()
-                    QtWidgets.QMessageBox.critical(
-                        parent, self.tr("Error"), self.tr(
-                            "Could not establish a SSH connection to server:\n\n{0}"
-                        ).format(str(e))
-                    )
-                    return False
+                return False
 
             sp = ServerProxy("http://127.0.0.1:{0}".format(ssh_tunnel_port))
 
@@ -386,17 +379,30 @@ class ConnectionManager(QtCore.QThread):
             pi.logger.exception(e)
             self.connection_error_observed.emit(str(e))
 
-            if not revpi_settings.ssh_use_tunnel:
+            if revpi_settings.ssh_use_tunnel:
+                self.connect_error.emit(
+                    self.tr("Error"), self.tr(
+                        "Can not connect to RevPi XML-RPC Service through SSH tunnel! \n\n"
+                        "This could have the following reasons: The XML-RPC service is not "
+                        "running / not bind to localhost or the ACL permission is not set for "
+                        "127.0.0.1!!!"
+                    ),
+                    ConnectionFail.NO_XML_RPC,
+                    revpi_settings,
+                )
+            else:
                 # todo: Change message, that user can use ssh
-                QtWidgets.QMessageBox.critical(
-                    parent, self.tr("Error"), self.tr(
+                self.connect_error.emit(
+                    self.tr("Error"), self.tr(
                         "Can not connect to RevPi XML-RPC Service! \n\n"
                         "This could have the following reasons: The RevPi is not "
                         "online, the XML-RPC service is not running / bind to "
                         "localhost or the ACL permission is not set for your "
                         "IP!!!\n\nRun 'sudo revpipyload_secure_installation' on "
                         "Revolution Pi to setup this function!"
-                    )
+                    ),
+                    ConnectionFail.NO_XML_RPC,
+                    revpi_settings,
                 )
 
             return False
@@ -408,7 +414,6 @@ class ConnectionManager(QtCore.QThread):
         self.xml_mode = xml_mode
 
         with self._lck_cli:
-            socket.setdefaulttimeout(revpi_settings.timeout)
             self.ssh_tunnel_server = ssh_tunnel_server
             self._cli = sp
             self._cli_connect.put_nowait((
@@ -686,7 +691,8 @@ def import_old_settings():
             revpi_setting = RevPiSettings(i, settings_storage=old_settings)
             revpi_setting._settings = settings
             revpi_setting.save_settings()
-        except Exception as e:
+        except Exception:
             pi.logger.warning("Could not import saved connection {0}".format(i))
+
 
 import_old_settings()

@@ -124,7 +124,7 @@ class RevPiFiles(QtWidgets.QMainWindow, Ui_win_files):
             return
 
         uploader = UploadFiles(self.file_list_local(), self)
-        if uploader.exec_dialog() == QtWidgets.QDialog.Rejected:
+        if uploader.exec_dialog(self.tr("File transfer...")) == QtWidgets.QDialog.Rejected:
             return
 
         if uploader.ec == 0:
