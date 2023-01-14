@@ -9,6 +9,7 @@
     <file>ico/file-python.ico</file>
   </qresource>
   <qresource prefix="action">
+    <file>ico/edit-delete-6.ico</file>
     <file>ico/applications-utilities.ico</file>
     <file>ico/edit-find.ico</file>
     <file>ico/process-stop.ico</file>

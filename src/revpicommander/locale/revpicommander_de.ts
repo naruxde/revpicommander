@@ -834,16 +834,30 @@ Ungesicherte Änderungen gehen verloren.</translation>
         <translation type="obsolete">Neue Verbindung</translation>
     </message>
     <message>
-        <location filename="../revpiplclist.py" line="117"/>
+        <location filename="../revpiplclist.py" line="282"/>
         <source>Question</source>
         <translation>Frage</translation>
     </message>
     <message>
-        <location filename="../revpiplclist.py" line="117"/>
+        <location filename="../revpiplclist.py" line="121"/>
         <source>Do you really want to quit? 
 Unsaved changes will be lost.</source>
         <translation>Soll das Fenster wirklich geschlossen werden?
 Ungesicherte Änderungen gehen verloren.</translation>
+    </message>
+    <message>
+        <location filename="../revpiplclist.py" line="282"/>
+        <source>If you remote this folder, all containing elements will be removed, too. 
+
+Do you want to delete folder and all elements?</source>
+        <translation>Wird dieser Ordner gelöscht, betrifft dies auch alle Elemente im Ordner.
+
+Wollen sie den Ordner und alle Elemente löschen?</translation>
+    </message>
+    <message>
+        <location filename="../revpiplclist.py" line="324"/>
+        <source>New folder</source>
+        <translation>Neuer Ordner</translation>
     </message>
 </context>
 <context>

@@ -108,6 +108,9 @@
          <property name="editable">
           <bool>true</bool>
          </property>
+         <property name="sizeAdjustPolicy">
+          <enum>QComboBox::AdjustToContents</enum>
+         </property>
          <item>
           <property name="text">
            <string/>
@@ -218,9 +221,6 @@
      </item>
      <item>
       <widget class="QPushButton" name="btn_up">
-       <property name="text">
-        <string/>
-       </property>
        <property name="icon">
         <iconset resource="ressources.qrc">
          <normaloff>:/action/ico/arrow-up.ico</normaloff>:/action/ico/arrow-up.ico</iconset>
@@ -229,9 +229,6 @@
      </item>
      <item>
       <widget class="QPushButton" name="btn_down">
-       <property name="text">
-        <string/>
-       </property>
        <property name="icon">
         <iconset resource="ressources.qrc">
          <normaloff>:/action/ico/arrow-down.ico</normaloff>:/action/ico/arrow-down.ico</iconset>
@@ -240,20 +237,22 @@
      </item>
      <item>
       <widget class="QPushButton" name="btn_delete">
-       <property name="text">
-        <string/>
-       </property>
        <property name="icon">
         <iconset resource="ressources.qrc">
-         <normaloff>:/action/ico/edit-delete.ico</normaloff>:/action/ico/edit-delete.ico</iconset>
+         <normaloff>:/action/ico/edit-delete-6.ico</normaloff>:/action/ico/edit-delete-6.ico</iconset>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="btn_add_dir">
+       <property name="icon">
+        <iconset resource="ressources.qrc">
+         <normaloff>:/action/ico/folder-open.ico</normaloff>:/action/ico/folder-open.ico</iconset>
        </property>
       </widget>
      </item>
      <item>
       <widget class="QPushButton" name="btn_add">
-       <property name="text">
-        <string/>
-       </property>
        <property name="icon">
         <iconset resource="ressources.qrc">
          <normaloff>:/action/ico/edit-add.ico</normaloff>:/action/ico/edit-add.ico</iconset>
@@ -270,32 +269,32 @@
  <connections>
   <connection>
    <sender>btn_box</sender>
-   <signal>accepted()</signal>
+   <signal>rejected()</signal>
    <receiver>diag_connections</receiver>
-   <slot>accept()</slot>
+   <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>248</x>
-     <y>254</y>
+     <x>322</x>
+     <y>564</y>
     </hint>
     <hint type="destinationlabel">
-     <x>157</x>
+     <x>286</x>
      <y>274</y>
     </hint>
    </hints>
   </connection>
   <connection>
    <sender>btn_box</sender>
-   <signal>rejected()</signal>
+   <signal>accepted()</signal>
    <receiver>diag_connections</receiver>
-   <slot>reject()</slot>
+   <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>316</x>
-     <y>260</y>
+     <x>254</x>
+     <y>564</y>
     </hint>
     <hint type="destinationlabel">
-     <x>286</x>
+     <x>157</x>
      <y>274</y>
     </hint>
    </hints>

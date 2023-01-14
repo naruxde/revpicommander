@@ -37,13 +37,30 @@ class RevPiPlcList(QtWidgets.QDialog, Ui_diag_connections):
         self.lbl_port.setText(self.lbl_port.text().format(self.__default_port))
         self.sbx_port.setValue(self.__default_port)
 
+        # Dirty workaround to remove default button to prevent action on ENTER key, while user edit texts
+        self.__btn_dummy = QtWidgets.QPushButton(self)
+        self.__btn_dummy.setVisible(False)
+        self.__btn_dummy.setDefault(True)
+
+    def _load_cbb_folder(self):
+        """Clean up all entries and reload existing ones from treeview."""
+        self.cbb_folder.blockSignals(True)
+
+        self.cbb_folder.clear()
+        self.cbb_folder.addItem("")
+        for i in range(self.tre_connections.topLevelItemCount()):
+            item = self.tre_connections.topLevelItem(i)
+            if item.type() != NodeType.DIR:
+                continue
+            self.cbb_folder.addItem(item.text(0))
+
+        self.cbb_folder.blockSignals(False)
+
     def _load_settings(self):
         """Load values to GUI widgets."""
         pi.logger.debug("RevPiPlcList._load_settings")
 
         self.tre_connections.clear()
-        self.cbb_folder.clear()
-        self.cbb_folder.addItem("")
 
         # Get length of array and close it, the RevPiSettings-class need it
         count_settings = helper.settings.beginReadArray("connections")
@@ -67,7 +84,6 @@ class RevPiPlcList(QtWidgets.QDialog, Ui_diag_connections):
                     sub_folder.setIcon(0, QtGui.QIcon(":/main/ico/folder.ico"))
                     sub_folder.setText(0, folder)
                     self.tre_connections.addTopLevelItem(sub_folder)
-                    self.cbb_folder.addItem(folder)
 
                 sub_folder.addChild(con_item)
             else:
@@ -76,8 +92,7 @@ class RevPiPlcList(QtWidgets.QDialog, Ui_diag_connections):
         self.tre_connections.expandAll()
         self.changes = False
 
-        if self.tre_connections.topLevelItemCount() == 0:
-            self._edit_state()
+        self._edit_state()
 
     def accept(self) -> None:
         pi.logger.debug("RevPiPlcList.accept")
@@ -150,6 +165,8 @@ class RevPiPlcList(QtWidgets.QDialog, Ui_diag_connections):
 
     def _edit_state(self):
         """Set enabled status of all controls, depending on selected item."""
+        pi.logger.debug("RevPiPlcList._edit_state")
+
         item = self.tre_connections.currentItem()
         if item is None:
             up_ok = False
@@ -171,12 +188,16 @@ class RevPiPlcList(QtWidgets.QDialog, Ui_diag_connections):
 
         self.btn_up.setEnabled(up_ok)
         self.btn_down.setEnabled(down_ok)
-        self.btn_delete.setEnabled(con_item)
+        self.btn_delete.setEnabled(con_item or dir_item)
         self.txt_name.setEnabled(con_item)
         self.txt_address.setEnabled(con_item)
         self.sbx_port.setEnabled(con_item)
         self.sbx_timeout.setEnabled(con_item)
         self.cbb_folder.setEnabled(con_item or dir_item)
+        self.cbb_folder.setEditable(dir_item)
+        if self.cbb_folder.isEditable():
+            # Disable auto complete, this would override a new typed name with existing one
+            self.cbb_folder.setCompleter(None)
 
         self.cbx_ssh_use_tunnel.setEnabled(con_item)
         self.sbx_ssh_port.setEnabled(con_item)
@@ -203,22 +224,25 @@ class RevPiPlcList(QtWidgets.QDialog, Ui_diag_connections):
             if 0 <= new_index < dir_item.childCount():
                 item = dir_item.takeChild(index)
                 dir_item.insertChild(new_index, item)
-            self.tre_connections.expandItem(dir_item)
         else:
             index = self.tre_connections.indexOfTopLevelItem(item)
             new_index = index + count
             if 0 <= index < self.tre_connections.topLevelItemCount():
                 item = self.tre_connections.takeTopLevelItem(index)
                 self.tre_connections.insertTopLevelItem(new_index, item)
+                if item.type() == NodeType.DIR:
+                    # Expand a moved dir node, it would be collapsed after move
+                    self.tre_connections.expandItem(item)
 
         self.tre_connections.setCurrentItem(item)
-        self._edit_state()
 
     @QtCore.pyqtSlot(QtWidgets.QTreeWidgetItem, QtWidgets.QTreeWidgetItem)
     def on_tre_connections_currentItemChanged(
             self, current: QtWidgets.QTreeWidgetItem, previous: QtWidgets.QTreeWidgetItem):
 
         self._edit_state()
+        self._load_cbb_folder()
+
         if current and current.type() == NodeType.CON:
             self.__current_item = current
 
@@ -255,9 +279,9 @@ class RevPiPlcList(QtWidgets.QDialog, Ui_diag_connections):
     @QtCore.pyqtSlot()
     def on_btn_delete_clicked(self):
         """Remove selected entry."""
-        item = self.tre_connections.currentItem()
-        if item and item.type() == NodeType.CON:
 
+        def remove_item(item: QtWidgets.QTreeWidgetItem):
+            """Remove CON item and save keyring actions for save action."""
             revpi_settings = item.data(0, WidgetData.revpi_settings)  # type: RevPiSettings
             if revpi_settings.ssh_saved_password:
                 # Cleans up keyring in save function
@@ -270,7 +294,27 @@ class RevPiPlcList(QtWidgets.QDialog, Ui_diag_connections):
                 index = self.tre_connections.indexOfTopLevelItem(item)
                 self.tre_connections.takeTopLevelItem(index)
 
-        self._edit_state()
+        item_to_remove = self.tre_connections.currentItem()
+
+        if item_to_remove and item_to_remove.type() == NodeType.DIR:
+            if item_to_remove.childCount():
+                rc = QtWidgets.QMessageBox.question(
+                    self, self.tr("Question"), self.tr(
+                        "If you remote this folder, all containing elements will be removed, too. \n\n"
+                        "Do you want to delete folder and all elements?"
+                    ),
+                )
+                if rc != QtWidgets.QMessageBox.Yes:
+                    return
+
+                while item_to_remove.childCount() > 0:
+                    remove_item(item_to_remove.child(0))
+
+            item_index = self.tre_connections.indexOfTopLevelItem(item_to_remove)
+            self.tre_connections.takeTopLevelItem(item_index)
+
+        elif item_to_remove and item_to_remove.type() == NodeType.CON:
+            remove_item(item_to_remove)
 
     @QtCore.pyqtSlot()
     def on_btn_add_clicked(self, settings_preset: RevPiSettings = None):
@@ -290,6 +334,20 @@ class RevPiPlcList(QtWidgets.QDialog, Ui_diag_connections):
         self.tre_connections.setCurrentItem(new_item)
         self.txt_name.setFocus()
         self.txt_name.selectAll()
+
+    @QtCore.pyqtSlot()
+    def on_btn_add_dir_clicked(self):
+        """Add a new folder."""
+        folder_text = self.tr("New folder")
+        sub_folder = QtWidgets.QTreeWidgetItem(NodeType.DIR)
+        sub_folder.setIcon(0, QtGui.QIcon(":/main/ico/folder.ico"))
+        sub_folder.setText(0, folder_text)
+
+        self.tre_connections.addTopLevelItem(sub_folder)
+        self.tre_connections.setCurrentItem(sub_folder)
+        self.cbb_folder.setFocus()
+
+        self.changes = True
 
     @QtCore.pyqtSlot(str)
     def on_txt_name_textEdited(self, text):
@@ -350,64 +408,46 @@ class RevPiPlcList(QtWidgets.QDialog, Ui_diag_connections):
         self.changes = True
 
     @QtCore.pyqtSlot(str)
+    def on_cbb_folder_currentIndexChanged(self, text: str):
+        pi.logger.debug("RevPiPlcList.on_cbb_folder_currentIndexChanged({0})".format(text))
+
+        if self.__current_item.type() == NodeType.CON:
+            new_dir_node = self._get_folder_item(text)
+            current_dir_node = self.__current_item.parent()
+            if current_dir_node == new_dir_node:
+                # No change required, both nodes are the same
+                return
+
+            change_item = self.__current_item
+            self.tre_connections.blockSignals(True)
+            self.changes = True
+
+            if current_dir_node:
+                # Move an element to other folder or root
+                index = current_dir_node.indexOfChild(change_item)
+                change_item = current_dir_node.takeChild(index)
+
+            else:
+                # Move a root element to a folder
+                index = self.tre_connections.indexOfTopLevelItem(change_item)
+                change_item = self.tre_connections.takeTopLevelItem(index)
+
+            if text == "":
+                self.tre_connections.addTopLevelItem(change_item)
+
+            else:
+                new_dir_node.addChild(change_item)
+
+            self.tre_connections.blockSignals(False)
+            self.tre_connections.setCurrentItem(change_item)
+
+    @QtCore.pyqtSlot(str)
     def on_cbb_folder_editTextChanged(self, text: str):
         pi.logger.debug("RevPiPlcList.on_cbb_folder_editTextChanged({0})".format(text))
 
-        if self.__current_item.type() == NodeType.DIR:
+        if self.__current_item.type() == NodeType.DIR and self.__current_item.text(0) != text:
             # We just have to rename the dir node
             self.__current_item.setText(0, text)
-
-        elif self.__current_item.type() == NodeType.CON:
-            sub_folder = self._get_folder_item(text)
-            dir_node = self.__current_item.parent()
-            if dir_node:
-                if dir_node.text(0) == text:
-                    # It is the same folder
-                    return
-
-                if text != "" and dir_node.childCount() == 1 and not sub_folder:
-                    # The folder hold just one item, so we can rename that
-                    for i in range(self.cbb_folder.count()):
-                        if self.cbb_folder.itemText(i) == dir_node.text(0):
-                            self.cbb_folder.setItemText(i, text)
-                            break
-                    dir_node.setText(0, text)
-                    return
-
-                index = dir_node.indexOfChild(self.__current_item)
-                self.__current_item = dir_node.takeChild(index)
-
-            elif text != "":
-                # Move root to folder
-                index = self.tre_connections.indexOfTopLevelItem(self.__current_item)
-                self.__current_item = self.tre_connections.takeTopLevelItem(index)
-
-            else:
-                # Root stays root
-                return
-
-            if text == "":
-                self.tre_connections.addTopLevelItem(self.__current_item)
-
-            else:
-                if sub_folder is None:
-                    sub_folder = QtWidgets.QTreeWidgetItem(NodeType.DIR)
-                    sub_folder.setIcon(0, QtGui.QIcon(":/main/ico/folder.ico"))
-                    sub_folder.setText(0, text)
-                    self.tre_connections.addTopLevelItem(sub_folder)
-                    self.cbb_folder.addItem(text)
-                sub_folder.addChild(self.__current_item)
-
-            if dir_node and dir_node.childCount() == 0:
-                # Remove empty folders
-                for i in range(self.cbb_folder.count()):
-                    if self.cbb_folder.itemText(i) == dir_node.text(0):
-                        self.cbb_folder.removeItem(i)
-                        break
-                index = self.tre_connections.indexOfTopLevelItem(dir_node)
-                self.tre_connections.takeTopLevelItem(index)
-
-            self.tre_connections.setCurrentItem(self.__current_item)
-            self.cbb_folder.setFocus()
+            self.changes = True
 
     # endregion # # # # #
