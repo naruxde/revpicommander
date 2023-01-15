@@ -89,11 +89,12 @@ parser.add_argument(
     "-f", "--logfile", dest="logfile",
     help="Save log entries to this file"
 )
-
 parser.add_argument(
     "-v", "--verbose", action="count", dest="verbose", default=0,
     help="Switch on verbose logging"
 )
+# The __main__ script will process the version number argument
+parser.add_argument("--version", action="store_true", help="Print version number of program and exit")
 pargs = parser.parse_args()
 
 # Check important objects and set to default if they do not exists
