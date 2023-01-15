@@ -8,6 +8,7 @@
 #define MyAppICO "data\revpicommander.ico"
 
 [Setup]
+SignTool=kSign
 ; NOTE: The value of AppId uniquely identifies this application. Do not use the same AppId value in installers for other applications.
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
 AppId={{21E8D429-0C18-462F-AFC0-56EA664DE629}

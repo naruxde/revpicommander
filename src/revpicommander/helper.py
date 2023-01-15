@@ -21,7 +21,7 @@ from paramiko.ssh_exception import AuthenticationException
 from . import proginit as pi
 from .ssh_tunneling.server import SSHLocalTunnel
 
-settings = QtCore.QSettings("revpimodio.org", "RevPiCommander")
+settings = QtCore.QSettings("revpimodio.org", "revpicommander")
 """Global application settings."""
 
 homedir = environ.get("HOME", "") or environ.get("APPDATA", "")

@@ -2,7 +2,7 @@ recursive-include data *
 recursive-include src/revpicommander *.py *.qm
 recursive-include ui_dev *
 include LICENSE.txt
-include make_installer_win.bat
+include make.bat
 include Makefile
 include MANIFEST.in
 include README.md

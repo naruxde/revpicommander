@@ -3,7 +3,6 @@
 __author__ = "Sven Sager"
 __copyright__ = "Copyright (C) 2023 Sven Sager"
 __license__ = "GPLv3"
-__version__ = "0.9.10rc4"
 
 # If we are running from a wheel, add the wheel to sys.path
 if __package__ == "":
@@ -20,6 +19,7 @@ if __name__ == "__main__":
 
     if len(sys.argv) == 2 and "--version" in sys.argv:
         # Catch --version, if this is the only argument (sys.argv[0] is always the script name)
+        from revpicommander import __version__
         print(__version__)
         sys.exit(0)
 

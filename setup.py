@@ -6,7 +6,7 @@ __license__ = "GPLv3"
 
 from setuptools import find_namespace_packages, setup
 
-from src.revpicommander.__main__ import __version__
+from src.revpicommander import __version__
 
 setup(
     name="revpicommander",
