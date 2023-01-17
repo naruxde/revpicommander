@@ -19,6 +19,7 @@ setup(
     install_requires=[
         "keyring",
         "PyQt5",
+        "paramiko",
         "revpimodio2",
         "zeroconf"
     ],
