@@ -59,7 +59,7 @@ build: build_ui build_rc
 	$(PYTHON) -m setup sdist
 	$(PYTHON) -m setup bdist_wheel
 
-install:
+install: build
 	$(PYTHON) -m pip install dist/$(PACKAGE)-*.whl
 
 .PHONY: build install
@@ -96,7 +96,19 @@ installer_mac_dmg: installer_mac
 		dist/$(APP_NAME)\ $(APP_VERSION).dmg \
 		dist/dmg
 
-.PHONY: installer_mac installer_mac_dmg
+installer_linux: build_ui build_rc
+	$(PYTHON) -m PyInstaller -n $(APP_NAME) \
+		--add-data="src/$(PACKAGE)/locale:./$(PACKAGE)/locale" \
+		--add-data="data/$(PACKAGE).ico:." \
+		--add-data="data/$(PACKAGE).png:." \
+		--icon=data/$(PACKAGE).ico \
+		--noconfirm \
+		--clean \
+		--onedir \
+		--windowed \
+		src/$(PACKAGE)/__main__.py
+
+.PHONY: installer_mac installer_mac_dmg installer_linux
 
 ## Clean
 clean:

@@ -548,6 +548,7 @@ class RevPiCommander(QtWidgets.QMainWindow, Ui_win_revpicommander):
 
 
 def main() -> int:
+    """Entry point for RevPiCommander."""
     from sys import argv
 
     if hasattr(QtCore.Qt, 'AA_EnableHighDpiScaling'):
