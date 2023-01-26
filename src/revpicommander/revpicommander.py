@@ -11,12 +11,12 @@ from os.path import dirname, join
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
-from revpicommander.backgroundworker import BackgroundWaiter
 from . import __version__
 from . import helper
 from . import proginit as pi
 from . import revpilogfile
 from .avahisearch import AvahiSearch
+from .backgroundworker import BackgroundWaiter
 from .debugcontrol import DebugControl
 from .helper import ConnectionFail, RevPiSettings
 from .revpifiles import RevPiFiles

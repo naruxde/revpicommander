@@ -676,6 +676,16 @@ def all_revpi_settings() -> [RevPiSettings]:
     return [RevPiSettings(i) for i in range(count_settings)]
 
 
+def swap_word_order(bytes_to_swap) -> bytes:
+    """Swap word order of an even byte array."""
+    array_lenght = len(bytes_to_swap)
+    swap_array = bytearray(bytes_to_swap)
+    for i in range(0, array_lenght // 2, 2):
+        swap_array[-i - 2:array_lenght - i], swap_array[i:i + 2] = \
+            swap_array[i:i + 2], swap_array[-i - 2:array_lenght - i]
+    return bytes(swap_array)
+
+
 def import_old_settings():
     """Try to import saved connections from old storage to new setting object."""
     if settings.value("revpicommander/imported_settings", False, type=bool):

@@ -82,6 +82,7 @@ class DebugIos(QtWidgets.QMainWindow, Ui_win_debugios):
             bit_address = io[4]
             byteorder = io[5]
             signed = io[6]
+            word_order = io[7] if len(io) > 7 else "ignored"
 
             val = container.findChild(self.search_class, name)
             if val is not None:
@@ -100,14 +101,15 @@ class DebugIos(QtWidgets.QMainWindow, Ui_win_debugios):
             lbl.setObjectName("lbl_".format(name))
             lbl.setStyleSheet(self.style_sheet)
 
-            val = self._create_widget(name, byte_length, bit_address, byteorder, signed, read_only)
+            val = self._create_widget(name, byte_length, bit_address, byteorder, signed, read_only, word_order)
             val.setParent(container)
             layout.insertRow(counter, val, lbl)
 
         self.splitter.setSizes([1, 1])
 
     def _create_widget(
-            self, name: str, byte_length: int, bit_address: int, byteorder: str, signed: bool, read_only: bool):
+            self, name: str, byte_length: int, bit_address: int, byteorder: str, signed: bool, read_only: bool,
+            word_order: str):
         """Create widget in functions address space to use lambda functions."""
         if bit_address >= 0:
             val = QtWidgets.QCheckBox()
@@ -160,6 +162,7 @@ class DebugIos(QtWidgets.QMainWindow, Ui_win_debugios):
         val.setProperty("bit_address", bit_address)
         val.setProperty("byte_length", byte_length)
         val.setProperty("signed", signed)
+        val.setProperty("word_order", word_order)
 
         self.__qwa[name] = val
         return val
@@ -203,6 +206,9 @@ class DebugIos(QtWidgets.QMainWindow, Ui_win_debugios):
             act_as_number = QtWidgets.QAction(self.tr("as number"))
             men.addAction(act_as_number)
             men.addSeparator()
+        else:
+            act_as_text = None
+            act_as_number = None
 
         act_signed = QtWidgets.QAction(self.tr("signed"), men)
         act_signed.setCheckable(True)
@@ -213,6 +219,14 @@ class DebugIos(QtWidgets.QMainWindow, Ui_win_debugios):
         act_byteorder.setCheckable(True)
         act_byteorder.setChecked(sender.property("big_endian") or False)
         men.addAction(act_byteorder)
+
+        if sender.property("byte_length") > 2:
+            act_wordorder = QtWidgets.QAction(self.tr("switch wordorder"))
+            act_wordorder.setCheckable(True)
+            act_wordorder.setChecked(sender.property("word_order") == "big")
+            men.addAction(act_wordorder)
+        else:
+            act_wordorder = None
 
         rc = men.exec(sender.mapToGlobal(point))
         if not rc:
@@ -232,6 +246,8 @@ class DebugIos(QtWidgets.QMainWindow, Ui_win_debugios):
                 sender.setMaximum(max_value)
         elif rc == act_byteorder:
             sender.setProperty("big_endian", act_byteorder.isChecked())
+        elif rc == act_wordorder:
+            sender.setProperty("word_order", "big" if act_wordorder.isChecked() else "little")
 
         if sender.property("frm"):
             sender.setProperty("frm", "{0}{1}".format(
@@ -239,11 +255,10 @@ class DebugIos(QtWidgets.QMainWindow, Ui_win_debugios):
                 sender.property("struct_type").lower() if act_signed.isChecked()
                 else sender.property("struct_type").upper()
             ))
-        elif sender.property("byte_length") > 4:
-            if rc == act_as_text:
-                sender.setProperty("struct_type", "text")
-            elif rc == act_as_number:
-                sender.setProperty("struct_type", "number")
+        elif rc == act_as_text:
+            sender.setProperty("struct_type", "text")
+        elif rc == act_as_number:
+            sender.setProperty("struct_type", "number")
 
         self.set_value(sender.objectName(), actual_value)
         men.deleteLater()
@@ -335,6 +350,10 @@ class DebugIos(QtWidgets.QMainWindow, Ui_win_debugios):
         :param just_last_value: Just set last value property
         """
         child = self.__qwa[io_name]
+
+        if child.property("word_order") == "big" and type(value) == bytes:
+            value = helper.swap_word_order(value)
+
         if child.property("frm"):
             value = struct.unpack(child.property("frm"), value)[0]
         elif type(value) == bytes:
@@ -349,6 +368,7 @@ class DebugIos(QtWidgets.QMainWindow, Ui_win_debugios):
                         ).format(value, io_name)
                     )
             if child.property("struct_type") == "number":
+                # fixme: Crashs with too much bytes
                 value = str(int.from_bytes(
                     value,
                     byteorder="big" if child.property("big_endian") else "little",
