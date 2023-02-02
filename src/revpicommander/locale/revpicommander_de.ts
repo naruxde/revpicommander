@@ -93,7 +93,7 @@ Nicht gespeicherte Änderunen gehen verloren</translation>
         <translation type="obsolete">Der ausgewählte RevPi ist schon in der Verbindungsliste als &apos;{0}&apos;.</translation>
     </message>
     <message>
-        <location filename="../avahisearch.py" line="285"/>
+        <location filename="../avahisearch.py" line="288"/>
         <source> over SSH</source>
         <translation> über SSH</translation>
     </message>
@@ -229,62 +229,62 @@ Wurde eine Hardwarekonfiguration in piCtory erzeugt?</translation>
 <context>
     <name>ConnectionManager</name>
     <message>
-        <location filename="../helper.py" line="524"/>
+        <location filename="../helper.py" line="533"/>
         <source>SIMULATING</source>
         <translation>SIMULATION</translation>
     </message>
     <message>
-        <location filename="../helper.py" line="527"/>
+        <location filename="../helper.py" line="536"/>
         <source>NOT CONNECTED</source>
         <translation>NICHT VERBUNDEN</translation>
     </message>
     <message>
-        <location filename="../helper.py" line="544"/>
+        <location filename="../helper.py" line="553"/>
         <source>SERVER ERROR</source>
         <translation>SERVER FEHLER</translation>
     </message>
     <message>
-        <location filename="../helper.py" line="569"/>
+        <location filename="../helper.py" line="578"/>
         <source>RUNNING</source>
         <translation>LÄUFT</translation>
     </message>
     <message>
-        <location filename="../helper.py" line="571"/>
+        <location filename="../helper.py" line="580"/>
         <source>PLC FILE NOT FOUND</source>
         <translation>SPS PROGRAMM NICHT GEFUNDEN</translation>
     </message>
     <message>
-        <location filename="../helper.py" line="573"/>
+        <location filename="../helper.py" line="582"/>
         <source>NOT RUNNING (NO STATUS)</source>
         <translation>LÄUFT NICHT (KEIN STATUS)</translation>
     </message>
     <message>
-        <location filename="../helper.py" line="575"/>
+        <location filename="../helper.py" line="584"/>
         <source>PROGRAM KILLED</source>
         <translation>PROGRAMM GETÖTET</translation>
     </message>
     <message>
-        <location filename="../helper.py" line="577"/>
+        <location filename="../helper.py" line="586"/>
         <source>PROGRAM TERMED</source>
         <translation>PROGRAMM BEENDET</translation>
     </message>
     <message>
-        <location filename="../helper.py" line="579"/>
+        <location filename="../helper.py" line="588"/>
         <source>NOT RUNNING</source>
         <translation>LÄUFT NICHT</translation>
     </message>
     <message>
-        <location filename="../helper.py" line="581"/>
+        <location filename="../helper.py" line="590"/>
         <source>FINISHED WITH CODE {0}</source>
         <translation>BEENDET MIT CODE {0}</translation>
     </message>
     <message>
-        <location filename="../helper.py" line="395"/>
+        <location filename="../helper.py" line="401"/>
         <source>Error</source>
         <translation>Fehler</translation>
     </message>
     <message>
-        <location filename="../helper.py" line="347"/>
+        <location filename="../helper.py" line="351"/>
         <source>The combination of username and password was rejected from the SSH server.
 
 Try again.</source>
@@ -293,7 +293,7 @@ Try again.</source>
 Bitte erneut versuchen.</translation>
     </message>
     <message>
-        <location filename="../helper.py" line="359"/>
+        <location filename="../helper.py" line="363"/>
         <source>Could not establish a SSH connection to server:
 
 {0}</source>
@@ -308,7 +308,7 @@ Bitte erneut versuchen.</translation>
 This could have the following reasons: The RevPi is not online, the XML-RPC service is not running / bind to localhost or the ACL permission is not set for your IP!!!
 
 Run &apos;sudo revpipyload_secure_installation&apos; on Revolution Pi to setup this function!</source>
-        <translation>Kann keine Verbindung zum RevPi XML-RPC Dienst herstellen!
+        <translation type="obsolete">Kann keine Verbindung zum RevPi XML-RPC Dienst herstellen!
 
 Das kann eine der folgenden Ursachen haben: Der Rev Pi ist nicht online, der XML-RPC Dienst läuft nicht / ist an localhost gebunden order die Berechtigungen sind nicht für diese IP gesetzt!!!
 
@@ -328,9 +328,64 @@ Das kann eine der folgenden Ursachen haben: Der XML-RPC Dienst läuft nicht / is
         <source>Can not connect to RevPi XML-RPC Service through SSH tunnel! 
 
 This could have the following reasons: The XML-RPC service is not running / not bind to localhost or the ACL permission is not set for 127.0.0.1!!!</source>
-        <translation>Kann keine Verbindung zum RevPi XML-RPC Dienst über SSH herstellen!
+        <translation type="obsolete">Kann keine Verbindung zum RevPi XML-RPC Dienst über SSH herstellen!
 
 Das kann eine der folgenden Ursachen haben: Der XML-RPC Dienst läuft nicht / ist nicht an localhost gebunden order die Berechtigungen sind nicht für 127.0.0.1 gesetzt!!!</translation>
+    </message>
+    <message>
+        <location filename="../helper.py" line="389"/>
+        <source>Can not connect to RevPiPyLoad service through SSH tunnel!
+
+This could have the following reasons:
+- The RevPiPyLoad service is not running (activate it on your Revolution Pi)
+- The RevPiPyLoad XML-RPC service is NOT bind to localhost
+- The ACL permission is not set for 127.0.0.1!!!
+
+</source>
+        <translation type="obsolete">Kann keine Verbindung zum RevPiPyLoad Dienst über SSH herstellen!
+
+Das kann eine der folgenden Ursachen haben:
+- Der RevPiPyLoad Dienst läuft nicht (aktiviere Diesen auf dem Revolution Pi)
+- Der RevPiPyLoad XML-RPC Dienst ist NICHT an localhost gebunden
+- Die Berechtigungen sind nicht für 127.0.0.1 gesetzt!!!
+
+Benutze &quot;Über SSH verbinden&quot; um eine verschlüsselte Verbindung aufzubauen oder führe &apos;sudo revpipyload_secure_installation&apos; auf dem Revolution Pi aus, um eine direkte Verbindung zu konfigurieren!</translation>
+    </message>
+    <message>
+        <location filename="../helper.py" line="401"/>
+        <source>Can not connect to RevPiPyLoad XML-RPC service! 
+
+This could have the following reasons:
+- The Revolution Pi is not online
+- The RevPiPyLoad service is not running (activate it on your Revolution Pi)
+- The RevPiPyLoad XML-RPC service is bind to localhost, only
+- The ACL permission is not set for your IP!!!
+
+Use &apos;Connect via SSH&apos; to use an encrypted connection or run &apos;sudo revpipyload_secure_installation&apos; on Revolution Pi to setup direct remote access!</source>
+        <translation>Kann keine Verbindung zum RevPiPyLoad XML-RPC Dienst herstellen!
+
+Das kann eine der folgenden Ursachen haben:
+- Der Revolution Pi ist nicht online
+- Der RevPiPyLoad Dienst läuft nicht (aktiviere Diesen auf dem Revolution Pi)
+- Der RevPiPyLoad XML-RPC Dienst ist nur an localhost gebunden
+- Die Berechtigungen sind nicht für diese IP gesetzt!!!
+
+Benutze &quot;Über SSH verbinden&quot; um eine verschlüsselte Verbindung aufzubauen oder führe &apos;sudo revpipyload_secure_installation&apos; auf dem Revolution Pi aus, um eine direkte Verbindung zu konfigurieren!</translation>
+    </message>
+    <message>
+        <location filename="../helper.py" line="389"/>
+        <source>Can not connect to RevPiPyLoad service through SSH tunnel!
+
+This could have the following reasons:
+- The RevPiPyLoad service is not running (activate it on your Revolution Pi)
+- The RevPiPyLoad XML-RPC service is NOT bind to localhost
+- The ACL permission is not set for 127.0.0.1!!!</source>
+        <translation>Kann keine Verbindung zum RevPiPyLoad Dienst über SSH herstellen!
+
+Das kann eine der folgenden Ursachen haben:
+- Der RevPiPyLoad Dienst läuft nicht (aktiviere Diesen auf dem Revolution Pi)
+- Der RevPiPyLoad XML-RPC Dienst ist NICHT an localhost gebunden
+- Die Berechtigungen sind nicht für 127.0.0.1 gesetzt!!!</translation>
     </message>
 </context>
 <context>
@@ -346,24 +401,24 @@ Das kann eine der folgenden Ursachen haben: Der XML-RPC Dienst läuft nicht / is
         <translation>Fehler bei Werteempfang von RevPi.</translation>
     </message>
     <message>
-        <location filename="../debugcontrol.py" line="228"/>
+        <location filename="../debugcontrol.py" line="229"/>
         <source>Auto update values...</source>
         <translation>Werte automatisch aktualisiert...</translation>
     </message>
     <message>
-        <location filename="../debugcontrol.py" line="230"/>
+        <location filename="../debugcontrol.py" line="231"/>
         <source>Values updated...</source>
         <translation>Werte aktualisiert...</translation>
     </message>
     <message>
-        <location filename="../debugcontrol.py" line="267"/>
+        <location filename="../debugcontrol.py" line="268"/>
         <source>Error set value of device &apos;{0}&apos; Output &apos;{1}&apos;: {2}
 </source>
         <translation>Fehler beim Setzen des Ausgangs &apos;{1}&apos; auf Modul &apos;{0}&apos;: {2}
 </translation>
     </message>
     <message>
-        <location filename="../debugcontrol.py" line="276"/>
+        <location filename="../debugcontrol.py" line="277"/>
         <source>Error</source>
         <translation>Fehler</translation>
     </message>
@@ -371,34 +426,39 @@ Das kann eine der folgenden Ursachen haben: Der XML-RPC Dienst läuft nicht / is
 <context>
     <name>DebugIos</name>
     <message>
-        <location filename="../debugios.py" line="207"/>
+        <location filename="../debugios.py" line="213"/>
         <source>signed</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../debugios.py" line="212"/>
+        <location filename="../debugios.py" line="218"/>
         <source>big_endian</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../debugios.py" line="201"/>
+        <location filename="../debugios.py" line="204"/>
         <source>as text</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../debugios.py" line="203"/>
+        <location filename="../debugios.py" line="206"/>
         <source>as number</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../debugios.py" line="346"/>
+        <location filename="../debugios.py" line="365"/>
         <source>Can not use format text</source>
         <translation>Formatierung nicht möglich</translation>
     </message>
     <message>
-        <location filename="../debugios.py" line="346"/>
+        <location filename="../debugios.py" line="365"/>
         <source>Can not convert bytes {0} to a text for IO &apos;{1}&apos;. Switch to number format instead!</source>
         <translation>Kann bytes {0} für &apos;{1}&apos; nicht in Text konvertieren. Wechseln Sie auf Nummernformat!</translation>
+    </message>
+    <message>
+        <location filename="../debugios.py" line="224"/>
+        <source>switch wordorder</source>
+        <translation>Wordorder tauschen</translation>
     </message>
 </context>
 <context>
@@ -429,86 +489,86 @@ Ungesicherte Änderungen gehen verloren.</translation>
 <context>
     <name>RevPiCommander</name>
     <message>
-        <location filename="../revpicommander.py" line="306"/>
+        <location filename="../revpicommander.py" line="308"/>
         <source>Simulator started...</source>
         <translation>Simulator gestartet...</translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="315"/>
+        <location filename="../revpicommander.py" line="317"/>
         <source>Can not start...</source>
         <translation>Kann nicht gestartet werden...</translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="508"/>
+        <location filename="../revpicommander.py" line="510"/>
         <source>Warning</source>
         <translation>Warnung</translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="331"/>
+        <location filename="../revpicommander.py" line="333"/>
         <source>This version of Logviewer ist not supported in version {0} of RevPiPyLoad on your RevPi! You need at least version 0.4.1.</source>
         <translation>Diese Version vom Logbetrachter wird in RevPiPyLoad Version {0} nicht unterstützt! Es wird mindestens Version 0.4.1 benötigt.</translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="381"/>
+        <location filename="../revpicommander.py" line="383"/>
         <source>XML-RPC access mode in the RevPiPyLoad configuration is too small to access this dialog!</source>
         <translation>XML-RPC Zugriffsberechtigung in der RevPiPyLoad Konfiguraiton ist zu klein für diese Einstellungen!</translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="535"/>
+        <location filename="../revpicommander.py" line="537"/>
         <source>Error</source>
         <translation>Fehler</translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="361"/>
+        <location filename="../revpicommander.py" line="363"/>
         <source>The Version of RevPiPyLoad on your Revolution Pi ({0}) is to old. This Version of RevPiCommander require at least version 0.6.0 of RevPiPyLoad. Please update your Revolution Pi!</source>
         <translation>Die Version von RevPiPyLoad ({0}) auf dem Revolution Pi ist zu alt. Diese Version vom RevPiCommander braucht mindestens Version 0.6.0. Bitte aktualisiere deinen Revolution Pi!</translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="414"/>
+        <location filename="../revpicommander.py" line="416"/>
         <source>Question</source>
         <translation>Frage</translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="414"/>
+        <location filename="../revpicommander.py" line="416"/>
         <source>Are you sure to reset piControl?
 The pictory configuration will be reloaded. During that time the process image will be interrupted and could rise errors on running control programs!</source>
         <translation>Soll piControl wirklich zurückgesetzt werden?
 Die piCtory Konfiguration wird neu geladen. Das Prozessabbild wird in dieser Zeit nicht verfügbar sein und es könnten Fehler in Steuerungsprogrammen ausgelöst werden!</translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="427"/>
+        <location filename="../revpicommander.py" line="429"/>
         <source>Success</source>
         <translation>Erfolgreich</translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="427"/>
+        <location filename="../revpicommander.py" line="429"/>
         <source>piControl reset executed successfully</source>
         <translation>piControl wurde erfolgreich zurückgesetzt</translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="434"/>
+        <location filename="../revpicommander.py" line="436"/>
         <source>piControl reset could not be executed successfully</source>
         <translation>piControl konnte nicht zurückgesetzt werden</translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="482"/>
+        <location filename="../revpicommander.py" line="484"/>
         <source>Reset to piCtory defaults...</source>
         <translation>Standardwerte von piCtory laden...</translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="508"/>
+        <location filename="../revpicommander.py" line="510"/>
         <source>The watch mode ist not supported in version {0} of RevPiPyLoad on your RevPi! You need at least version 0.5.3! Maybe the python3-revpimodio2 module is not installed on your RevPi at least version 2.0.0.</source>
         <translation>Der SPS Betrachter ist in Version {0} von RevPiPyLoad auf dem Rev Pi nicht unterstützt! Es muss mindestens Version 0.5.3 installiert sein! Vielleicht fehlt auch das python3-revpimodio2 Modul, welches mindestens Version 2.0.0 haben muss.</translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="520"/>
+        <location filename="../revpicommander.py" line="522"/>
         <source>Can not load this function, because your ACL level is to low!
 You need at least level 1 to read or level 3 to write.</source>
         <translation>Für diese Funktion ist das Berechtigungslevel zu gering!
 Es muss mindestens Level 1 zum Lesen oder Level 3 zu Schreiben sein.</translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="535"/>
+        <location filename="../revpicommander.py" line="537"/>
         <source>Can not load piCtory configuration. 
 Did you create a hardware configuration? Please check this in piCtory!</source>
         <translation>Kann piCtory Konfiguration nicht laden.
@@ -528,7 +588,7 @@ Das kann eine der folgenden Ursachen haben: Der Rev Pi ist nicht online, der XML
 Führe &apos;sudo revpipyload_secure_installation&apos; auf dem Revolution Pi aus um diese Funktion zu konfigurieren!</translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="306"/>
+        <location filename="../revpicommander.py" line="308"/>
         <source>The simulator is running!
 
 You can work with this simulator if your call RevPiModIO with this additional parameters:
@@ -545,39 +605,39 @@ configrsc={1}
 Dies kann aus der Textbox oben kopiert werden.</translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="315"/>
+        <location filename="../revpicommander.py" line="317"/>
         <source>Can not start the simulator! Maybe the piCtory file is corrupt or you have no write permissions for &apos;{0}&apos;.</source>
         <translation>Kann Simulator nicht starten! Vielleicht ist die piCtory Datei defekt oder es gibt keine Schreibberechtigung für &apos;{0}&apos;.</translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="482"/>
+        <location filename="../revpicommander.py" line="484"/>
         <source>Do you want to reset your process image to {0} values?
 You have to stop other RevPiModIO programs before doing that, because they could reset the outputs.</source>
         <translation>Soll das virtuelle Prozessabbild auf {0} zurückgesetzt werden?
 Es sollten alle RevPiModIO Programme vorher beendet werden, da diese ihre IO Werte sofort wieder schreiben würden.</translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="482"/>
+        <location filename="../revpicommander.py" line="484"/>
         <source>zero</source>
         <translation>null</translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="482"/>
+        <location filename="../revpicommander.py" line="484"/>
         <source>piCtory default</source>
         <translation>piCtory Standardwerte</translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="236"/>
+        <location filename="../revpicommander.py" line="238"/>
         <source>Revolution Pi connected!</source>
         <translation>Revolution Pi verbunden!</translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="273"/>
+        <location filename="../revpicommander.py" line="275"/>
         <source>Connecting...</source>
         <translation>Verbinde...</translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="236"/>
+        <location filename="../revpicommander.py" line="238"/>
         <source>Establish a connection to the Revolution Pi...</source>
         <translation>Baue eine Verbindung zum Revolution Pi auf...</translation>
     </message>
@@ -834,19 +894,19 @@ Ungesicherte Änderungen gehen verloren.</translation>
         <translation type="obsolete">Neue Verbindung</translation>
     </message>
     <message>
-        <location filename="../revpiplclist.py" line="282"/>
+        <location filename="../revpiplclist.py" line="301"/>
         <source>Question</source>
         <translation>Frage</translation>
     </message>
     <message>
-        <location filename="../revpiplclist.py" line="121"/>
+        <location filename="../revpiplclist.py" line="132"/>
         <source>Do you really want to quit? 
 Unsaved changes will be lost.</source>
         <translation>Soll das Fenster wirklich geschlossen werden?
 Ungesicherte Änderungen gehen verloren.</translation>
     </message>
     <message>
-        <location filename="../revpiplclist.py" line="282"/>
+        <location filename="../revpiplclist.py" line="301"/>
         <source>If you remote this folder, all containing elements will be removed, too. 
 
 Do you want to delete folder and all elements?</source>
@@ -855,7 +915,7 @@ Do you want to delete folder and all elements?</source>
 Wollen sie den Ordner und alle Elemente löschen?</translation>
     </message>
     <message>
-        <location filename="../revpiplclist.py" line="324"/>
+        <location filename="../revpiplclist.py" line="341"/>
         <source>New folder</source>
         <translation>Neuer Ordner</translation>
     </message>
@@ -1240,12 +1300,12 @@ Dies ist kein Fehler von RevPi Commander.</translation>
         <translation>Revolution Pi Verbindungen</translation>
     </message>
     <message>
-        <location filename="../../../ui_dev/revpiplclist.ui" line="194"/>
+        <location filename="../../../ui_dev/revpiplclist.ui" line="197"/>
         <source>Connection name</source>
         <translation>Verbindungsname</translation>
     </message>
     <message>
-        <location filename="../../../ui_dev/revpiplclist.ui" line="199"/>
+        <location filename="../../../ui_dev/revpiplclist.ui" line="202"/>
         <source>Address</source>
         <translation>Adresse</translation>
     </message>
@@ -1290,22 +1350,22 @@ Dies ist kein Fehler von RevPi Commander.</translation>
         <translation>Verbindung</translation>
     </message>
     <message>
-        <location filename="../../../ui_dev/revpiplclist.ui" line="122"/>
+        <location filename="../../../ui_dev/revpiplclist.ui" line="125"/>
         <source>Over SSH</source>
         <translation>Über SSH</translation>
     </message>
     <message>
-        <location filename="../../../ui_dev/revpiplclist.ui" line="128"/>
+        <location filename="../../../ui_dev/revpiplclist.ui" line="131"/>
         <source>Connect over SSH tunnel:</source>
         <translation>Über SSH Tunnel verbinden:</translation>
     </message>
     <message>
-        <location filename="../../../ui_dev/revpiplclist.ui" line="145"/>
+        <location filename="../../../ui_dev/revpiplclist.ui" line="148"/>
         <source>SSH port:</source>
         <translation>SSH Port:</translation>
     </message>
     <message>
-        <location filename="../../../ui_dev/revpiplclist.ui" line="162"/>
+        <location filename="../../../ui_dev/revpiplclist.ui" line="165"/>
         <source>SSH user name:</source>
         <translation>SSH Benutzername:</translation>
     </message>
@@ -1387,7 +1447,9 @@ Dies ist kein Fehler von RevPi Commander.</translation>
         <source>The base topic is the first part of any mqtt topic, the Revolution Pi will publish. You can use any character includig &apos;/&apos; to structure the messages on your broker.
 
 For example: revpi0000/data</source>
-        <translation type="unfinished"></translation>
+        <translation>Der Basistopic wird allen MQTT Topics vorangestellt, welche der Revolution Pi veröffentlicht. Es können alle Zeichen inklusive &apos;/&apos; verwendet werden, um die Nachrichten auf dem Broker zu strukturieren.
+
+Zum Beispiel: revpi0000/data</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/mqttmanager.ui" line="80"/>
@@ -1404,7 +1466,9 @@ For example: revpi0000/data</source>
         <source>The Revolution Pi will subscribe a topic on which your mqtt client can publish messages with the new io value as payload.
 
 Publish values with topic:    [basetopic]/set/[outputname]</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Der Revolution Pi abonniert ein Topic, auf dem die MQTT Clients über den Inhalt einer Nachricht einen neuen Ausgangswert setzen können.
+
+Publish values with Topic:    [basistopic]/set/[ausgangsname]</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/mqttmanager.ui" line="175"/>
@@ -1671,17 +1735,12 @@ Publish values with topic:    [basetopic]/set/[outputname]</source>
         <translation>RevPi Python SPS - Commander</translation>
     </message>
     <message>
-        <location filename="../../../ui_dev/revpiinfo.ui" line="69"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;https://revpimodio.org/&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;https://revpimodio.org/&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../ui_dev/revpiinfo.ui" line="96"/>
+        <location filename="../../../ui_dev/revpiinfo.ui" line="86"/>
         <source>Version:</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../ui_dev/revpiinfo.ui" line="126"/>
+        <location filename="../../../ui_dev/revpiinfo.ui" line="116"/>
         <source>RevPiModIO, RevPiPyLoad and RevPiPyControl are community driven projects. They are all free and open source software.
 All of them comes with ABSOLUTELY NO WARRANTY, to the extent permitted by
 applicable law.
@@ -1745,7 +1804,7 @@ applicable law.
     <message>
         <location filename="../../../ui_dev/avahisearch.ui" line="140"/>
         <source>Connect via SSH (recommended)</source>
-        <translation>Über SSH verbinden (empfholen)</translation>
+        <translation>Über SSH verbinden (empfohlen)</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/avahisearch.ui" line="143"/>

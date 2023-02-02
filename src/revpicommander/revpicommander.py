@@ -215,6 +215,8 @@ class RevPiCommander(QtWidgets.QMainWindow, Ui_win_revpicommander):
                 parent_menu = self.men_connections
 
             display_name = settings.name
+            if settings.name != settings.address:
+                display_name += " [{0}]".format(settings.address)
             if settings.ssh_use_tunnel:
                 display_name += " (SSH)"
 

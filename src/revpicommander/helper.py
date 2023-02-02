@@ -388,24 +388,26 @@ class ConnectionManager(QtCore.QThread):
             if revpi_settings.ssh_use_tunnel:
                 self.connect_error.emit(
                     self.tr("Error"), self.tr(
-                        "Can not connect to RevPi XML-RPC Service through SSH tunnel! \n\n"
-                        "This could have the following reasons: The XML-RPC service is not "
-                        "running / not bind to localhost or the ACL permission is not set for "
-                        "127.0.0.1!!!"
+                        "Can not connect to RevPiPyLoad service through SSH tunnel!\n\n"
+                        "This could have the following reasons:\n"
+                        "- The RevPiPyLoad service is not running (activate it on your Revolution Pi)\n"
+                        "- The RevPiPyLoad XML-RPC service is NOT bind to localhost\n"
+                        "- The ACL permission is not set for 127.0.0.1!!!"
                     ),
                     ConnectionFail.NO_XML_RPC,
                     revpi_settings,
                 )
             else:
-                # todo: Change message, that user can use ssh
                 self.connect_error.emit(
                     self.tr("Error"), self.tr(
-                        "Can not connect to RevPi XML-RPC Service! \n\n"
-                        "This could have the following reasons: The RevPi is not "
-                        "online, the XML-RPC service is not running / bind to "
-                        "localhost or the ACL permission is not set for your "
-                        "IP!!!\n\nRun 'sudo revpipyload_secure_installation' on "
-                        "Revolution Pi to setup this function!"
+                        "Can not connect to RevPiPyLoad XML-RPC service! \n\n"
+                        "This could have the following reasons:\n"
+                        "- The Revolution Pi is not online\n"
+                        "- The RevPiPyLoad service is not running (activate it on your Revolution Pi)\n"
+                        "- The RevPiPyLoad XML-RPC service is bind to localhost, only\n"
+                        "- The ACL permission is not set for your IP!!!\n\n"
+                        "Use 'Connect via SSH' to use an encrypted connection or run "
+                        "'sudo revpipyload_secure_installation' on Revolution Pi to setup direct remote access!"
                     ),
                     ConnectionFail.NO_XML_RPC,
                     revpi_settings,
