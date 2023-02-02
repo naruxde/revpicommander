@@ -130,7 +130,7 @@ class AvahiSearch(QtWidgets.QDialog, Ui_diag_search):
         self.act_connect_xmlrpc.setVisible(True)
 
     @staticmethod
-    def _find_settings(address: str) -> list[RevPiSettings]:
+    def _find_settings(address: str):
         """Find all settings with known avahi_id."""
         return [
             revpi_setting
@@ -258,8 +258,11 @@ class AvahiSearch(QtWidgets.QDialog, Ui_diag_search):
             return
         item = selected_items[0]
 
-        # Till we could not choose https / http we are using the ip address
-        webbrowser.open("http://{0}/".format(item.data(WidgetData.address)))
+        # We should use the hostname on macOS to let safari connect in link local mode (for linux nice too)
+        webbrowser.open("http://{0}/".format(item.data(
+            WidgetData.address if platform == "win32"
+            else WidgetData.host_name_full
+        )))
 
     @QtCore.pyqtSlot(str, str, int, str, str)
     def on_avahi_added(self, avahi_id: str, server: str, port: int, conf_type: str, ip: str) -> None:

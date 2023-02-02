@@ -402,8 +402,8 @@ class RevPiCommander(QtWidgets.QMainWindow, Ui_win_revpicommander):
     @QtCore.pyqtSlot()
     def on_act_pictory_triggered(self):
         """Open piCtory in default browser of operating system."""
-        if helper.cm.address:
-            webbrowser.open("http://{0}/".format(helper.cm.address))
+        if helper.cm.settings.address:
+            webbrowser.open("http://{0}/".format(helper.cm.settings.address))
 
     @QtCore.pyqtSlot()
     def on_act_reset_triggered(self):

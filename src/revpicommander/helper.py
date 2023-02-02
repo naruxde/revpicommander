@@ -11,6 +11,7 @@ from http.client import CannotSendRequest
 from os import environ, remove
 from os.path import exists
 from queue import Queue
+from re import search
 from threading import Lock
 from uuid import uuid4
 from xmlrpc.client import Binary, ServerProxy
@@ -232,6 +233,8 @@ class ConnectionManager(QtCore.QThread):
 
         self.pyload_version = (0, 0, 0)
         """Version number of RevPiPyLoad 0.0.0 with <class 'int'> values."""
+        self.pyload_version_str = ""
+        """Raw string of RevPyPyLoad version, could contain rc1 at the end."""
         self.xml_funcs = []
         """Name list of all supported functions of RevPiPyLoad."""
         self.xml_mode = -1
@@ -315,6 +318,7 @@ class ConnectionManager(QtCore.QThread):
         self.ssh_pass = ""
 
         self.pyload_version = (0, 0, 0)
+        self.pyload_version_str = ""
         self.xml_funcs.clear()
         self.xml_mode = -1
 
@@ -372,7 +376,9 @@ class ConnectionManager(QtCore.QThread):
 
         # Load values and test connection to Revolution Pi
         try:
-            pyload_version = tuple(map(int, sp.version().split(".")))
+            ma = search(r"(?P<major>\d+)\.(?P<minor>\d+)\.(?P<patch>\d+)", sp.version())
+            pyload_version = int(ma.group("major")), int(ma.group("minor")), int(ma.group("patch"))
+            pyload_version_str = ma.string
             xml_funcs = sp.system.listMethods()
             xml_mode = sp.xmlmodus()
         except Exception as e:
@@ -410,6 +416,7 @@ class ConnectionManager(QtCore.QThread):
         self.settings = revpi_settings
         self.ssh_pass = ssh_pass
         self.pyload_version = pyload_version
+        self.pyload_version_str = pyload_version_str
         self.xml_funcs = xml_funcs
         self.xml_mode = xml_mode
 

@@ -24,7 +24,7 @@ class RevPiInfo(QtWidgets.QDialog, Ui_diag_revpiinfo):
 
     def exec(self) -> int:
         self.lbl_version_pyload.setText(
-            "{0}.{1}.{2}".format(*helper.cm.pyload_version)
+            helper.cm.pyload_version_str
             if helper.cm.connected else "-"
         )
         self._load_lst_files()
