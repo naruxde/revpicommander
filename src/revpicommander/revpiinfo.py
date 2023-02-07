@@ -2,7 +2,7 @@
 """Program information of local an remote system."""
 __author__ = "Sven Sager"
 __copyright__ = "Copyright (C) 2023 Sven Sager"
-__license__ = "GPLv3"
+__license__ = "GPLv2"
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 

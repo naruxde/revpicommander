@@ -2,7 +2,7 @@
 """Global program initialization."""
 __author__ = "Sven Sager"
 __copyright__ = "Copyright (C) 2023 Sven Sager"
-__license__ = "LGPLv3"
+__license__ = "GPLv2"
 
 import logging
 import sys

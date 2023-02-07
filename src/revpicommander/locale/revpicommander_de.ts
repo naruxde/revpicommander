@@ -1466,9 +1466,9 @@ Zum Beispiel: revpi0000/data</translation>
         <source>The Revolution Pi will subscribe a topic on which your mqtt client can publish messages with the new io value as payload.
 
 Publish values with topic:    [basetopic]/set/[outputname]</source>
-        <translation type="unfinished">Der Revolution Pi abonniert ein Topic, auf dem die MQTT Clients über den Inhalt einer Nachricht einen neuen Ausgangswert setzen können.
+        <translation>Der Revolution Pi abonniert ein Topic, auf dem die MQTT Clients über den Inhalt einer Nachricht einen neuen Ausgangswert setzen können.
 
-Publish values with Topic:    [basistopic]/set/[ausgangsname]</translation>
+Sende Werte mit Topic:    [basistopic]/set/[ausgangsname]</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/mqttmanager.ui" line="175"/>
@@ -1745,7 +1745,7 @@ Publish values with Topic:    [basistopic]/set/[ausgangsname]</translation>
 All of them comes with ABSOLUTELY NO WARRANTY, to the extent permitted by
 applicable law.
 
-(c) Sven Sager, License: GPLv3</source>
+(c) Sven Sager, License: GPLv2</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

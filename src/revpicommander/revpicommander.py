@@ -4,7 +4,7 @@
 
 __author__ = "Sven Sager"
 __copyright__ = "Copyright (C) 2018 Sven Sager"
-__license__ = "GPLv3"
+__license__ = "GPLv2"
 
 import webbrowser
 from os.path import dirname, join

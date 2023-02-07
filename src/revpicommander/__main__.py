@@ -2,7 +2,7 @@
 """Start main application of this package."""
 __author__ = "Sven Sager"
 __copyright__ = "Copyright (C) 2023 Sven Sager"
-__license__ = "GPLv3"
+__license__ = "GPLv2"
 
 # If we are running from a wheel, add the wheel to sys.path
 if __package__ == "":

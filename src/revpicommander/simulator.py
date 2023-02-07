@@ -2,7 +2,7 @@
 """Simulator for piControl."""
 __author__ = "Sven Sager"
 __copyright__ = "Copyright (C) 2023 Sven Sager"
-__license__ = "GPLv3"
+__license__ = "GPLv2"
 
 from os import W_OK, access
 from os.path import basename, dirname, exists, join

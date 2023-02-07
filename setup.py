@@ -2,7 +2,7 @@
 """Setup script for RevPiCommander."""
 __author__ = "Sven Sager"
 __copyright__ = "Copyright (C) 2018 Sven Sager"
-__license__ = "GPLv3"
+__license__ = "GPLv2"
 
 from setuptools import find_namespace_packages, setup
 
@@ -32,7 +32,7 @@ setup(
     platforms=["all"],
 
     url="https://revpimodio.org/revpipyplc/",
-    license="GPLv3",
+    license="GPLv2",
     author="Sven Sager",
     author_email="akira@narux.de",
     maintainer="Sven Sager",
@@ -45,6 +45,6 @@ setup(
                      "over the network.",
     keywords=["revpi", "revolution pi", "revpimodio", "plc"],
     classifiers=[
-        "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+        "License :: OSI Approved :: GNU General Public License v2 (GPLv2)",
     ],
 )

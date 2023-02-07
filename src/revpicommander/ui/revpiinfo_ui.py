@@ -95,7 +95,7 @@ class Ui_diag_revpiinfo(object):
 "All of them comes with ABSOLUTELY NO WARRANTY, to the extent permitted by\n"
 "applicable law.\n"
 "\n"
-"(c) Sven Sager, License: GPLv3"))
+"(c) Sven Sager, License: GPLv2"))
 
 
 if __name__ == "__main__":

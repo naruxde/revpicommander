@@ -2,7 +2,7 @@
 """File transfer system to handle QThreads."""
 __author__ = "Sven Sager"
 __copyright__ = "Copyright (C) 2023 Sven Sager"
-__license__ = "GPLv3"
+__license__ = "GPLv2"
 
 from logging import getLogger
 
