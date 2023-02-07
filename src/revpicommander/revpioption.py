@@ -22,9 +22,10 @@ class RevPiOption(QtWidgets.QDialog, Ui_diag_options):
         self.setFixedSize(self.size())
 
         self.dc = {}
-        self.acl_plcslave = ""
+        self.acl_plcserver = ""
         self.acl_xmlrpc = ""
         self.mrk_xml_ask = True
+        self.wrong_names = False
 
         self._dict_mqttsettings = {
             "mqttbasetopic": "revpi01",
@@ -56,7 +57,7 @@ class RevPiOption(QtWidgets.QDialog, Ui_diag_options):
         self.cbx_zeroonerror.setEnabled(allow)
         self.cbb_replace_io.setEnabled(allow)
         self.txt_replace_io.setEnabled(allow and self.cbb_replace_io.currentIndex() == 3)
-        self.cbx_plcslave.setEnabled(allow)
+        self.cbx_plcserver.setEnabled(allow)
         self.cbx_mqtt.setEnabled(allow)
         self.cbx_xmlrpc.setEnabled(allow)
 
@@ -85,8 +86,8 @@ class RevPiOption(QtWidgets.QDialog, Ui_diag_options):
             self.cbb_reset_driver_action.currentIndex() != self.dc.get("reset_driver_action", 2) or
             # todo: self.dc.get("rtlevel", 2)
 
-            int(self.cbx_plcslave.isChecked()) != self.dc.get("plcslave", 0) or
-            self.acl_plcslave != self.dc.get("plcslaveacl", "") or
+            int(self.cbx_plcserver.isChecked()) != self.dc.get("plcserver", 0) or
+            self.acl_plcserver != self.dc.get("plcserveracl", "") or
 
             int(self.cbx_mqtt.isChecked()) != self.dc.get("mqtt", 0) or
             self._changesdone_mqtt() or
@@ -120,8 +121,8 @@ class RevPiOption(QtWidgets.QDialog, Ui_diag_options):
         self.cbx_zeroonerror.setChecked(bool(self.dc.get("zeroonerror", 0)))
         self.txt_replace_io.setText(self.dc.get("replace_ios", ""))
         self.cbb_reset_driver_action.setCurrentIndex(self.dc.get("reset_driver_action", 2))
-        self.cbx_plcslave.setChecked(bool(self.dc.get("plcslave", 0)))
-        self.acl_plcslave = self.dc.get("plcslaveacl", "")
+        self.cbx_plcserver.setChecked(bool(self.dc.get("plcserver", 0)))
+        self.acl_plcserver = self.dc.get("plcserveracl", "")
         self.cbx_mqtt.setChecked(bool(self.dc.get("mqtt", 0)))
         self.cbx_xmlrpc.setChecked(bool(self.dc.get("xmlrpc", 0)))
         self.acl_xmlrpc = self.dc.get("xmlrpcacl", "")
@@ -140,6 +141,41 @@ class RevPiOption(QtWidgets.QDialog, Ui_diag_options):
         for key in self._dict_mqttsettings:
             if key in self.dc:
                 self._dict_mqttsettings[key] = self.dc[key]
+
+    def _translate_wrong_names(self) -> dict:
+        """
+        Translate settings values of revpipyload < 0.10.0.
+
+        With RevPiPyLoad 0.10.0 we replaced the words master-slave with
+        client-server. Unfortunately we cannot expect that everyone will be
+        able to switch to the new version of RevPiPyLoad immediately.
+        Therefore, for a few versions of this software, we need to do a
+        translation of the values.
+
+        This function will translate the self.dc always to the new values and
+        return a copy of it with new or old values, depending on previous
+        detections.
+
+        :return: Settings with wrong values, if detected in previous calls
+        """
+        name_mappings = (
+            ("plcslave", "plcserver"),
+            ("plcslaveacl", "plcserveracl"),
+        )
+        for wrong, right in name_mappings:
+            if wrong in self.dc:
+                self.wrong_names = True
+                self.dc[right] = self.dc[wrong]
+                del self.dc[wrong]
+
+        translated_settings = self.dc.copy()
+        if self.wrong_names:
+            for wrong, right in name_mappings:
+                if right in translated_settings:
+                    translated_settings[wrong] = self.dc[right]
+                    del translated_settings[right]
+
+        return translated_settings
 
     def accept(self) -> None:
         if not self._changesdone():
@@ -164,9 +200,9 @@ class RevPiOption(QtWidgets.QDialog, Ui_diag_options):
         self.dc["zeroonerror"] = int(self.cbx_zeroonerror.isChecked())
         self.dc["replace_ios"] = self.txt_replace_io.text()
 
-        # PLCSlave Settings
-        self.dc["plcslave"] = int(self.cbx_plcslave.isChecked())
-        self.dc["plcslaveacl"] = self.acl_plcslave
+        # PLCServer Settings
+        self.dc["plcserver"] = int(self.cbx_plcserver.isChecked())
+        self.dc["plcserveracl"] = self.acl_plcserver
 
         # MQTT Settings
         self.dc["mqtt"] = int(self.cbx_mqtt.isChecked())
@@ -186,7 +222,7 @@ class RevPiOption(QtWidgets.QDialog, Ui_diag_options):
         self.dc["xmlrpcacl"] = self.acl_xmlrpc
 
         saved = helper.cm.call_remote_function(
-            "set_config", self.dc, ask,
+            "set_config", self._translate_wrong_names(), ask,
             default_value=False
         )
 
@@ -223,14 +259,20 @@ class RevPiOption(QtWidgets.QDialog, Ui_diag_options):
         if len(self.dc) == 0:
             return QtWidgets.QDialog.Rejected
 
+        self.wrong_names = False
+        self._translate_wrong_names()
+
         self._load_settings()
         self._apply_acl()
 
-        running = helper.cm.call_remote_function("plcslaverunning", default_value=False)
-        self.lbl_slave_status.setText(
+        running = helper.cm.call_remote_function(
+            "plcslaverunning" if self.wrong_names else "plcserverrunning",
+            default_value=False
+        )
+        self.lbl_server_status.setText(
             self.tr("running") if running else self.tr("stopped")
         )
-        self.lbl_slave_status.setStyleSheet(
+        self.lbl_server_status.setStyleSheet(
             "color: green" if running else "color: red"
         )
 
@@ -275,15 +317,15 @@ class RevPiOption(QtWidgets.QDialog, Ui_diag_options):
         self.txt_replace_io.setEnabled(index == 3)
 
     @QtCore.pyqtSlot()
-    def on_btn_aclplcslave_clicked(self):
+    def on_btn_aclplcserver_clicked(self):
         """Start ACL manager to edit ACL entries."""
-        self.diag_aclmanager.setup_acl_manager(self.acl_plcslave, {
+        self.diag_aclmanager.setup_acl_manager(self.acl_plcserver, {
             0: self.tr("read only"),
             1: self.tr("read and write"),
         })
         self.diag_aclmanager.read_only = helper.cm.xml_mode < 4
         if self.diag_aclmanager.exec() == QtWidgets.QDialog.Accepted:
-            self.acl_plcslave = self.diag_aclmanager.get_acl()
+            self.acl_plcserver = self.diag_aclmanager.get_acl()
 
     @QtCore.pyqtSlot()
     def on_btn_mqtt_clicked(self):

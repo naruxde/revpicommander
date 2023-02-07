@@ -61,7 +61,7 @@ class MqttManager(QtWidgets.QDialog, Ui_diag_mqtt):
         return True
 
     def accept(self) -> None:
-        """Save values to master dict."""
+        """Save values to value dict."""
         self.dc["mqttbasetopic"] = self.txt_basetopic.text()
         self.dc["mqttsendinterval"] = self.sbx_sendinterval.value()
         self.dc["mqttsend_on_event"] = int(self.cbx_send_on_event.isChecked())

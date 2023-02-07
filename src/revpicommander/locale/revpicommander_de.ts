@@ -798,12 +798,12 @@ Wählen Sie &apos;Ja&apos; zum Überschreiben, &apos;Nein&apos; um nur fehlende 
 <context>
     <name>RevPiOption</name>
     <message>
-        <location filename="../revpioption.py" line="300"/>
+        <location filename="../revpioption.py" line="342"/>
         <source>Question</source>
         <translation>Frage</translation>
     </message>
     <message>
-        <location filename="../revpioption.py" line="149"/>
+        <location filename="../revpioption.py" line="185"/>
         <source>The settings will be set on the Revolution Pi now.
 
 ACL changes and service settings are applied immediately.</source>
@@ -812,76 +812,76 @@ ACL changes and service settings are applied immediately.</source>
 Berechtigungseinstellungen werden sofort gesetzt.</translation>
     </message>
     <message>
-        <location filename="../revpioption.py" line="196"/>
+        <location filename="../revpioption.py" line="232"/>
         <source>Error</source>
         <translation>Fehler</translation>
     </message>
     <message>
-        <location filename="../revpioption.py" line="196"/>
+        <location filename="../revpioption.py" line="232"/>
         <source>The settings could not be saved on the Revolution Pi!
 Try to save the values one mor time and check the log files of RevPiPyLoad if the error rises again.</source>
         <translation>Die Einstellungen konnten nicht auf dem Revolution Pi gespeichert werden!
 Versuche es erneut und prüfe die Logdateien von RevPiPyLoad, wenn der Fehler erneut auftritt.</translation>
     </message>
     <message>
-        <location filename="../revpioption.py" line="206"/>
+        <location filename="../revpioption.py" line="242"/>
         <source>Do you really want to quit? 
 Unsaved changes will be lost.</source>
         <translation>Soll das Fenster wirklich geschlossen werden?
 Ungesicherte Änderungen gehen verloren.</translation>
     </message>
     <message>
-        <location filename="../revpioption.py" line="249"/>
+        <location filename="../revpioption.py" line="291"/>
         <source>running</source>
         <translation>läuft</translation>
     </message>
     <message>
-        <location filename="../revpioption.py" line="249"/>
+        <location filename="../revpioption.py" line="291"/>
         <source>stopped</source>
         <translation>angehalten</translation>
     </message>
     <message>
-        <location filename="../revpioption.py" line="240"/>
+        <location filename="../revpioption.py" line="282"/>
         <source>The MQTT service is not available on your RevPiPyLoad version.</source>
         <translation>MQTT ist in der RevPiPyLoad Version nicht verfügbar.</translation>
     </message>
     <message>
-        <location filename="../revpioption.py" line="280"/>
+        <location filename="../revpioption.py" line="322"/>
         <source>read only</source>
         <translation>Nur lesen</translation>
     </message>
     <message>
-        <location filename="../revpioption.py" line="280"/>
+        <location filename="../revpioption.py" line="322"/>
         <source>read and write</source>
         <translation>lesen und schreiben</translation>
     </message>
     <message>
-        <location filename="../revpioption.py" line="300"/>
+        <location filename="../revpioption.py" line="342"/>
         <source>Are you sure you want to deactivate the XML-RPC server? You will NOT be able to access the Revolution Pi with this program after saving the options!</source>
         <translation>Willst du den XML-RPC Server wirklich deaktivieren? Du wirst dich NICHT mehr mit diesem Programm zum Revolution Pi verbinden können!</translation>
     </message>
     <message>
-        <location filename="../revpioption.py" line="312"/>
+        <location filename="../revpioption.py" line="354"/>
         <source>Start/Stop PLC program and read logs</source>
         <translation>SPS Programm starten/stoppen und Logs lesen</translation>
     </message>
     <message>
-        <location filename="../revpioption.py" line="312"/>
+        <location filename="../revpioption.py" line="354"/>
         <source>+ read IOs in watch mode</source>
         <translation>+ EAs in SPS Betrachter lesen</translation>
     </message>
     <message>
-        <location filename="../revpioption.py" line="312"/>
+        <location filename="../revpioption.py" line="354"/>
         <source>+ read properties and download PLC program</source>
         <translation>+ Einstellungen lesen und SPS Programm herunterladen</translation>
     </message>
     <message>
-        <location filename="../revpioption.py" line="312"/>
+        <location filename="../revpioption.py" line="354"/>
         <source>+ upload PLC program</source>
         <translation>+ SPS Programm hochladen</translation>
     </message>
     <message>
-        <location filename="../revpioption.py" line="312"/>
+        <location filename="../revpioption.py" line="354"/>
         <source>+ set properties</source>
         <translation>+ Einstellungen ändern</translation>
     </message>
