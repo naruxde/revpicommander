@@ -19,8 +19,8 @@ class BackgroundWorker(QtCore.QThread):
     status_message = QtCore.pyqtSignal(str)
 
     def __init__(self, parent=None, interruption_text: str = None):
+        super().__init__(parent)
         self._interruption_text = interruption_text or self.tr("User requested cancellation...")
-        super(BackgroundWorker, self).__init__(parent)
 
     def check_cancel(self) -> bool:
         """
@@ -73,9 +73,9 @@ class BackgroundWaiter(BackgroundWorker):
     """Just wait an amount of time and show progress bar."""
 
     def __init__(self, seconds: int, status_message: str, parent=None, interruption_text: str = None):
+        super().__init__(parent, interruption_text)
         self._status_message = status_message
         self._wait_steps = seconds * 4
-        super().__init__(parent, interruption_text)
 
     def run(self) -> None:
         log.debug("BackgroundWaiter.run")
@@ -101,7 +101,7 @@ class WorkerDialog(QtWidgets.QDialog, Ui_diag_backgroundworker):
         :param worker_thread: Thread with the logic work to do
         :param parent: QtWidget
         """
-        super(WorkerDialog, self).__init__(parent)
+        super().__init__(parent)
         self.setupUi(self)
 
         self._canceled = False
@@ -117,7 +117,7 @@ class WorkerDialog(QtWidgets.QDialog, Ui_diag_backgroundworker):
 
     def exec(self) -> int:
         self._th.start()
-        return super(WorkerDialog, self).exec()
+        return super().exec()
 
     @QtCore.pyqtSlot()
     def on_th_finished(self) -> None:

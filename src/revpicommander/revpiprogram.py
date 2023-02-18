@@ -23,7 +23,7 @@ class RevPiProgram(QtWidgets.QDialog, Ui_diag_program):
     """Program options of RevPiPyLoad."""
 
     def __init__(self, parent=None):
-        super(RevPiProgram, self).__init__(parent)
+        super().__init__(parent)
         self.setupUi(self)
         self.setFixedSize(self.size())
 
@@ -103,7 +103,7 @@ class RevPiProgram(QtWidgets.QDialog, Ui_diag_program):
     def accept(self) -> None:
         # todo: After upload ask for restart pcl program?
         if not self._changesdone():
-            super(RevPiProgram, self).accept()
+            super().accept()
             return
 
         if self.cbb_plcprogram.currentText() == "":
@@ -138,7 +138,7 @@ class RevPiProgram(QtWidgets.QDialog, Ui_diag_program):
         )
 
         if saved:
-            super(RevPiProgram, self).accept()
+            super().accept()
         else:
             QtWidgets.QMessageBox.critical(
                 self, self.tr("Error"), self.tr(
@@ -174,12 +174,12 @@ class RevPiProgram(QtWidgets.QDialog, Ui_diag_program):
         self._load_settings()
         self._apply_acl()
 
-        return super(RevPiProgram, self).exec()
+        return super().exec()
 
     def reject(self) -> None:
         """Reject all sub windows and reload settings."""
         self._load_settings()
-        super(RevPiProgram, self).reject()
+        super().reject()
 
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
     # region #      REGION: PLC program

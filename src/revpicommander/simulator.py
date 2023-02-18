@@ -21,7 +21,7 @@ class Simulator(QtWidgets.QDialog, Ui_diag_simulator):
     """
 
     def __init__(self, parent=None):
-        super(Simulator, self).__init__(parent)
+        super().__init__(parent)
         self.setupUi(self)
         self.clean_procimg = False
         self.max_items = 5
@@ -69,7 +69,7 @@ class Simulator(QtWidgets.QDialog, Ui_diag_simulator):
 
         self.clean_procimg = self.sender() is self.btn_start_empty
 
-        super(Simulator, self).accept()
+        super().accept()
 
     def closeEvent(self, a0: QtGui.QCloseEvent) -> None:
         self._save_gui()

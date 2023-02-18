@@ -25,7 +25,7 @@ class DataThread(QtCore.QThread):
     """log_type, success, text"""
 
     def __init__(self, parent=None, cycle_time=1000):
-        super(DataThread, self).__init__(parent)
+        super().__init__(parent)
 
         self._cycle_time = cycle_time
         self._paused = True
@@ -113,7 +113,7 @@ class RevPiLogfile(QtWidgets.QMainWindow, Ui_win_revpilogfile):
 
     def __init__(self, parent=None):
         u"""Init RevPiLogfile-Class."""
-        super(RevPiLogfile, self).__init__(parent)
+        super().__init__(parent)
         self.setupUi(self)
 
         self.th_data = DataThread(self)
@@ -138,11 +138,11 @@ class RevPiLogfile(QtWidgets.QMainWindow, Ui_win_revpilogfile):
 
     def hideEvent(self, a0: QtGui.QHideEvent) -> None:
         self.th_data.pause()
-        super(RevPiLogfile, self).hideEvent(a0)
+        super().hideEvent(a0)
 
     def showEvent(self, a0: QtGui.QShowEvent) -> None:
         self.th_data.resume()
-        super(RevPiLogfile, self).showEvent(a0)
+        super().showEvent(a0)
 
     def _load_gui_settings(self):
         self.restoreGeometry(helper.settings.value("logfile/geo", b''))

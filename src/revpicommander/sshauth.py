@@ -31,7 +31,7 @@ class SSHAuth(QtWidgets.QDialog, Ui_diag_sshauth):
         """
         log.debug("SSHAuth.__init__")
 
-        super(SSHAuth, self).__init__(parent)
+        super().__init__(parent)
         self.setupUi(self)
 
         self._in_keyring = False

@@ -24,7 +24,7 @@ class AvahiSearchThread(QtCore.QThread):
     updated = QtCore.pyqtSignal(str, str, int, str, str)
 
     def __init__(self, parent=None):
-        super(AvahiSearchThread, self).__init__(parent)
+        super().__init__(parent)
         self._cycle_wait_ms = 1000
 
         self.re_posix = compile(
@@ -71,7 +71,7 @@ class AvahiSearchThread(QtCore.QThread):
 class AvahiSearch(QtWidgets.QDialog, Ui_diag_search):
 
     def __init__(self, parent=None):
-        super(AvahiSearch, self).__init__(parent)
+        super().__init__(parent)
         self.setupUi(self)
 
         # Global variables to let parent decide other actions
@@ -184,7 +184,7 @@ class AvahiSearch(QtWidgets.QDialog, Ui_diag_search):
         self.connect_settings = None
         self.just_save = False
         self._restart_search()
-        rc = super(AvahiSearch, self).exec()
+        rc = super().exec()
         self._th_zero_conf.requestInterruption()
         return rc
 

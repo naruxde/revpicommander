@@ -52,7 +52,7 @@ class RevPiCommander(QtWidgets.QMainWindow, Ui_win_revpicommander):
 
     def __init__(self, parent=None):
         """Init main program."""
-        super(RevPiCommander, self).__init__(parent)
+        super().__init__(parent)
         self.setupUi(self)
 
         self.wid_debugcontrol = None  # type: DebugControl

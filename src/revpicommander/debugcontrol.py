@@ -26,7 +26,7 @@ class PsValues(QtCore.QThread):
     process_image_received = QtCore.pyqtSignal(Binary)
 
     def __init__(self):
-        super(PsValues, self).__init__()
+        super().__init__()
         self._cycle_time = 200
 
     def run(self):
@@ -55,7 +55,7 @@ class DebugControl(QtWidgets.QWidget, Ui_wid_debugcontrol):
     """Debug controller for main window."""
 
     def __init__(self, parent=None):
-        super(DebugControl, self).__init__(parent)
+        super().__init__(parent)
         self.setupUi(self)
 
         self.dict_devices = {}
@@ -284,7 +284,7 @@ class DebugControl(QtWidgets.QWidget, Ui_wid_debugcontrol):
         self.cbx_refresh.setChecked(False)
         self._destroy_io_view()
 
-        super(DebugControl, self).deleteLater()
+        super().deleteLater()
 
     def reload_devices(self):
         """Rebuild GUI depending on devices and ios of Revolution Pi."""

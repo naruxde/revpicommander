@@ -17,7 +17,7 @@ class RevPiOption(QtWidgets.QDialog, Ui_diag_options):
     """Set options of RevPiPyLoad."""
 
     def __init__(self, parent=None):
-        super(RevPiOption, self).__init__(parent)
+        super().__init__(parent)
         self.setupUi(self)
         self.setFixedSize(self.size())
 
@@ -179,7 +179,7 @@ class RevPiOption(QtWidgets.QDialog, Ui_diag_options):
 
     def accept(self) -> None:
         if not self._changesdone():
-            super(RevPiOption, self).accept()
+            super().accept()
             return
 
         ask = QtWidgets.QMessageBox.question(
@@ -227,7 +227,7 @@ class RevPiOption(QtWidgets.QDialog, Ui_diag_options):
         )
 
         if saved:
-            super(RevPiOption, self).accept()
+            super().accept()
         else:
             QtWidgets.QMessageBox.critical(
                 self, self.tr("Error"), self.tr(
@@ -295,12 +295,12 @@ class RevPiOption(QtWidgets.QDialog, Ui_diag_options):
                 "color: green" if running else "color: red"
             )
 
-        return super(RevPiOption, self).exec()
+        return super().exec()
 
     def reject(self) -> None:
         """Reject all sub windows and reload settings."""
         self._load_settings()
-        super(RevPiOption, self).reject()
+        super().reject()
 
     @QtCore.pyqtSlot(int)
     def on_cbb_replace_io_currentIndexChanged(self, index: int):

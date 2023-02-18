@@ -26,7 +26,7 @@ class NodeType(IntEnum):
 class UploadFiles(BackgroundWorker):
 
     def __init__(self, file_list: list, parent):
-        super(UploadFiles, self).__init__(parent)
+        super().__init__(parent)
         self.ec = 1
         self.file_list = file_list
         self.plc_program_included = False  # Will be True, when opt_program was found in files
@@ -76,7 +76,7 @@ class UploadFiles(BackgroundWorker):
 class RevPiFiles(QtWidgets.QMainWindow, Ui_win_files):
 
     def __init__(self, parent=None):
-        super(RevPiFiles, self).__init__(parent)
+        super().__init__(parent)
         self.setupUi(self)
 
         self.dc_settings = {}

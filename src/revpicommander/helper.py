@@ -216,7 +216,7 @@ class ConnectionManager(QtCore.QThread):
     """After errors the connection is established again, could have other port information (SSH)."""
 
     def __init__(self, parent=None, cycle_time_ms=1000):
-        super(ConnectionManager, self).__init__(parent)
+        super().__init__(parent)
 
         self._cli = None
         self._cli_connect = Queue()

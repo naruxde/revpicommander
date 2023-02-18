@@ -15,7 +15,7 @@ class MqttManager(QtWidgets.QDialog, Ui_diag_mqtt):
     """MQTT settings for option window."""
 
     def __init__(self, parent=None):
-        super(MqttManager, self).__init__(parent)
+        super().__init__(parent)
         self.setupUi(self)
         self.setFixedSize(self.size())
 
@@ -72,7 +72,7 @@ class MqttManager(QtWidgets.QDialog, Ui_diag_mqtt):
         self.dc["mqttusername"] = self.txt_username.text()
         self.dc["mqttpassword"] = self.txt_password.text()
         self.dc["mqttclient_id"] = self.txt_client_id.text()
-        super(MqttManager, self).accept()
+        super().accept()
 
     def closeEvent(self, a0: QtGui.QCloseEvent) -> None:
         if self._changesdone():
@@ -95,12 +95,12 @@ class MqttManager(QtWidgets.QDialog, Ui_diag_mqtt):
                 )
             )
             return QtWidgets.QDialog.Rejected
-        return super(MqttManager, self).exec()
+        return super().exec()
 
     def reject(self) -> None:
         """Reject settings."""
         self._load_settings()
-        super(MqttManager, self).reject()
+        super().reject()
 
     @property
     def read_only(self):

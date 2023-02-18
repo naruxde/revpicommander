@@ -14,7 +14,7 @@ class RevPiInfo(QtWidgets.QDialog, Ui_diag_revpiinfo):
     """Version information window."""
 
     def __init__(self, version: str, parent=None):
-        super(RevPiInfo, self).__init__(parent)
+        super().__init__(parent)
         self.setupUi(self)
 
         self._debug_load = False
@@ -28,7 +28,7 @@ class RevPiInfo(QtWidgets.QDialog, Ui_diag_revpiinfo):
             if helper.cm.connected else "-"
         )
         self._load_lst_files()
-        return super(RevPiInfo, self).exec()
+        return super().exec()
 
     def lbl_version_mousePressEvent(self, a0: QtGui.QMouseEvent):
         if a0.button() == QtCore.Qt.MidButton:

@@ -25,7 +25,7 @@ class RevPiPlcList(QtWidgets.QDialog, Ui_diag_connections):
     """Manage your saved connections."""
 
     def __init__(self, parent=None):
-        super(RevPiPlcList, self).__init__(parent)
+        super().__init__(parent)
         self.setupUi(self)
         self.__default_port = 55123
 
@@ -124,7 +124,7 @@ class RevPiPlcList(QtWidgets.QDialog, Ui_diag_connections):
                 revpi_settings.save_settings()
 
         self.changes = False
-        super(RevPiPlcList, self).accept()
+        super().accept()
 
     def closeEvent(self, a0: QtGui.QCloseEvent) -> None:
         pi.logger.debug("RevPiPlcList.closeEvent")
@@ -142,7 +142,7 @@ class RevPiPlcList(QtWidgets.QDialog, Ui_diag_connections):
 
     def exec(self) -> int:
         self._load_settings()
-        return super(RevPiPlcList, self).exec()
+        return super().exec()
 
     def exec_with_presets(self, presets: RevPiSettings) -> int:
         """
@@ -153,7 +153,7 @@ class RevPiPlcList(QtWidgets.QDialog, Ui_diag_connections):
         """
         self._load_settings()
         self.on_btn_add_clicked(presets)
-        return super(RevPiPlcList, self).exec()
+        return super().exec()
 
     @QtCore.pyqtSlot(QtWidgets.QAbstractButton)
     def on_btn_box_clicked(self, button: QtWidgets.QAbstractButton):

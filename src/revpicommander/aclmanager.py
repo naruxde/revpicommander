@@ -16,7 +16,7 @@ class AclManager(QtWidgets.QDialog, Ui_diag_aclmanager):
     """ACL manager."""
 
     def __init__(self, parent=None):
-        super(AclManager, self).__init__(parent)
+        super().__init__(parent)
         self.setupUi(self)
         self.setFixedSize(self.size())
 
@@ -91,7 +91,7 @@ class AclManager(QtWidgets.QDialog, Ui_diag_aclmanager):
             return
 
         self.__oldacl = self.__table_to_acl()
-        super(AclManager, self).accept()
+        super().accept()
 
     def closeEvent(self, a0: QtGui.QCloseEvent) -> None:
         if self._changes_done():
@@ -107,12 +107,12 @@ class AclManager(QtWidgets.QDialog, Ui_diag_aclmanager):
                 a0.ignore()
 
     def exec(self) -> int:
-        return super(AclManager, self).exec()
+        return super().exec()
 
     def reject(self) -> None:
         """Restore old settings."""
         self.setup_acl_manager(self.__oldacl, self.__dict_acltext)
-        super(AclManager, self).reject()
+        super().reject()
 
     def setup_acl_manager(self, acl_string: str, acl_texts: dict):
         if type(acl_string) != str:

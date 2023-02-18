@@ -22,7 +22,7 @@ class DebugIos(QtWidgets.QMainWindow, Ui_win_debugios):
     search_class = (QtWidgets.QLineEdit, QtWidgets.QDoubleSpinBox, QtWidgets.QCheckBox)
 
     def __init__(self, position: int, name: str, inputs: list, outputs: list, parent=None):
-        super(DebugIos, self).__init__(parent)
+        super().__init__(parent)
         self.setupUi(self)
 
         self.restoreGeometry(helper.cm.settings.debug_geos.get(position, b''))
