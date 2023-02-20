@@ -13,7 +13,7 @@ import select
 from socketserver import BaseRequestHandler, ThreadingTCPServer
 from threading import Thread
 
-from paramiko.client import SSHClient, WarningPolicy
+from paramiko.client import MissingHostKeyPolicy, SSHClient
 from paramiko.rsakey import RSAKey
 from paramiko.ssh_exception import PasswordRequiredException
 from paramiko.transport import Transport
@@ -71,8 +71,7 @@ class SSHLocalTunnel:
         self._th_server = Thread()
 
         self._ssh_client = SSHClient()
-        self._ssh_client.load_system_host_keys()
-        self._ssh_client.set_missing_host_key_policy(WarningPolicy())
+        self._ssh_client.set_missing_host_key_policy(MissingHostKeyPolicy())
 
         self._ssh_transport = None  # type: Transport
         self._forward_server = None  # type: ThreadingTCPServer
