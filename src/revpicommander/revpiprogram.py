@@ -167,8 +167,8 @@ class RevPiProgram(QtWidgets.QDialog, Ui_diag_program):
             return QtWidgets.QDialog.Rejected
 
         self.dc = helper.cm.call_remote_function("get_config", default_value={})
-        self.lst_files = helper.cm.call_remote_function("get_filelist", default_value=[])
-        if len(self.dc) == 0 or len(self.lst_files) == 0:
+        self.lst_files = helper.cm.call_remote_function("get_filelist", default_value=None)
+        if len(self.dc) == 0 or self.lst_files is None:
             return QtWidgets.QDialog.Rejected
 
         self._load_settings()
