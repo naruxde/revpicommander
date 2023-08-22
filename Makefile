@@ -9,7 +9,7 @@ APP_IDENT = org.revpimodio.revpicommander
 APPLE_SIG = "Developer ID Application: Sven Sager (U3N5843D9K)"
 
 # If virtualenv exists, use it. If not, use PATH to find, except python3
-SYSTEM_PYTHON  = /usr/bin/python3
+SYSTEM_PYTHON  = python3
 PYTHON         = $(or $(wildcard venv/bin/python), $(SYSTEM_PYTHON))
 SYSTEM_PYUIC5  = $(shell which pyuic5)
 PYUIC5         = $(or $(wildcard venv/bin/pyuic5), $(SYSTEM_PYUIC5))
@@ -26,7 +26,7 @@ all: build_ui build_rc build
 
 ## Environment
 venv:
-	$(SYSTEM_PYTHON) -m venv venv
+	$(SYSTEM_PYTHON) -m venv --system-site-packages venv
 	source venv/bin/activate && \
 		python3 -m pip install --upgrade pip && \
 		python3 -m pip install -r requirements.txt
