@@ -38,9 +38,7 @@ class DebugIos(QtWidgets.QMainWindow, Ui_win_debugios):
         self.outputs = outputs.copy()
         self.write_values = False
 
-        min_input = min(inputs, key=lambda k: k[2])
-        max_output = max(outputs, key=lambda k: k[2])
-        self.length = max_output[2] + max_output[1] - min_input[2]
+        self.length = self._calc_device_length(self.inputs, self.outputs)
 
         self.style_sheet = ""
         self._create_io(self.inputs, self.saw_inp, True)
@@ -61,6 +59,23 @@ class DebugIos(QtWidgets.QMainWindow, Ui_win_debugios):
         max_int_value = 256 ** byte_length
         return max_int_value / 2 * -1 if signed else 0.0, \
             max_int_value / 2 - 1 if signed else max_int_value - 1
+
+    @staticmethod
+    def _calc_device_length(inputs: list, outputs: list) -> int:
+        """Calculate the device length with IO data."""
+        if inputs and outputs:
+            min_input = min(inputs, key=lambda k: k[2])
+            max_output = max(outputs, key=lambda k: k[2])
+        elif inputs:
+            min_input = min(inputs, key=lambda k: k[2])
+            max_output = max(inputs, key=lambda k: k[2])
+        elif outputs:
+            min_input = min(outputs, key=lambda k: k[2])
+            max_output = max(outputs, key=lambda k: k[2])
+        else:
+            return 0
+
+        return max_output[2] + max_output[1] - min_input[2]
 
     def _create_io(self, lst_ios: list, container: QtWidgets.QWidget, read_only: bool):
         lst_names = list(lst[0] for lst in lst_ios)
@@ -293,10 +308,7 @@ class DebugIos(QtWidgets.QMainWindow, Ui_win_debugios):
         """Update IOs after driver reset of piCtory."""
 
         # Check device length, this has to match to reuse this device
-        min_input = min(inputs, key=lambda k: k[2])
-        max_output = max(outputs, key=lambda k: k[2])
-        new_length = max_output[2] + max_output[1] - min_input[2]
-        if self.length != new_length:
+        if self.length != self._calc_device_length(inputs, outputs):
             return False
 
         # Remove IOs, which was remove or renamed
