@@ -8,15 +8,22 @@ APP_NAME = RevPi\ Commander
 APP_IDENT = org.revpimodio.revpicommander
 APPLE_SIG = "Developer ID Application: Sven Sager (U3N5843D9K)"
 
-# If virtualenv exists, use it. If not, use PATH to find, except python3
+# Set path to create the virtual environment with package name
+ifdef PYTHON3_VENV
+VENV_PATH = $(PYTHON3_VENV)/$(PACKAGE)
+else
+VENV_PATH = venv
+endif
+
+# If virtualenv exists, use it. If not, use PATH to find commands
 SYSTEM_PYTHON  = python3
-PYTHON         = $(or $(wildcard venv/bin/python), $(SYSTEM_PYTHON))
+PYTHON         = $(or $(wildcard $(VENV_PATH)/bin/python), $(SYSTEM_PYTHON))
 SYSTEM_PYUIC5  = $(shell which pyuic5)
-PYUIC5         = $(or $(wildcard venv/bin/pyuic5), $(SYSTEM_PYUIC5))
+PYUIC5         = $(or $(wildcard $(VENV_PATH)/bin/pyuic5), $(SYSTEM_PYUIC5))
 SYSTEM_PYRCC5  = $(shell which pyrcc5)
-PYRCC5         = $(or $(wildcard venv/bin/pyrcc5), $(SYSTEM_PYRCC5))
+PYRCC5         = $(or $(wildcard $(VENV_PATH)/bin/pyrcc5), $(SYSTEM_PYRCC5))
 SYSTEM_PYLUP5  = $(shell which pylupdate5)
-PYLUP5         = $(or $(wildcard venv/bin/pylupdate5), $(SYSTEM_PYLUP5))
+PYLUP5         = $(or $(wildcard $(VENV_PATH)/bin/pylupdate5), $(SYSTEM_PYLUP5))
 
 APP_VERSION = $(shell $(PYTHON) src/$(PACKAGE) --version)
 
@@ -25,14 +32,18 @@ all: build_ui build_rc build
 .PHONY: all
 
 ## Environment
+venv-info:
+	echo Using path: "$(VENV_PATH)"
+	exit 0
+
 venv:
-	$(SYSTEM_PYTHON) -m venv --system-site-packages venv
-	source venv/bin/activate && \
+	$(SYSTEM_PYTHON) -m venv --system-site-packages "$(VENV_PATH)"
+	source $(VENV_PATH)/bin/activate && \
 		python3 -m pip install --upgrade pip && \
 		python3 -m pip install -r requirements.txt
 	exit 0
 
-.PHONY: venv
+.PHONY: venv-info venv
 
 ## Compile Qt UI files to python code
 build_ui:
@@ -115,6 +126,6 @@ clean:
 	rm -rf build dist src/*.egg-info *.spec
 
 clean-all: clean
-	rm -R venv
+	rm -R $(VENV_PATH)
 
 .PHONY: clean clean-all
