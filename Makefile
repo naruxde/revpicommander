@@ -18,12 +18,6 @@ endif
 # If virtualenv exists, use it. If not, use PATH to find commands
 SYSTEM_PYTHON  = python3
 PYTHON         = $(or $(wildcard $(VENV_PATH)/bin/python), $(SYSTEM_PYTHON))
-SYSTEM_PYUIC5  = $(shell which pyuic5)
-PYUIC5         = $(or $(wildcard $(VENV_PATH)/bin/pyuic5), $(SYSTEM_PYUIC5))
-SYSTEM_PYRCC5  = $(shell which pyrcc5)
-PYRCC5         = $(or $(wildcard $(VENV_PATH)/bin/pyrcc5), $(SYSTEM_PYRCC5))
-SYSTEM_PYLUP5  = $(shell which pylupdate5)
-PYLUP5         = $(or $(wildcard $(VENV_PATH)/bin/pylupdate5), $(SYSTEM_PYLUP5))
 
 APP_VERSION = $(shell $(PYTHON) src/$(PACKAGE) --version)
 
@@ -49,19 +43,19 @@ venv:
 build_ui:
 	cd ui_dev && for ui_file in *.ui; do \
 		file_name=$${ui_file%.ui}; \
-		$(PYUIC5) $${ui_file} -o ../src/$(PACKAGE)/ui/$${file_name}_ui.py -x --from-imports; \
+		$(PYTHON) -m PyQt5.uic.pyuic $${ui_file} -o ../src/$(PACKAGE)/ui/$${file_name}_ui.py -x --from-imports; \
 		echo $${file_name}; \
 	done
 
 build_rc:
 	cd ui_dev && for rc_file in *.qrc; do \
 		file_name=$${rc_file%.qrc}; \
-		$(PYRCC5) $${rc_file} -o ../src/$(PACKAGE)/ui/$${file_name}_rc.py; \
+		$(PYTHON) -m PyQt5.pyrcc_main $${rc_file} -o ../src/$(PACKAGE)/ui/$${file_name}_rc.py; \
 		echo $${file_name}; \
 	done
 
 update_translation:
-	$(PYLUP5) translate.pro
+	$(PYTHON) -m PyQt5.pylupdate_main translate.pro
 
 .PHONY: build_ui build_rc update_translation
 
