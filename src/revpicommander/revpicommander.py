@@ -316,7 +316,7 @@ class RevPiCommander(QtWidgets.QMainWindow, Ui_win_revpicommander):
         configrsc_file = helper.settings.value("simulator/configrsc", "", str)
         procimg_file = helper.settings.value("simulator/procimg", "", str)
 
-        if helper.cm.pyload_simulate(configrsc_file, procimg_file, diag.cbx_stop_remove.isChecked()):
+        if helper.cm.pyload_simulate(configrsc_file, procimg_file, diag.clean_procimg):
             QtWidgets.QMessageBox.information(
                 self, self.tr("Simulator started..."), self.tr(
                     "The simulator is running!\n\nYou can work with this simulator if your call "

@@ -476,7 +476,13 @@ class ConnectionManager(QtCore.QThread):
             self.connection_disconnected.emit()
 
     def pyload_simulate(self, configrsc: str, procimg: str, clean_existing: bool):
-        """Start the simulator for piControl on local computer."""
+        """
+        Start the simulator for piControl on local computer.
+
+        :param configrsc: piCtory configuration
+        :param procimg: Process image, which is a 4 kByte file for simulation
+        :param clean_existing: Reset the file to ZERO \x00 bytes
+        """
         pi.logger.debug("ConnectionManager.start_simulate")
 
         if not exists(procimg) or clean_existing:
