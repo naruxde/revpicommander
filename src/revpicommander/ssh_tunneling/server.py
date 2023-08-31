@@ -10,13 +10,17 @@ __copyright__ = "Copyright (C) 2023 Sven Sager"
 __license__ = "GPLv2"
 
 import select
+from logging import getLogger
 from socketserver import BaseRequestHandler, ThreadingTCPServer
 from threading import Thread
+from typing import Tuple, Union
 
 from paramiko.client import MissingHostKeyPolicy, SSHClient
 from paramiko.rsakey import RSAKey
 from paramiko.ssh_exception import PasswordRequiredException
 from paramiko.transport import Transport
+
+log = getLogger("ssh_tunneling")
 
 
 class ForwardServer(ThreadingTCPServer):
@@ -33,9 +37,13 @@ class Handler(BaseRequestHandler):
                 self.request.getpeername(),
             )
         except Exception as e:
+            log.error(e)
             return
         if chan is None:
+            log.error("Could not create a ssh channel")
             return
+
+        log.info("Starting tunnel exchange loop")
 
         while True:
             r, w, x = select.select([self.request, chan], [], [], 5.0)
@@ -49,6 +57,8 @@ class Handler(BaseRequestHandler):
                 if len(data) == 0:
                     break
                 self.request.send(data)
+
+        log.info("Stopped tunnel exchange loop")
 
         chan.close()
         self.request.close()
@@ -161,6 +171,30 @@ class SSHLocalTunnel:
         except PasswordRequiredException:
             return True
         return False
+
+    def send_cmd(self, cmd: str, timeout: float = None) -> Union[Tuple[str, str], Tuple[None, None]]:
+        """
+        Send simple command to ssh host.
+
+        The output of stdout and stderr is returned as a tuple of two elements.
+        This elements could be None, in case of an internal error.
+
+        :param cmd: Shell command to execute on remote host
+        :param timeout: Timeout for execution
+        :return: Tuple with stdout and stderr
+        """
+        if not self._th_server.is_alive():
+            raise RuntimeError("Not connected")
+
+        try:
+            _, stdout, stderr = self._ssh_client.exec_command(cmd, 1024, timeout)
+            buffer_out = stdout.read()
+            buffer_err = stderr.read()
+
+            return buffer_out.decode(), buffer_err.decode()
+        except Exception as e:
+            log.error(e)
+            return None, None
 
     @property
     def connected(self):
