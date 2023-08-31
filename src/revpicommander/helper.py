@@ -33,6 +33,7 @@ class ConnectionFail(IntEnum):
     NO_XML_RPC = 1
     SSH_CONNECT = 2
     SSH_AUTH = 4
+    NO_XML_RPC_VIA_TUNNEL = 9  # Includes NO_XML_RPC Bit
 
 
 class WidgetData(IntEnum):
@@ -347,6 +348,10 @@ class ConnectionManager(QtCore.QThread):
             )
             try:
                 ssh_tunnel_port = ssh_tunnel_server.connect_by_credentials(revpi_settings.ssh_user, ssh_pass)
+
+                if getattr(revpi_settings, "ssh_enable_revpipyload", False):
+                    ssh_tunnel_server.send_cmd("sudo systemctl enable --now revpipyload")
+
             except AuthenticationException:
                 self.connect_error.emit(
                     self.tr("Error"), self.tr(
@@ -394,7 +399,7 @@ class ConnectionManager(QtCore.QThread):
                         "- The RevPiPyLoad XML-RPC service is NOT bind to localhost\n"
                         "- The ACL permission is not set for 127.0.0.1!!!"
                     ),
-                    ConnectionFail.NO_XML_RPC,
+                    ConnectionFail.NO_XML_RPC_VIA_TUNNEL,
                     revpi_settings,
                 )
             else:

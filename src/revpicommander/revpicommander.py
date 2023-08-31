@@ -128,10 +128,22 @@ class RevPiCommander(QtWidgets.QMainWindow, Ui_win_revpicommander):
         :param fail_code: Type of error
         :param revpi_settings: Settings of the revpi with the error
         """
-        QtWidgets.QMessageBox.critical(self, title, text)
-        if fail_code is ConnectionFail.SSH_AUTH:
-            # On failed credentials, we try to connect again and remove password form keychain, if exists
-            self._pyload_connect(revpi_settings, True)
+        if fail_code is ConnectionFail.NO_XML_RPC_VIA_TUNNEL:
+            # If RevPiPyLoad is not running, we can try to activate it via ssh
+            QtWidgets.QMessageBox.information(
+                self, self.tr("Information"), self.tr(
+                    "Can not connect to RevPiPyLoad service through SSH tunnel!\n\n"
+                    "We are trying to activate this service now and reconnect. The settings can be "
+                    "changed at any time via 'webstatus'."
+                ),
+            )
+            revpi_settings.ssh_enable_revpipyload = True
+            self._pyload_connect(revpi_settings, False)
+        else:
+            QtWidgets.QMessageBox.critical(self, title, text)
+            if fail_code is ConnectionFail.SSH_AUTH:
+                # On failed credentials, we try to connect again and remove password form keychain, if exists
+                self._pyload_connect(revpi_settings, True)
 
     @QtCore.pyqtSlot(str)
     def on_cm_connection_error_observed(self, message: str):
