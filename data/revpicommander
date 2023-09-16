@@ -1,9 +1,7 @@
 #!/bin/sh
-# Used to call the entry point, if packed with pybuild as application.
-# PYBUILD_INSTALL_ARGS=--install-lib=/usr/share/revpicommander/ \
-#                      --install-scripts=/usr/share/revpicommander/
-#
-# In that case the entry point will not find the revpicommander module in
-# the python lib.
+# This script will create the entry point 'revpicommander', which is defined
+# in the setup.py script. If you want to install this python module as an
+# application and not in the python standard library directory, you will need
+# to use this script for /usr/bin.
 
-exec "/usr/share/revpicommander/revpicommander-gui" "$@"
+exec python3 /usr/share/revpicommander/revpicommander "$@"

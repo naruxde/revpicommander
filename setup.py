@@ -25,7 +25,7 @@ setup(
     ],
     entry_points={
         'gui_scripts': [
-            'revpicommander-gui = revpicommander.revpicommander:main',
+            'revpicommander = revpicommander.revpicommander:main',
         ],
     },
 
