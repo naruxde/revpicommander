@@ -1,0 +1,9 @@
+#!/usr/bin/make -f
+
+export PYBUILD_NAME=revpicommander
+
+# Install this module as an application an not into the python standard library path
+export PYBUILD_INSTALL_ARGS=--install-lib=/usr/share/revpicommander/ --install-scripts=/usr/share/revpicommander/bin/
+
+%:
+	dh $@ --with python3 --buildsystem=pybuild
