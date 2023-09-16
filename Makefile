@@ -21,7 +21,7 @@ PYTHON         = $(or $(wildcard $(VENV_PATH)/bin/python), $(SYSTEM_PYTHON))
 
 APP_VERSION = $(shell $(PYTHON) src/$(PACKAGE) --version)
 
-all: build_ui build_rc build
+all: build_ui build_rc test build
 
 .PHONY: all
 
@@ -59,15 +59,18 @@ update_translation:
 
 .PHONY: build_ui build_rc update_translation
 
-## Build, install
+## Build steps
 build: build_ui build_rc
 	$(PYTHON) -m setup sdist
 	$(PYTHON) -m setup bdist_wheel
 
-install: build
+install: test build
 	$(PYTHON) -m pip install dist/$(PACKAGE)-*.whl
 
-.PHONY: build install
+uninstall:
+	$(PYTHON) -m pip uninstall --yes $(PACKAGE)
+
+.PHONY: test build install uninstall
 
 ## PyInstaller
 installer_mac: build_ui build_rc
@@ -119,7 +122,7 @@ installer_linux: build_ui build_rc
 clean:
 	rm -rf build dist src/*.egg-info *.spec
 
-clean-all: clean
-	rm -R $(VENV_PATH)
+distclean: clean
+	rm -rf $(VENV_PATH)
 
-.PHONY: clean clean-all
+.PHONY: clean distclean
