@@ -1,0 +1,24 @@
+From: Sven Sager <akira@narux.de>
+Date: Mon, 18 Sep 2023 06:49:44 +0200
+Subject: Change entry point name to differ from the module name
+
+In the package, the module and its scripts are installed in the same
+directory. This is done via PYBUILD_INSTALL_ARGS and --install-lib,
+--install-scripts. Module name and script name must not be the same.
+---
+ setup.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/setup.py b/setup.py
+index 227874b..8b2acab 100644
+--- a/setup.py
++++ b/setup.py
+@@ -25,7 +25,7 @@ setup(
+     ],
+     entry_points={
+         'gui_scripts': [
+-            'revpicommander = revpicommander.revpicommander:main',
++            'revpicommander_entry_point = revpicommander.revpicommander:main',
+         ],
+     },
+ 
