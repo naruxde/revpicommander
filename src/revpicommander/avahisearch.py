@@ -5,6 +5,7 @@ __copyright__ = "Copyright (C) 2023 Sven Sager"
 __license__ = "GPLv2"
 
 import webbrowser
+from logging import getLogger
 from re import compile
 from sys import platform
 
@@ -12,9 +13,10 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from zeroconf import IPVersion, ServiceBrowser, Zeroconf
 
 from . import helper
-from . import proginit as pi
 from .helper import RevPiSettings, WidgetData, all_revpi_settings
 from .ui.avahisearch_ui import Ui_diag_search
+
+log = getLogger(__name__)
 
 
 class AvahiSearchThread(QtCore.QThread):
@@ -34,12 +36,12 @@ class AvahiSearchThread(QtCore.QThread):
 
     def remove_service(self, zeroconf: Zeroconf, conf_type: str, name: str) -> None:
         """Revolution Pi disappeared."""
-        pi.logger.debug("AvahiSearchThread.remove_service")
+        log.debug("AvahiSearchThread.remove_service")
         self.removed.emit(name, conf_type)
 
     def add_service(self, zeroconf: Zeroconf, conf_type: str, name: str) -> None:
         """New Revolution Pi found."""
-        pi.logger.debug("AvahiSearchThread.add_service")
+        log.debug("AvahiSearchThread.add_service")
         info = zeroconf.get_service_info(conf_type, name)
         if not info:
             return
@@ -49,7 +51,7 @@ class AvahiSearchThread(QtCore.QThread):
 
     def update_service(self, zeroconf: Zeroconf, conf_type: str, name: str) -> None:
         """New data of revolution pi"""
-        pi.logger.debug("AvahiSearchThread.add_service")
+        log.debug("AvahiSearchThread.add_service")
         info = zeroconf.get_service_info(conf_type, name)
         if not info:
             return
@@ -58,14 +60,14 @@ class AvahiSearchThread(QtCore.QThread):
             self.updated.emit(name, info.server, info.port, conf_type, ip)
 
     def run(self) -> None:
-        pi.logger.debug("Started zero conf discovery.")
+        log.debug("Started zero conf discovery.")
         zeroconf = Zeroconf()
         revpi_browser = ServiceBrowser(zeroconf, "_revpipyload._tcp.local.", self)
         while not self.isInterruptionRequested():
             # Just hanging around :)
             self.msleep(self._cycle_wait_ms)
         zeroconf.close()
-        pi.logger.debug("Stopped zero conf discovery.")
+        log.debug("Stopped zero conf discovery.")
 
 
 class AvahiSearch(QtWidgets.QDialog, Ui_diag_search):
@@ -191,7 +193,7 @@ class AvahiSearch(QtWidgets.QDialog, Ui_diag_search):
     @QtCore.pyqtSlot()
     def on_act_connect_triggered(self) -> None:
         """Connect via existing settings or ask for type."""
-        pi.logger.debug("AvahiSearch.on_act_connect_triggered")
+        log.debug("AvahiSearch.on_act_connect_triggered")
         selected_items = self.tb_revpi.selectedItems()
         if not selected_items:
             return
@@ -206,7 +208,7 @@ class AvahiSearch(QtWidgets.QDialog, Ui_diag_search):
     @QtCore.pyqtSlot()
     def on_act_connect_ssh_triggered(self) -> None:
         """Create new revpi settings with ssh, save and connect."""
-        pi.logger.debug("AvahiSearch.on_act_connect_ssh_triggered")
+        log.debug("AvahiSearch.on_act_connect_ssh_triggered")
         if self.tb_revpi.currentRow() == -1:
             return
 
@@ -218,7 +220,7 @@ class AvahiSearch(QtWidgets.QDialog, Ui_diag_search):
     @QtCore.pyqtSlot()
     def on_act_connect_xmlrpc_triggered(self) -> None:
         """Create new revpi settings with XML-RPC, save and connect."""
-        pi.logger.debug("AvahiSearch.on_act_connect_xmlrpc_triggered")
+        log.debug("AvahiSearch.on_act_connect_xmlrpc_triggered")
         if self.tb_revpi.currentRow() == -1:
             return
 
@@ -331,7 +333,7 @@ class AvahiSearch(QtWidgets.QDialog, Ui_diag_search):
     @QtCore.pyqtSlot(int, int)
     def on_tb_revpi_cellDoubleClicked(self, row: int, column: int) -> None:
         """Connect to double-clicked Revolution Pi."""
-        pi.logger.debug("AvahiSearch.on_tb_revpi_cellDoubleClicked")
+        log.debug("AvahiSearch.on_tb_revpi_cellDoubleClicked")
         selected_items = self.tb_revpi.selectedItems()
         if not selected_items:
             return
@@ -353,7 +355,7 @@ class AvahiSearch(QtWidgets.QDialog, Ui_diag_search):
     @QtCore.pyqtSlot()
     def on_btn_connect_clicked(self) -> None:
         """Connect to selected Revolution Pi."""
-        pi.logger.debug("AvahiSearch.on_btn_connect_clicked")
+        log.debug("AvahiSearch.on_btn_connect_clicked")
         selected_items = self.tb_revpi.selectedItems()
         if not selected_items:
             return
@@ -370,7 +372,7 @@ class AvahiSearch(QtWidgets.QDialog, Ui_diag_search):
     @QtCore.pyqtSlot()
     def on_btn_save_clicked(self) -> None:
         """Save selected Revolution Pi."""
-        pi.logger.debug("AvahiSearch.on_btn_save_clicked")
+        log.debug("AvahiSearch.on_btn_save_clicked")
         row_index = self.tb_revpi.currentRow()
         if row_index == -1:
             return

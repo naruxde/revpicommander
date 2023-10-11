@@ -5,10 +5,13 @@ __author__ = "Sven Sager"
 __copyright__ = "Copyright (C) 2023 Sven Sager"
 __license__ = "GPLv2"
 
+from logging import getLogger
+
 from PyQt5 import QtGui, QtWidgets
 
-from . import proginit as pi
 from .ui.mqttmanager_ui import Ui_diag_mqtt
+
+log = getLogger(__name__)
 
 
 class MqttManager(QtWidgets.QDialog, Ui_diag_mqtt):
@@ -55,7 +58,7 @@ class MqttManager(QtWidgets.QDialog, Ui_diag_mqtt):
             self.txt_password.setText(self.dc["mqttpassword"])
             self.txt_client_id.setText(self.dc["mqttclient_id"])
         except Exception as e:
-            pi.logger.exception(e)
+            log.exception(e)
             self.dc = {}
             return False
         return True

@@ -8,6 +8,7 @@ import gzip
 import os
 import tarfile
 import zipfile
+from logging import getLogger
 from shutil import rmtree
 from tempfile import mkdtemp
 from xmlrpc.client import Binary
@@ -15,8 +16,9 @@ from xmlrpc.client import Binary
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 from . import helper
-from . import proginit as pi
 from .ui.revpiprogram_ui import Ui_diag_program
+
+log = getLogger(__name__)
 
 
 class RevPiProgram(QtWidgets.QDialog, Ui_diag_program):
@@ -67,7 +69,7 @@ class RevPiProgram(QtWidgets.QDialog, Ui_diag_program):
 
     def _load_settings(self, files_only=False):
         """Load values to GUI widgets."""
-        pi.logger.debug("RevPiProgram._load_settings")
+        log.debug("RevPiProgram._load_settings")
 
         if files_only:
             mrk_program = self.cbb_plcprogram.currentText()
@@ -88,7 +90,7 @@ class RevPiProgram(QtWidgets.QDialog, Ui_diag_program):
                 is_in_list = True
 
         if not is_in_list:
-            pi.logger.warning("File {0} is not in list".format(mrk_program or self.dc.get("plcprogram", "")))
+            log.warning("File {0} is not in list".format(mrk_program or self.dc.get("plcprogram", "")))
 
         if files_only:
             self.cbb_plcprogram.setCurrentText(mrk_program)
@@ -382,7 +384,7 @@ class RevPiProgram(QtWidgets.QDialog, Ui_diag_program):
                 fh.close()
 
             except Exception as e:
-                pi.logger.error(e)
+                log.error(e)
                 QtWidgets.QMessageBox.critical(
                     self, self.tr("Error"), self.tr(
                         "Coud not save the archive or extract the files!\n"

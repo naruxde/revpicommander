@@ -5,12 +5,14 @@ __copyright__ = "Copyright (C) 2023 Sven Sager"
 __license__ = "GPLv2"
 
 from enum import IntEnum
+from logging import getLogger
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 from . import helper
-from . import proginit as pi
 from .ui.revpilogfile_ui import Ui_win_revpilogfile
+
+log = getLogger(__name__)
 
 
 class LogType(IntEnum):
@@ -60,7 +62,7 @@ class DataThread(QtCore.QThread):
             # The log file was rotated by log rotate on the Revolution Pi
             start_position = 0
             eof = False
-            pi.logger.info("RevPi started a new log file.")
+            log.info("RevPi started a new log file.")
 
         elif buff_log:
             start_position += len(buff_log)
@@ -71,16 +73,16 @@ class DataThread(QtCore.QThread):
 
     def pause(self):
         """Stop checking new log lines, but leave thread alive."""
-        pi.logger.debug("DataThread.pause")
+        log.debug("DataThread.pause")
         self._paused = True
 
     def resume(self):
         """Start checking for new log lines."""
-        pi.logger.debug("DataThread.resume")
+        log.debug("DataThread.resume")
         self._paused = False
 
     def run(self) -> None:
-        pi.logger.debug("DataThread.run")
+        log.debug("DataThread.run")
 
         while not self.isInterruptionRequested():
             eof_app = False
@@ -191,7 +193,7 @@ class RevPiLogfile(QtWidgets.QMainWindow, Ui_win_revpilogfile):
 
     @QtCore.pyqtSlot(LogType, bool, str)
     def on_line_logged(self, log_type: LogType, success: bool, text: str):
-        pi.logger.debug("RevPiLogfile.on_line_logged")
+        log.debug("RevPiLogfile.on_line_logged")
 
         if log_type == LogType.APP:
             textwidget = self.txt_app

@@ -8,6 +8,7 @@ import pickle
 import socket
 from enum import IntEnum
 from http.client import CannotSendRequest
+from logging import getLogger
 from os import environ, remove
 from os.path import exists
 from queue import Queue
@@ -21,6 +22,8 @@ from paramiko.ssh_exception import AuthenticationException
 
 from . import proginit as pi
 from .ssh_tunneling.server import SSHLocalTunnel
+
+log = getLogger(__name__)
 
 settings = QtCore.QSettings("revpimodio.org", "revpicommander")
 """Global application settings."""
@@ -243,7 +246,7 @@ class ConnectionManager(QtCore.QThread):
         self._xml_mode_refresh = False
 
     def __call_simulator(self, function_name: str, *args, default_value=None, **kwargs):
-        pi.logger.debug("ConnectionManager.__call_simulator({0})".format(function_name))
+        log.debug("ConnectionManager.__call_simulator({0})".format(function_name))
         if function_name == "ps_values":
             if self._revpi.readprocimg():
                 bytebuff = bytearray()
@@ -387,7 +390,7 @@ class ConnectionManager(QtCore.QThread):
             xml_funcs = sp.system.listMethods()
             xml_mode = sp.xmlmodus()
         except Exception as e:
-            pi.logger.exception(e)
+            log.exception(e)
             self.connection_error_observed.emit(str(e))
 
             if revpi_settings.ssh_use_tunnel:
@@ -451,7 +454,7 @@ class ConnectionManager(QtCore.QThread):
             self._revpi = None
             self._revpi_output = None
 
-            pi.logger.debug("Simulator destroyed.")
+            log.debug("Simulator destroyed.")
             self.connection_disconnected.emit()
 
         elif self._cli is not None:
@@ -483,7 +486,7 @@ class ConnectionManager(QtCore.QThread):
         :param procimg: Process image, which is a 4 kByte file for simulation
         :param clean_existing: Reset the file to ZERO \x00 bytes
         """
-        pi.logger.debug("ConnectionManager.start_simulate")
+        log.debug("ConnectionManager.start_simulate")
 
         if not exists(procimg) or clean_existing:
             with open(procimg, "wb") as fh:
@@ -507,7 +510,7 @@ class ConnectionManager(QtCore.QThread):
             self.connection_established.emit()
 
         except Exception as e:
-            pi.logger.exception(e)
+            log.exception(e)
             self.connection_error_observed.emit(str(e))
             self._revpi_output = None
             self._revpi = None
@@ -522,7 +525,7 @@ class ConnectionManager(QtCore.QThread):
 
     def reset_simulator(self):
         """Reset all io to piCtory defaults."""
-        pi.logger.debug("ConnectionManager.reset_simulator")
+        log.debug("ConnectionManager.reset_simulator")
         if settings.value("simulator/restart_zero", False, bool):
             with open(self._revpi.procimg, "wb") as fh:
                 fh.write(b'\x00' * 4096)
@@ -558,9 +561,9 @@ class ConnectionManager(QtCore.QThread):
                         self.xml_mode = sp.xmlmodus()
                         self._xml_mode_refresh = False
                 except CannotSendRequest as e:
-                    pi.logger.warning(e)
+                    log.warning(e)
                 except Exception as e:
-                    pi.logger.warning(e)
+                    log.warning(e)
                     self.status_changed.emit(self.tr("SERVER ERROR"), "red")
                     self.connection_error_observed.emit("{0} | {1}".format(e, type(e)))
 
@@ -614,7 +617,7 @@ class ConnectionManager(QtCore.QThread):
         :return: Return value of remote function or default_value
         """
         if self._cli is None and self._revpi is None:
-            pi.logger.error("Not connected while calling {0}".format(function_name))
+            log.error("Not connected while calling {0}".format(function_name))
             if raise_exception:
                 raise ConnectionError("Connection manager not connected")
             return default_value
@@ -638,7 +641,7 @@ class ConnectionManager(QtCore.QThread):
                     if reload_funcs:
                         self.xml_funcs = self._cli.system.listMethods()
                 except Exception as e:
-                    pi.logger.error(e)
+                    log.error(e)
                     if raise_exception:
                         self._lck_cli.release()
                         raise
@@ -722,7 +725,7 @@ def import_old_settings():
             revpi_setting._settings = settings
             revpi_setting.save_settings()
         except Exception:
-            pi.logger.warning("Could not import saved connection {0}".format(i))
+            log.warning("Could not import saved connection {0}".format(i))
 
 
 import_old_settings()

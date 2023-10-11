@@ -7,15 +7,17 @@ __license__ = "GPLv2"
 import gzip
 import os
 from enum import IntEnum
+from logging import getLogger
 from xmlrpc.client import Binary
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 from . import helper
-from . import proginit as pi
 from .backgroundworker import BackgroundWorker
 from .helper import WidgetData
 from .ui.files_ui import Ui_win_files
+
+log = getLogger(__name__)
 
 
 class NodeType(IntEnum):
@@ -58,7 +60,7 @@ class UploadFiles(BackgroundWorker):
                         default_value=False
                     )
             except Exception as e:
-                pi.logger.error(e)
+                log.error(e)
                 self.ec = -2
                 return
 
@@ -99,10 +101,10 @@ class RevPiFiles(QtWidgets.QMainWindow, Ui_win_files):
         self.splitter.setSizes(list(map(int, helper.settings.value("files/splitter", [0, 0]))))
 
     def __del__(self):
-        pi.logger.debug("RevPiFiles.__del__")
+        log.debug("RevPiFiles.__del__")
 
     def closeEvent(self, a0: QtGui.QCloseEvent) -> None:
-        pi.logger.debug("RevPiFiles.closeEvent")
+        log.debug("RevPiFiles.closeEvent")
         helper.settings.setValue("files/geo", self.saveGeometry())
         helper.settings.setValue("files/splitter", self.splitter.sizes())
 
@@ -197,7 +199,7 @@ class RevPiFiles(QtWidgets.QMainWindow, Ui_win_files):
 
     def _select_children(self, top_item: QtWidgets.QTreeWidgetItem, value: bool):
         """Recursive select children from parent."""
-        pi.logger.debug("RevPiFiles._select_children")
+        log.debug("RevPiFiles._select_children")
 
         for i in range(top_item.childCount()):
             item = top_item.child(i)
@@ -213,7 +215,7 @@ class RevPiFiles(QtWidgets.QMainWindow, Ui_win_files):
         if item is None:
             return
 
-        pi.logger.debug("RevPiFiles.__itemSelectionChanged")
+        log.debug("RevPiFiles.__itemSelectionChanged")
 
         # Block while preselect other entries
         tree_view.blockSignals(True)
@@ -296,7 +298,7 @@ class RevPiFiles(QtWidgets.QMainWindow, Ui_win_files):
 
         :param silent: Do not show message boxes
         """
-        pi.logger.debug("RevPiFiles._load_files_local")
+        log.debug("RevPiFiles._load_files_local")
 
         self.tree_files_counter = 0
         self.tree_files_local.blockSignals(True)
@@ -316,7 +318,7 @@ class RevPiFiles(QtWidgets.QMainWindow, Ui_win_files):
 
     def file_list_local(self):
         """Generate a file list with full path of selected entries."""
-        pi.logger.debug("RevPiFiles.file_list_local")
+        log.debug("RevPiFiles.file_list_local")
         lst = []
         for item in self.tree_files_local.selectedItems():
             if item.type() == NodeType.DIR:
@@ -337,7 +339,7 @@ class RevPiFiles(QtWidgets.QMainWindow, Ui_win_files):
 
         :param silent: Do not show message boxes
         """
-        pi.logger.debug("RevPiFiles._load_files_revpi")
+        log.debug("RevPiFiles._load_files_revpi")
 
         self.tree_files_revpi.blockSignals(True)
         self.tree_files_revpi.clear()
@@ -421,7 +423,7 @@ class RevPiFiles(QtWidgets.QMainWindow, Ui_win_files):
 
     def file_list_revpi(self):
         """Generate a file list with full path of selected entries."""
-        pi.logger.debug("RevPiFiles.file_list_revpi")
+        log.debug("RevPiFiles.file_list_revpi")
         lst = []
         for item in self.tree_files_revpi.selectedItems():
             if item.type() == NodeType.DIR:
@@ -435,13 +437,13 @@ class RevPiFiles(QtWidgets.QMainWindow, Ui_win_files):
 
     @QtCore.pyqtSlot()
     def on_btn_all_clicked(self):
-        pi.logger.debug("RevPiFiles.on_btn_all_clicked")
+        log.debug("RevPiFiles.on_btn_all_clicked")
         self._do_my_job(True)
         self.file_list_revpi()
 
     @QtCore.pyqtSlot()
     def on_btn_select_local_clicked(self):
-        pi.logger.debug("RevPiFiles.on_btn_select_clicked")
+        log.debug("RevPiFiles.on_btn_select_clicked")
 
         diag_folder = QtWidgets.QFileDialog(
             self, self.tr("Select folder..."),
@@ -472,25 +474,25 @@ class RevPiFiles(QtWidgets.QMainWindow, Ui_win_files):
 
     @QtCore.pyqtSlot()
     def on_btn_refresh_local_clicked(self):
-        pi.logger.debug("RevPiFiles.on_btn_refresh_clicked")
+        log.debug("RevPiFiles.on_btn_refresh_clicked")
         self._load_files_local(False)
 
     @QtCore.pyqtSlot()
     def on_btn_refresh_revpi_clicked(self):
-        pi.logger.debug("RevPiFiles.on_btn_refresh_revpi_clicked")
+        log.debug("RevPiFiles.on_btn_refresh_revpi_clicked")
         self._load_files_revpi(False)
 
     @QtCore.pyqtSlot()
     def on_btn_to_right_clicked(self):
         """Upload selected files to revolution pi."""
-        pi.logger.debug("RevPiFiles.on_btn_to_right_clicked")
+        log.debug("RevPiFiles.on_btn_to_right_clicked")
         self._do_my_job(False)
         self._load_files_revpi(True)
 
     @QtCore.pyqtSlot()
     def on_btn_to_left_clicked(self):
         """Download selected file."""
-        pi.logger.debug("RevPiFiles.on_btn_to_left_clicked")
+        log.debug("RevPiFiles.on_btn_to_left_clicked")
 
         override = None
         for item in self.tree_files_revpi.selectedItems():
@@ -524,7 +526,7 @@ class RevPiFiles(QtWidgets.QMainWindow, Ui_win_files):
                     override = rc_diag == QtWidgets.QMessageBox.Yes
 
                 if os.path.exists(file_name) and not override:
-                    pi.logger.debug("Skip existing file '{0}'".format(file_name))
+                    log.debug("Skip existing file '{0}'".format(file_name))
                     continue
 
                 os.makedirs(os.path.dirname(file_name), exist_ok=True)
@@ -537,7 +539,7 @@ class RevPiFiles(QtWidgets.QMainWindow, Ui_win_files):
     @QtCore.pyqtSlot()
     def on_btn_delete_revpi_clicked(self):
         """Remove selected files from working directory on revolution pi."""
-        pi.logger.debug("RevPiFiles.btn_delete_revpi_clicked")
+        log.debug("RevPiFiles.btn_delete_revpi_clicked")
 
         lst_delete = []
         for item in self.tree_files_revpi.selectedItems():

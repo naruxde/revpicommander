@@ -5,6 +5,7 @@ __copyright__ = "Copyright (C) 2023 Sven Sager"
 __license__ = "GPLv2"
 
 import pickle
+from logging import getLogger
 from xmlrpc.client import Binary, Fault, MultiCall, MultiCallIterator
 
 from PyQt5 import QtCore, QtGui, QtWidgets
@@ -13,6 +14,8 @@ from . import helper
 from . import proginit as pi
 from .debugios import DebugIos
 from .ui.debugcontrol_ui import Ui_wid_debugcontrol
+
+log = getLogger(__name__)
 
 
 class PsValues(QtCore.QThread):
@@ -31,7 +34,7 @@ class PsValues(QtCore.QThread):
 
     def run(self):
         """Read IO values of Revolution Pi."""
-        pi.logger.debug("PsValues.run enter")
+        log.debug("PsValues.run enter")
 
         while not self.isInterruptionRequested():
             try:
@@ -39,16 +42,16 @@ class PsValues(QtCore.QThread):
                     helper.cm.call_remote_function("ps_values", raise_exception=True)
                 )
             except Fault:
-                pi.logger.warning("Detected piCtory reset.")
+                log.warning("Detected piCtory reset.")
                 self.requestInterruption()
                 self.driver_reset_detected.emit()
             except Exception as e:
-                pi.logger.error(e)
+                log.error(e)
                 self.process_image_received.emit(Binary())
 
             self.msleep(self._cycle_time)
 
-        pi.logger.debug("PsValues.run exit")
+        log.debug("PsValues.run exit")
 
 
 class DebugControl(QtWidgets.QWidget, Ui_wid_debugcontrol):
@@ -87,11 +90,11 @@ class DebugControl(QtWidgets.QWidget, Ui_wid_debugcontrol):
         self.shc_write_o.activated.connect(self.on_btn_write_o_clicked)
 
     def __del__(self):
-        pi.logger.debug("DebugControl.__del__")
+        log.debug("DebugControl.__del__")
 
     def _set_gui_control_states(self):
         """Set states depending on acl level."""
-        pi.logger.debug("DebugControl._set_gui_control_states")
+        log.debug("DebugControl._set_gui_control_states")
         # xml_mode view >= 1
         # xml_mode write >= 3
         self.btn_read_io.setEnabled(not self.cbx_write.isChecked())
@@ -109,7 +112,7 @@ class DebugControl(QtWidgets.QWidget, Ui_wid_debugcontrol):
 
         :param device_position: Only device position or -1 for all
         """
-        pi.logger.debug("DebugControl._destroy_io_view")
+        log.debug("DebugControl._destroy_io_view")
         for position in sorted(self.dict_devices) if device_position == -1 else [device_position]:
             if position in self.dict_windows:
                 # Remove singe window and button
@@ -151,11 +154,11 @@ class DebugControl(QtWidgets.QWidget, Ui_wid_debugcontrol):
             try:
                 ba_values = helper.cm.call_remote_function("ps_values", raise_exception=True)
             except Fault:
-                pi.logger.warning("Detected piCtory reset.")
+                log.warning("Detected piCtory reset.")
                 self._driver_reset_detected()
                 return
             except Exception as e:
-                pi.logger.error(e)
+                log.error(e)
                 ba_values = Binary()
 
         # From now on use bytes instead of Binary
@@ -255,7 +258,7 @@ class DebugControl(QtWidgets.QWidget, Ui_wid_debugcontrol):
                 return
         elif not isinstance(return_list, list):
             return
-        pi.logger.debug("DebugControl._validate_multicall")
+        log.debug("DebugControl._validate_multicall")
 
         str_errmsg = ""
         for lst_result in return_list:  # type: list
@@ -272,13 +275,13 @@ class DebugControl(QtWidgets.QWidget, Ui_wid_debugcontrol):
                 self.dict_windows[lst_result[0]].reset_change_value_colors(lst_result[1])
 
         if str_errmsg != "":
-            pi.logger.error(str_errmsg)
+            log.error(str_errmsg)
             if not self.cbx_refresh.isChecked():
                 QtWidgets.QMessageBox.critical(self, self.tr("Error"), str_errmsg)
 
     def deleteLater(self):
         """Clean up all sub windows."""
-        pi.logger.debug("DebugControl.deleteLater")
+        log.debug("DebugControl.deleteLater")
 
         self.cbx_write.setChecked(False)
         self.cbx_refresh.setChecked(False)
@@ -288,7 +291,7 @@ class DebugControl(QtWidgets.QWidget, Ui_wid_debugcontrol):
 
     def reload_devices(self):
         """Rebuild GUI depending on devices and ios of Revolution Pi."""
-        pi.logger.debug("DebugControl.reload_devices")
+        log.debug("DebugControl.reload_devices")
 
         if not helper.cm.call_remote_function("psstart", default_value=False):
             # RevPiPyLoad does not support psstart (too old)
@@ -358,7 +361,7 @@ class DebugControl(QtWidgets.QWidget, Ui_wid_debugcontrol):
     @QtCore.pyqtSlot(bool)
     def on_btn_device_clicked(self, checked: bool):
         """Open or close IO window."""
-        pi.logger.debug("DebugControl.on_btn_device_clicked")
+        log.debug("DebugControl.on_btn_device_clicked")
 
         position = int(self.sender().objectName())
         if position in self.dict_windows:
@@ -369,14 +372,14 @@ class DebugControl(QtWidgets.QWidget, Ui_wid_debugcontrol):
     @QtCore.pyqtSlot(int)
     def on_device_closed(self, position: int):
         """Change the check state of button, if window was closed."""
-        pi.logger.debug("DebugControl.on_device_closed")
+        log.debug("DebugControl.on_device_closed")
         btn = self.gb_devices.findChild(QtWidgets.QPushButton, str(position))  # type: QtWidgets.QPushButton
         btn.setChecked(False)
 
     @QtCore.pyqtSlot()
     def on_btn_read_io_pressed(self):
         """Read all IO values and replace changed ones."""
-        pi.logger.debug("DebugControl.on_btn_read_io_pressed")
+        log.debug("DebugControl.on_btn_read_io_pressed")
         for win in self.dict_windows.values():  # type: DebugIos
             win.reset_label_colors()
         self._work_values()
@@ -384,14 +387,14 @@ class DebugControl(QtWidgets.QWidget, Ui_wid_debugcontrol):
     @QtCore.pyqtSlot()
     def on_btn_refresh_io_pressed(self):
         """Read all IO values but do not touch changed ones."""
-        pi.logger.debug("DebugControl.on_btn_refresh_io_pressed")
+        log.debug("DebugControl.on_btn_refresh_io_pressed")
         if not self.cbx_refresh.isChecked():
             self._work_values(refresh=True)
 
     @QtCore.pyqtSlot()
     def on_btn_write_o_clicked(self):
         """Write outputs."""
-        pi.logger.debug("DebugControl.on_btn_write_o_clicked")
+        log.debug("DebugControl.on_btn_write_o_clicked")
         if not self.cbx_write.isChecked() and (helper.cm.xml_mode >= 3 or helper.cm.simulating):
             for win in self.dict_windows.values():  # type: DebugIos
                 win.reset_label_colors()
@@ -400,7 +403,7 @@ class DebugControl(QtWidgets.QWidget, Ui_wid_debugcontrol):
     @QtCore.pyqtSlot(int)
     def on_cbx_refresh_stateChanged(self, state: int):
         """Start or stop the auto refresh thread."""
-        pi.logger.debug("DebugControl.cbx_refresh_stateChanged")
+        log.debug("DebugControl.cbx_refresh_stateChanged")
 
         # Start / stop worker thread
         if state == QtCore.Qt.Checked and (helper.cm.connected or helper.cm.simulating):
@@ -433,7 +436,7 @@ class DebugControl(QtWidgets.QWidget, Ui_wid_debugcontrol):
 
     @QtCore.pyqtSlot(int)
     def on_cbx_write_stateChanged(self, state: int):
-        pi.logger.debug("DebugControl.cbx_write_stateChanged")
+        log.debug("DebugControl.cbx_write_stateChanged")
         checked = state == QtCore.Qt.Checked
         for win in self.dict_windows.values():  # type: DebugIos
             win.write_values = checked
