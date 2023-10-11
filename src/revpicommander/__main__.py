@@ -17,14 +17,14 @@ if __package__ == "":
 if __name__ == "__main__":
     import sys
 
-    if len(sys.argv) == 2 and "--version" in sys.argv:
-        # Catch --version, if this is the only argument (sys.argv[0] is always the script name)
-        from revpicommander import __version__
-        print(__version__)
-        sys.exit(0)
-
-    else:
+    try:
+        # Use absolut import in the __main__ module
         from revpicommander.revpicommander import main
 
         # Run the main application of this package
         sys.exit(main())
+
+    except Exception as e:
+        sys.stdout.write(f"Can not start __main__ module: {e}")
+        sys.stdout.write("\n")
+        sys.exit(1)

@@ -90,6 +90,8 @@ class RevPiCommander(QtWidgets.QMainWindow, Ui_win_revpicommander):
 
         self.setWindowFlag(QtCore.Qt.WindowMaximizeButtonHint, False)
 
+        pi.startup_complete()
+
     def closeEvent(self, a0: QtGui.QCloseEvent) -> None:
         log.debug("RevPiCommander.closeEvent")
         helper.cm.pyload_disconnect()
