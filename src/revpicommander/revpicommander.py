@@ -12,6 +12,7 @@ from os.path import dirname, join
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
+from revpicommander.oss_licenses import OssLicenses
 from . import __version__
 from . import helper
 from . import proginit as pi
@@ -89,6 +90,10 @@ class RevPiCommander(QtWidgets.QMainWindow, Ui_win_revpicommander):
         self.restoreGeometry(helper.settings.value("revpicommander/geo", b''))
 
         self.setWindowFlag(QtCore.Qt.WindowMaximizeButtonHint, False)
+
+        # Load oss licenses dialog, to show licenses, if this is build with app target
+        self.diag_oss_licenses = OssLicenses(pi.open_source_licenses[:-3] + "json", self)
+        self.men_help.addAction(self.diag_oss_licenses.action_start)
 
         pi.startup_complete()
 
