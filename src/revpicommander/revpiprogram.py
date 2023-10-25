@@ -41,8 +41,6 @@ class RevPiProgram(QtWidgets.QDialog, Ui_diag_program):
         # Setting properties require level 4
         self.cbb_plcprogram.setEnabled(helper.cm.xml_mode >= 4)
         self.txt_plcarguments.setEnabled(helper.cm.xml_mode >= 4)
-        self.rbn_pythonversion_2.setEnabled(helper.cm.xml_mode >= 4)
-        self.rbn_pythonversion_3.setEnabled(helper.cm.xml_mode >= 4)
         self.cbx_plcworkdir_set_uid.setEnabled(helper.cm.xml_mode >= 4)
 
         # Downloads require level 2
@@ -62,8 +60,6 @@ class RevPiProgram(QtWidgets.QDialog, Ui_diag_program):
         """
         return self.cbb_plcprogram.currentText() != self.dc.get("plcprogram", "") or \
             self.txt_plcarguments.text() != self.dc.get("plcarguments", "") or \
-            self.rbn_pythonversion_2.isChecked() != (self.dc.get("pythonversion", 3) == 2) or \
-            self.rbn_pythonversion_3.isChecked() != (self.dc.get("pythonversion", 3) == 3) or \
             int(self.cbx_plcworkdir_set_uid.isChecked()) != self.dc.get("plcworkdir_set_uid", 0) or \
             self.sbx_plcprogram_watchdog.value() != self.dc.get("plcprogram_watchdog", 0)
 
@@ -97,8 +93,6 @@ class RevPiProgram(QtWidgets.QDialog, Ui_diag_program):
         else:
             self.cbb_plcprogram.setCurrentText(self.dc.get("plcprogram", ""))
             self.txt_plcarguments.setText(self.dc.get("plcarguments", ""))
-            self.rbn_pythonversion_2.setChecked(self.dc.get("pythonversion", 3) == 2)
-            self.rbn_pythonversion_3.setChecked(self.dc.get("pythonversion", 3) == 3)
             self.cbx_plcworkdir_set_uid.setChecked(bool(self.dc.get("plcworkdir_set_uid", 0)))
             self.sbx_plcprogram_watchdog.setValue(self.dc.get("plcprogram_watchdog", 0))
 
@@ -130,7 +124,6 @@ class RevPiProgram(QtWidgets.QDialog, Ui_diag_program):
 
         self.dc["plcprogram"] = self.cbb_plcprogram.currentText()
         self.dc["plcarguments"] = self.txt_plcarguments.text()
-        self.dc["pythonversion"] = 2 if self.rbn_pythonversion_2.isChecked() else 3
         self.dc["plcworkdir_set_uid"] = int(self.cbx_plcworkdir_set_uid.isChecked())
         self.dc["plcprogram_watchdog"] = self.sbx_plcprogram_watchdog.value()
 
