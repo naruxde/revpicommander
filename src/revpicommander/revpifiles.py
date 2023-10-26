@@ -171,17 +171,25 @@ class RevPiFiles(QtWidgets.QMainWindow, Ui_win_files):
 
         if "plcdeletefile" not in helper.cm.xml_funcs:
             self.btn_delete_revpi.setEnabled(False)
-            self.btn_delete_revpi.setToolTip(self.tr("The RevPiPyLoad version on the Revolution Pi is to old."))
+            self.btn_delete_revpi.setToolTip(self.tr(
+                "Upgrade your Revolution Pi! This function needs at least 'revpipyload' 0.9.5"
+            ))
         else:
             self.btn_delete_revpi.setEnabled(state_revpi)
+            self.btn_delete_revpi.setToolTip(self.tr(
+                "Deletes selected files immediately on the Revolution Pi"
+            ))
         if "plcdownload_file" not in helper.cm.xml_funcs:
             self.btn_to_left.setEnabled(False)
-            self.btn_to_left.setToolTip(self.tr("The RevPiPyLoad version on the Revolution Pi is to old."))
+            self.btn_to_left.setToolTip(self.tr(
+                "Upgrade your Revolution Pi! This function needs at least 'revpipyload' 0.9.5"
+            ))
         elif not helper.cm.settings.watch_path:
             self.btn_to_left.setEnabled(False)
             self.btn_to_left.setToolTip(self.tr("Choose a local directory first."))
         else:
             self.btn_to_left.setEnabled(state_revpi)
+            self.btn_to_left.setToolTip("")
 
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
     # region #      REGION: Tree management
