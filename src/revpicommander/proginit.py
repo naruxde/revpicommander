@@ -93,6 +93,17 @@ def cleanup():
 def reconfigure_logger():
     """Configure logging module of program."""
 
+    class FilterDebug(logging.Filter):
+        """Set this filter to log handler if verbose level is > 1."""
+
+        def filter(self, record: logging.LogRecord) -> bool:
+            remove_record = False
+
+            # Remove paramiko ssh module
+            remove_record = remove_record or record.name.startswith("paramiko")
+
+            return not remove_record
+
     # Clear all log handler
     for lhandler in logger.handlers.copy():
         lhandler.close()
@@ -127,6 +138,7 @@ def reconfigure_logger():
     if pargs.verbose == 1:
         loglevel = logging.INFO
     elif pargs.verbose > 1:
+        lhandler.addFilter(FilterDebug())
         loglevel = logging.DEBUG
     else:
         loglevel = logging.WARNING
@@ -307,7 +319,6 @@ if pargs.daemon:
             f.write(str(pid))
 
         sys.exit(0)
-
 
 # Get absolute paths
 pwd = abspath(".")
