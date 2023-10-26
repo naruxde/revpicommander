@@ -5,6 +5,7 @@
     <file>ico/revpipycontrol.ico</file>
   </qresource>
   <qresource prefix="file">
+    <file>ico/autostart.ico</file>
     <file>ico/file-else.ico</file>
     <file>ico/file-python.ico</file>
   </qresource>

@@ -48,6 +48,7 @@ class WidgetData(IntEnum):
     host_name = 267
     host_name_full = 268
     file_name = 309
+    is_plc_program = 310
     revpi_settings = 320
 
 

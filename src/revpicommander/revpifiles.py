@@ -166,6 +166,20 @@ class RevPiFiles(QtWidgets.QMainWindow, Ui_win_files):
         state_local = len(self.tree_files_local.selectedItems()) > 0
         state_revpi = len(self.tree_files_revpi.selectedItems()) > 0
 
+        if "set_plcprogram" in helper.cm.xml_funcs:
+            self.btn_mark_plcprogram.setEnabled(False)
+            self.btn_mark_plcprogram.setToolTip(self.tr(
+                "Set as start file"
+            ))
+            if len(self.tree_files_revpi.selectedItems()) == 1:
+                item = self.tree_files_revpi.selectedItems()[0]
+                self.btn_mark_plcprogram.setEnabled(not item.data(0, WidgetData.is_plc_program))
+        else:
+            self.btn_mark_plcprogram.setEnabled(False)
+            self.btn_mark_plcprogram.setToolTip(self.tr(
+                "Upgrade your Revolution Pi! This function needs at least 'revpipyload' 0.11.0"
+            ))
+
         self.btn_all.setEnabled(state_local)
         self.btn_to_right.setEnabled(state_local)
 
@@ -357,13 +371,13 @@ class RevPiFiles(QtWidgets.QMainWindow, Ui_win_files):
             lst_revpi = None
         else:
             lst_revpi = helper.cm.call_remote_function("get_filelist")
-            # Just load settings once
-            if not self.dc_settings:
-                self.dc_settings = helper.cm.call_remote_function("get_config", default_value={})
-                self.lbl_path_revpi.setText(
-                    self.dc_settings.get("plcworkdir", self.tr("Could not load path of working dir"))
-                )
-                self.lbl_path_revpi.setToolTip(self.lbl_path_revpi.text())
+            self.dc_settings = helper.cm.call_remote_function("get_config", default_value={})
+            self.lbl_path_revpi.setText(
+                self.dc_settings.get("plcworkdir", self.tr("Could not load path of working dir"))
+            )
+            self.lbl_path_revpi.setToolTip(self.lbl_path_revpi.text())
+
+        plc_program = self.dc_settings.get("plcprogram", "")
 
         if lst_revpi is not None:
             lst_revpi.sort()
@@ -409,7 +423,9 @@ class RevPiFiles(QtWidgets.QMainWindow, Ui_win_files):
                 item = QtWidgets.QTreeWidgetItem(NodeType.FILE)
                 item.setText(0, object_name)
                 item.setData(0, WidgetData.file_name, path_file)
+                item.setData(0, WidgetData.is_plc_program, path_file == plc_program)
                 item.setIcon(0, QtGui.QIcon(
+                    ":/file/ico/autostart.ico" if path_file == plc_program else
                     ":/file/ico/file-else.ico" if object_name.find(".py") == -1 else
                     ":/file/ico/file-python.ico"
                 ))
@@ -572,3 +588,23 @@ class RevPiFiles(QtWidgets.QMainWindow, Ui_win_files):
                 )
 
         self._load_files_revpi()
+
+    @QtCore.pyqtSlot()
+    def on_btn_mark_plcprogram_clicked(self):
+        """Mark selected file as plc autostart file."""
+        log.debug("RevPiFiles.on_btn_mark_plcprogram_clicked")
+
+        selected_item = self.tree_files_revpi.selectedItems()[0]
+
+        saved = helper.cm.call_remote_function("set_plcprogram", selected_item.data(0, WidgetData.file_name))
+
+        if saved is None:
+            QtWidgets.QMessageBox.critical(
+                self, self.tr("Error"), self.tr(
+                    "The settings could not be saved on the Revolution Pi!\n"
+                    "Try to save the values one mor time and check the log "
+                    "files of RevPiPyLoad if the error rises again."
+                )
+            )
+
+        self._load_files_revpi(True)
