@@ -225,6 +225,7 @@ class ConnectionManager(QtCore.QThread):
         self._cli = None
         self._cli_connect = Queue()
         self._cycle_time = cycle_time_ms
+        self._has_error = False
         self._lck_cli = Lock()
         self._ps_started = False
         self._revpi = None
@@ -565,6 +566,7 @@ class ConnectionManager(QtCore.QThread):
                 except Exception as e:
                     log.warning(e)
                     self.status_changed.emit(self.tr("SERVER ERROR"), "red")
+                    self._has_error = True
                     self.connection_error_observed.emit("{0} | {1}".format(e, type(e)))
 
                     if self.ssh_tunnel_server and not self.ssh_tunnel_server.connected:
@@ -588,6 +590,10 @@ class ConnectionManager(QtCore.QThread):
                             pass
 
                 else:
+                    if self._has_error:
+                        self._has_error = False
+                        self.connection_recovered.emit()
+
                     if plc_exit_code == -1:
                         self.status_changed.emit(self.tr("RUNNING"), "green")
                     elif plc_exit_code == -2:
@@ -641,6 +647,7 @@ class ConnectionManager(QtCore.QThread):
                     if reload_funcs:
                         self.xml_funcs = self._cli.system.listMethods()
                 except Exception as e:
+                    self._has_error = True
                     log.error(e)
                     if raise_exception:
                         self._lck_cli.release()
