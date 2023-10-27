@@ -4,13 +4,16 @@ __author__ = "Sven Sager"
 __copyright__ = "Copyright (C) 2023 Sven Sager"
 __license__ = "GPLv2"
 
+from logging import getLogger
+
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 from . import helper
-from . import proginit as pi
 from .aclmanager import AclManager
 from .mqttmanager import MqttManager
 from .ui.revpioption_ui import Ui_diag_options
+
+log = getLogger(__name__)
 
 
 class RevPiOption(QtWidgets.QDialog, Ui_diag_options):
@@ -110,7 +113,7 @@ class RevPiOption(QtWidgets.QDialog, Ui_diag_options):
 
     def _load_settings(self):
         """Load values to GUI widgets."""
-        pi.logger.debug("RevPiOption._load_settings")
+        log.debug("RevPiOption._load_settings")
 
         self.mrk_xml_ask = True
 

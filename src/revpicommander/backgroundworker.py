@@ -10,7 +10,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 
 from .ui.backgroundworker_ui import Ui_diag_backgroundworker
 
-log = getLogger()
+log = getLogger(__name__)
 
 
 class BackgroundWorker(QtCore.QThread):

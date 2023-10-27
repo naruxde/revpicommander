@@ -5,6 +5,7 @@ __copyright__ = "Copyright (C) 2023 Sven Sager"
 __license__ = "GPLv2"
 
 from enum import IntEnum
+from logging import getLogger
 
 import keyring
 from PyQt5 import QtCore, QtGui, QtWidgets
@@ -14,6 +15,8 @@ from . import helper
 from . import proginit as pi
 from .helper import RevPiSettings, WidgetData
 from .ui.revpiplclist_ui import Ui_diag_connections
+
+log = getLogger(__name__)
 
 
 class NodeType(IntEnum):
@@ -58,7 +61,7 @@ class RevPiPlcList(QtWidgets.QDialog, Ui_diag_connections):
 
     def _load_settings(self):
         """Load values to GUI widgets."""
-        pi.logger.debug("RevPiPlcList._load_settings")
+        log.debug("RevPiPlcList._load_settings")
 
         self.tre_connections.clear()
 
@@ -95,7 +98,7 @@ class RevPiPlcList(QtWidgets.QDialog, Ui_diag_connections):
         self._edit_state()
 
     def accept(self) -> None:
-        pi.logger.debug("RevPiPlcList.accept")
+        log.debug("RevPiPlcList.accept")
 
         for internal_id, ssh_user in self._keyring_cleanup_id_user:
             service_name = "{0}.{1}_{2}".format(
@@ -107,7 +110,7 @@ class RevPiPlcList(QtWidgets.QDialog, Ui_diag_connections):
                 # Remove information from os keyring, which we collected on_btn_delete_clicked
                 keyring.delete_password(service_name, ssh_user)
             except KeyringError as e:
-                pi.logger.error(e)
+                log.error(e)
 
         helper.settings.remove("connections")
 
@@ -127,7 +130,7 @@ class RevPiPlcList(QtWidgets.QDialog, Ui_diag_connections):
         super().accept()
 
     def closeEvent(self, a0: QtGui.QCloseEvent) -> None:
-        pi.logger.debug("RevPiPlcList.closeEvent")
+        log.debug("RevPiPlcList.closeEvent")
         if self.changes:
             ask = QtWidgets.QMessageBox.question(
                 self, self.tr("Question"), self.tr(
@@ -165,7 +168,7 @@ class RevPiPlcList(QtWidgets.QDialog, Ui_diag_connections):
 
     def _edit_state(self):
         """Set enabled status of all controls, depending on selected item."""
-        pi.logger.debug("RevPiPlcList._edit_state")
+        log.debug("RevPiPlcList._edit_state")
 
         item = self.tre_connections.currentItem()
         if item is None:
@@ -409,7 +412,7 @@ class RevPiPlcList(QtWidgets.QDialog, Ui_diag_connections):
 
     @QtCore.pyqtSlot(str)
     def on_cbb_folder_currentIndexChanged(self, text: str):
-        pi.logger.debug("RevPiPlcList.on_cbb_folder_currentIndexChanged({0})".format(text))
+        log.debug("RevPiPlcList.on_cbb_folder_currentIndexChanged({0})".format(text))
 
         if self.__current_item.type() == NodeType.CON:
             new_dir_node = self._get_folder_item(text)
@@ -443,7 +446,7 @@ class RevPiPlcList(QtWidgets.QDialog, Ui_diag_connections):
 
     @QtCore.pyqtSlot(str)
     def on_cbb_folder_editTextChanged(self, text: str):
-        pi.logger.debug("RevPiPlcList.on_cbb_folder_editTextChanged({0})".format(text))
+        log.debug("RevPiPlcList.on_cbb_folder_editTextChanged({0})".format(text))
 
         if self.__current_item.type() == NodeType.DIR and self.__current_item.text(0) != text:
             # We just have to rename the dir node

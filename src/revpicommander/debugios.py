@@ -5,12 +5,15 @@ __copyright__ = "Copyright (C) 2023 Sven Sager"
 __license__ = "GPLv2"
 
 import struct
+from logging import getLogger
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 from . import helper
 from . import proginit as pi
 from .ui.debugios_ui import Ui_win_debugios
+
+log = getLogger(__name__)
 
 
 class DebugIos(QtWidgets.QMainWindow, Ui_win_debugios):
@@ -46,10 +49,10 @@ class DebugIos(QtWidgets.QMainWindow, Ui_win_debugios):
         self.style_sheet = "background-color: red;"
 
     def __del__(self):
-        pi.logger.debug("DebugIos.__del__")
+        log.debug("DebugIos.__del__")
 
     def closeEvent(self, a0: QtGui.QCloseEvent):
-        pi.logger.debug("DebugIos.closeEvent")
+        log.debug("DebugIos.closeEvent")
         helper.cm.settings.debug_geos[self.position] = self.saveGeometry()
         self.device_closed.emit(self.position)
 
@@ -108,7 +111,7 @@ class DebugIos(QtWidgets.QMainWindow, Ui_win_debugios):
                         signed != val.property("signed"):
                     del self.__qwa[name]
                     layout.removeRow(layout.getWidgetPosition(val)[0])
-                    pi.logger.debug("Destroy property changed IO '{0}'".format(name))
+                    log.debug("Destroy property changed IO '{0}'".format(name))
                 else:
                     continue
 
@@ -209,7 +212,7 @@ class DebugIos(QtWidgets.QMainWindow, Ui_win_debugios):
     @QtCore.pyqtSlot(QtCore.QPoint)
     def on_context_menu(self, point: QtCore.QPoint):
         """Generate menu for data format changes."""
-        pi.logger.debug("DebugIos.on_context_menu")
+        log.debug("DebugIos.on_context_menu")
 
         sender = self.sender()
         men = QtWidgets.QMenu(sender)
@@ -289,7 +292,7 @@ class DebugIos(QtWidgets.QMainWindow, Ui_win_debugios):
 
         :param io_name: Clean up only this IO
         """
-        pi.logger.debug("DebugIos.reset_change_value_colors")
+        log.debug("DebugIos.reset_change_value_colors")
         if io_name is None:
             lst_wid = self.saw_out.findChildren(
                 self.search_class, options=QtCore.Qt.FindDirectChildrenOnly)
@@ -346,7 +349,7 @@ class DebugIos(QtWidgets.QMainWindow, Ui_win_debugios):
                     )
                     return actual_value, last_value
                 except Exception:
-                    pi.logger.error("Could not convert '{0}' to bytes".format(actual_value))
+                    log.error("Could not convert '{0}' to bytes".format(actual_value))
                     pass
 
             return actual_value.encode(), last_value.encode()

@@ -21,6 +21,7 @@ FORMS         = ui_dev/aclmanager.ui \
                 ui_dev/debugios.ui \
                 ui_dev/files.ui \
                 ui_dev/mqttmanager.ui \
+                ui_dev/oss_licenses.ui \
                 ui_dev/revpiinfo.ui \
                 ui_dev/revpilogfile.ui \
                 ui_dev/revpioption.ui \

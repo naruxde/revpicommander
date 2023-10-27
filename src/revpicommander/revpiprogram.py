@@ -8,6 +8,7 @@ import gzip
 import os
 import tarfile
 import zipfile
+from logging import getLogger
 from shutil import rmtree
 from tempfile import mkdtemp
 from xmlrpc.client import Binary
@@ -15,8 +16,9 @@ from xmlrpc.client import Binary
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 from . import helper
-from . import proginit as pi
 from .ui.revpiprogram_ui import Ui_diag_program
+
+log = getLogger(__name__)
 
 
 class RevPiProgram(QtWidgets.QDialog, Ui_diag_program):
@@ -39,8 +41,6 @@ class RevPiProgram(QtWidgets.QDialog, Ui_diag_program):
         # Setting properties require level 4
         self.cbb_plcprogram.setEnabled(helper.cm.xml_mode >= 4)
         self.txt_plcarguments.setEnabled(helper.cm.xml_mode >= 4)
-        self.rbn_pythonversion_2.setEnabled(helper.cm.xml_mode >= 4)
-        self.rbn_pythonversion_3.setEnabled(helper.cm.xml_mode >= 4)
         self.cbx_plcworkdir_set_uid.setEnabled(helper.cm.xml_mode >= 4)
 
         # Downloads require level 2
@@ -60,14 +60,12 @@ class RevPiProgram(QtWidgets.QDialog, Ui_diag_program):
         """
         return self.cbb_plcprogram.currentText() != self.dc.get("plcprogram", "") or \
             self.txt_plcarguments.text() != self.dc.get("plcarguments", "") or \
-            self.rbn_pythonversion_2.isChecked() != (self.dc.get("pythonversion", 3) == 2) or \
-            self.rbn_pythonversion_3.isChecked() != (self.dc.get("pythonversion", 3) == 3) or \
             int(self.cbx_plcworkdir_set_uid.isChecked()) != self.dc.get("plcworkdir_set_uid", 0) or \
             self.sbx_plcprogram_watchdog.value() != self.dc.get("plcprogram_watchdog", 0)
 
     def _load_settings(self, files_only=False):
         """Load values to GUI widgets."""
-        pi.logger.debug("RevPiProgram._load_settings")
+        log.debug("RevPiProgram._load_settings")
 
         if files_only:
             mrk_program = self.cbb_plcprogram.currentText()
@@ -88,15 +86,13 @@ class RevPiProgram(QtWidgets.QDialog, Ui_diag_program):
                 is_in_list = True
 
         if not is_in_list:
-            pi.logger.warning("File {0} is not in list".format(mrk_program or self.dc.get("plcprogram", "")))
+            log.warning("File {0} is not in list".format(mrk_program or self.dc.get("plcprogram", "")))
 
         if files_only:
             self.cbb_plcprogram.setCurrentText(mrk_program)
         else:
             self.cbb_plcprogram.setCurrentText(self.dc.get("plcprogram", ""))
             self.txt_plcarguments.setText(self.dc.get("plcarguments", ""))
-            self.rbn_pythonversion_2.setChecked(self.dc.get("pythonversion", 3) == 2)
-            self.rbn_pythonversion_3.setChecked(self.dc.get("pythonversion", 3) == 3)
             self.cbx_plcworkdir_set_uid.setChecked(bool(self.dc.get("plcworkdir_set_uid", 0)))
             self.sbx_plcprogram_watchdog.setValue(self.dc.get("plcprogram_watchdog", 0))
 
@@ -128,7 +124,6 @@ class RevPiProgram(QtWidgets.QDialog, Ui_diag_program):
 
         self.dc["plcprogram"] = self.cbb_plcprogram.currentText()
         self.dc["plcarguments"] = self.txt_plcarguments.text()
-        self.dc["pythonversion"] = 2 if self.rbn_pythonversion_2.isChecked() else 3
         self.dc["plcworkdir_set_uid"] = int(self.cbx_plcworkdir_set_uid.isChecked())
         self.dc["plcprogram_watchdog"] = self.sbx_plcprogram_watchdog.value()
 
@@ -382,7 +377,7 @@ class RevPiProgram(QtWidgets.QDialog, Ui_diag_program):
                 fh.close()
 
             except Exception as e:
-                pi.logger.error(e)
+                log.error(e)
                 QtWidgets.QMessageBox.critical(
                     self, self.tr("Error"), self.tr(
                         "Coud not save the archive or extract the files!\n"
