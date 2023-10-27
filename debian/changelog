@@ -1,3 +1,22 @@
+revpicommander (0.11.0~rc1-1) unstable; urgency=medium
+
+  * chore: Recompile UI files with PyQt generator 5.15.7
+  * refactor: Using module based logger and not root logger from proginit
+  * feat: Upgrade proginit to version 1.3.0
+  * build: Upgrade buildsystem with new Makefile and make.bat
+  * feat: Add open-source license viewer to help menu
+  * feat: Remove selector for Python version
+  * style: Change the selection method in developer file lists.
+  * refactor: Remove logging of debug logs from external modules
+  * refactor: Remove info logs of ssh transport handler loop
+  * fix: Signal connection_recovered when connected via XML-RPC native
+  * refactor: Set new tool tips with version information
+  * feat: Select start program in developer dialog
+  * packaging(deb): Create debian release candidate packages
+  * chore: Release 0.11.0rc1
+
+ -- Sven Sager <s.sager@kunbus.com>  Fri, 27 Oct 2023 11:59:57 +0200
+
 revpicommander (0.10.0-3) stable; urgency=medium
 
   * packaging: Remove unused GPL-3+ section from copyright file
