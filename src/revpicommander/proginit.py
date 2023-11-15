@@ -5,7 +5,7 @@
 __author__ = "Sven Sager"
 __copyright__ = "Copyright (C) 2018-2023 Sven Sager"
 __license__ = "LGPL-2.0-or-later"
-__version__ = "1.3.0"
+__version__ = "1.3.1"
 
 import logging
 import sys
@@ -14,7 +14,6 @@ from configparser import ConfigParser
 from os import R_OK, W_OK, access, environ, getpid, remove
 from os.path import abspath, dirname, exists, join
 from shutil import copy, move
-from socket import AF_UNIX, SOCK_DGRAM, socket
 from threading import Event
 
 try:
@@ -39,6 +38,8 @@ _daemon_started_up = Event()
 _daemon_main_pid = getpid()
 _systemd_notify = environ.get("NOTIFY_SOCKET", None)
 if _systemd_notify:
+    from socket import AF_UNIX, SOCK_DGRAM, socket
+
     # Set up the notification socket for systemd communication
     _systemd_socket = socket(family=AF_UNIX, type=SOCK_DGRAM)
     if _extend_daemon_startup_timeout:
