@@ -61,9 +61,13 @@ goto end
     %PYTHON% -m PyInstaller -n "%APP_NAME%" ^
         --add-data="dist/bundled-libraries.md;%PACKAGE%\open-source-licenses" ^
         --add-data="dist/open-source-licenses.*;%PACKAGE%\open-source-licenses" ^
+        --add-data="src\%PACKAGE%\locale;.\%PACKAGE%\locale" ^
+        --add-data="data\%PACKAGE%.ico;." ^
+        --icon=data\\%PACKAGE%.ico ^
         --noconfirm ^
         --clean ^
-        --onefile ^
+        --onedir ^
+        --windowed ^
         src\\%PACKAGE%\\__main__.py
     goto end
 
