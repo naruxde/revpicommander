@@ -10,7 +10,6 @@ from logging import getLogger
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 from . import helper
-from . import proginit as pi
 from .ui.debugios_ui import Ui_win_debugios
 
 log = getLogger(__name__)
@@ -102,6 +101,12 @@ class DebugIos(QtWidgets.QMainWindow, Ui_win_debugios):
             signed = io[6]
             word_order = io[7] if len(io) > 7 else "ignored"
 
+            # Since RevPiPyLoad 0.11.0rc2 we have a list with async functions
+            if len(io) > 8:
+                async_call = io[8]
+            else:
+                async_call = []
+
             val = container.findChild(self.search_class, name)
             if val is not None:
                 # Destroy IO if the properties was changed
@@ -115,23 +120,40 @@ class DebugIos(QtWidgets.QMainWindow, Ui_win_debugios):
                 else:
                     continue
 
-            lbl = QtWidgets.QLabel(name, container)
-            lbl.setObjectName("lbl_".format(name))
-            lbl.setStyleSheet(self.style_sheet)
-
-            val = self._create_widget(name, byte_length, bit_address, byteorder, signed, read_only, word_order)
+            lbl, val = self._create_widgets(
+                name,
+                byte_length,
+                bit_address,
+                byteorder,
+                signed,
+                read_only,
+                word_order,
+                async_call,
+            )
+            lbl.setParent(container)
             val.setParent(container)
             layout.insertRow(counter, val, lbl)
 
         self.splitter.setSizes([1, 1])
 
-    def _create_widget(
+    def _create_widgets(
             self, name: str, byte_length: int, bit_address: int, byteorder: str, signed: bool, read_only: bool,
-            word_order: str):
+            word_order: str, async_call: list):
         """Create widget in functions address space to use lambda functions."""
+        # Create lable to set same properties of value widget for context menues
+        lbl = QtWidgets.QLabel(name)
+        lbl.setObjectName("lbl_".format(name))
+        lbl.setStyleSheet(self.style_sheet)
+
         if bit_address >= 0:
             val = QtWidgets.QCheckBox()
             val.setEnabled(not read_only)
+
+            if async_call:
+                lbl.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
+                val.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
+                lbl.customContextMenuRequested.connect(self.on_context_menu)
+                val.customContextMenuRequested.connect(self.on_context_menu)
 
             # Set alias to use the same function name on all widget types
             val.setValue = val.setChecked
@@ -143,9 +165,12 @@ class DebugIos(QtWidgets.QMainWindow, Ui_win_debugios):
             # Bytes or string
             val = QtWidgets.QLineEdit()
             val.setReadOnly(read_only)
+            lbl.setProperty("struct_type", "text")
             val.setProperty("struct_type", "text")
 
+            lbl.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
             val.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
+            lbl.customContextMenuRequested.connect(self.on_context_menu)
             val.customContextMenuRequested.connect(self.on_context_menu)
 
             # Set alias to use the same function name on all widget types
@@ -159,13 +184,20 @@ class DebugIos(QtWidgets.QMainWindow, Ui_win_debugios):
 
             val = QtWidgets.QDoubleSpinBox()
             val.setReadOnly(read_only)
+            lbl.setProperty("struct_type", struct_type)
             val.setProperty("struct_type", struct_type)
+            lbl.setProperty("frm", "{0}{1}".format(
+                ">" if byteorder == "big" else "<",
+                struct_type.lower() if signed else struct_type
+            ))
             val.setProperty("frm", "{0}{1}".format(
                 ">" if byteorder == "big" else "<",
                 struct_type.lower() if signed else struct_type
             ))
 
+            lbl.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
             val.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
+            lbl.customContextMenuRequested.connect(self.on_context_menu)
             val.customContextMenuRequested.connect(self.on_context_menu)
 
             val.setDecimals(0)
@@ -175,15 +207,23 @@ class DebugIos(QtWidgets.QMainWindow, Ui_win_debugios):
             if not read_only:
                 val.valueChanged.connect(self._change_sbx_dvalue)
 
+        lbl.setObjectName(name)
         val.setObjectName(name)
+        lbl.setProperty("big_endian", byteorder == "big")
         val.setProperty("big_endian", byteorder == "big")
+        lbl.setProperty("bit_address", bit_address)
         val.setProperty("bit_address", bit_address)
+        lbl.setProperty("byte_length", byte_length)
         val.setProperty("byte_length", byte_length)
+        lbl.setProperty("signed", signed)
         val.setProperty("signed", signed)
+        lbl.setProperty("word_order", word_order)
         val.setProperty("word_order", word_order)
+        lbl.setProperty("async_call", async_call)
+        val.setProperty("async_call", async_call)
 
         self.__qwa[name] = val
-        return val
+        return lbl, val
 
     @QtCore.pyqtSlot(int)
     def _change_cbx_value(self, value: int):
@@ -217,6 +257,31 @@ class DebugIos(QtWidgets.QMainWindow, Ui_win_debugios):
         sender = self.sender()
         men = QtWidgets.QMenu(sender)
 
+        act_reset = QtWidgets.QAction(self.tr("Reset counter"))
+        if "di_reset" in sender.property("async_call"):
+            men.addAction(act_reset)
+            men.addSeparator()
+
+        if "ro_get_switching_cycles" in sender.property("async_call"):
+            switching_cycles = helper.cm.call_remote_function(
+                "ps_switching_cycles",
+                sender.objectName(),
+                default_value=self.tr("Can not display"),
+            )
+            if type(switching_cycles) is not list:
+                switching_cycles = [switching_cycles]
+            for i in range(len(switching_cycles)):
+                relais_counter = self.tr(" Relais {0}").format(i + 1)
+                if len(switching_cycles) == 1:
+                    relais_counter = ""
+                men.addAction(
+                    self.tr("Switching cycles{0}: {1}").format(
+                        relais_counter,
+                        switching_cycles[i],
+                    )
+                )
+            men.addSeparator()
+
         if sender.property("byte_length") > 4:
             # Textbox needs format buttons
             act_as_text = QtWidgets.QAction(self.tr("as text"))
@@ -231,12 +296,14 @@ class DebugIos(QtWidgets.QMainWindow, Ui_win_debugios):
         act_signed = QtWidgets.QAction(self.tr("signed"), men)
         act_signed.setCheckable(True)
         act_signed.setChecked(sender.property("signed") or False)
-        men.addAction(act_signed)
+        if sender.property("bit_address") == -1:
+            men.addAction(act_signed)
 
         act_byteorder = QtWidgets.QAction(self.tr("big_endian"), men)
         act_byteorder.setCheckable(True)
         act_byteorder.setChecked(sender.property("big_endian") or False)
-        men.addAction(act_byteorder)
+        if sender.property("bit_address") == -1:
+            men.addAction(act_byteorder)
 
         if sender.property("byte_length") > 2:
             act_wordorder = QtWidgets.QAction(self.tr("switch wordorder"))
@@ -266,6 +333,12 @@ class DebugIos(QtWidgets.QMainWindow, Ui_win_debugios):
             sender.setProperty("big_endian", act_byteorder.isChecked())
         elif rc == act_wordorder:
             sender.setProperty("word_order", "big" if act_wordorder.isChecked() else "little")
+        elif rc == act_reset:
+            try:
+                helper.cm.call_remote_function("ps_reset_counter", sender.objectName(), raise_exception=True)
+            except Exception as e:
+                log.error(e)
+                QtWidgets.QMessageBox.critical(self, self.tr("Error"), self.tr("Could not reset the counter value"))
 
         if sender.property("frm"):
             sender.setProperty("frm", "{0}{1}".format(

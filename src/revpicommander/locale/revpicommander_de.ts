@@ -172,7 +172,7 @@ Das kann eine der folgenden Ursachen haben:
 - Der RevPiPyLoad XML-RPC Dienst ist nur an localhost gebunden
 - Die Berechtigungen sind nicht für diese IP gesetzt!!!
 
-Benutze &quot;Über SSH verbinden&quot; um eine verschlüsselte Verbindung aufzubauen oder führe 'sudo revpipyload_secure_installation' auf dem Revolution Pi aus, um eine direkte Verbindung zu konfigurieren!</translation>
+Benutze &quot;Über SSH verbinden&quot; um eine verschlüsselte Verbindung aufzubauen oder führe &apos;sudo revpipyload_secure_installation&apos; auf dem Revolution Pi aus, um eine direkte Verbindung zu konfigurieren!</translation>
     </message>
     <message>
         <location filename="../helper.py" line="399"/>
@@ -216,7 +216,7 @@ Das kann eine der folgenden Ursachen haben:
         <location filename="../debugcontrol.py" line="271"/>
         <source>Error set value of device &apos;{0}&apos; Output &apos;{1}&apos;: {2}
 </source>
-        <translation>Fehler beim Setzen des Ausgangs '{1}' auf Modul '{0}': {2}
+        <translation>Fehler beim Setzen des Ausgangs &apos;{1}&apos; auf Modul &apos;{0}&apos;: {2}
 </translation>
     </message>
     <message>
@@ -228,39 +228,74 @@ Das kann eine der folgenden Ursachen haben:
 <context>
     <name>DebugIos</name>
     <message>
-        <location filename="../debugios.py" line="231"/>
+        <location filename="../debugios.py" line="287"/>
         <source>signed</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../debugios.py" line="236"/>
+        <location filename="../debugios.py" line="293"/>
         <source>big_endian</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../debugios.py" line="222"/>
+        <location filename="../debugios.py" line="278"/>
         <source>as text</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../debugios.py" line="224"/>
+        <location filename="../debugios.py" line="280"/>
         <source>as number</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../debugios.py" line="380"/>
+        <location filename="../debugios.py" line="444"/>
         <source>Can not use format text</source>
         <translation>Formatierung nicht möglich</translation>
     </message>
     <message>
-        <location filename="../debugios.py" line="380"/>
+        <location filename="../debugios.py" line="444"/>
         <source>Can not convert bytes {0} to a text for IO &apos;{1}&apos;. Switch to number format instead!</source>
-        <translation>Kann bytes {0} für '{1}' nicht in Text konvertieren. Wechseln Sie auf Nummernformat!</translation>
+        <translation>Kann bytes {0} für &apos;{1}&apos; nicht in Text konvertieren. Wechseln Sie auf Nummernformat!</translation>
     </message>
     <message>
-        <location filename="../debugios.py" line="242"/>
+        <location filename="../debugios.py" line="300"/>
         <source>switch wordorder</source>
         <translation>Wordorder tauschen</translation>
+    </message>
+    <message>
+        <location filename="../debugios.py" line="252"/>
+        <source>Reset counter</source>
+        <translation>Zähler zurücksetzen</translation>
+    </message>
+    <message>
+        <location filename="../debugios.py" line="258"/>
+        <source>can not display</source>
+        <translation type="obsolete">kann nicht angezeigt werden</translation>
+    </message>
+    <message>
+        <location filename="../debugios.py" line="265"/>
+        <source> Relais {0}</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../debugios.py" line="268"/>
+        <source>Switching cycles{0}: {1}</source>
+        <translation>Schaltzyklen{0}: {1}</translation>
+    </message>
+    <message>
+        <location filename="../debugios.py" line="332"/>
+        <source>Error</source>
+        <translation>Fehler</translation>
+    </message>
+    <message>
+        <location filename="../debugios.py" line="332"/>
+        <source>Could not reset the counter value</source>
+        <translation>Kann Zähler nicht zurücksetzen</translation>
+    </message>
+    <message>
+        <location filename="../debugios.py" line="258"/>
+        <source>Can not display</source>
+        <translation>Kann nicht angezeigt werden</translation>
     </message>
 </context>
 <context>
@@ -396,7 +431,7 @@ Dies kann aus der Textbox oben kopiert werden.</translation>
     <message>
         <location filename="../revpicommander.py" line="339"/>
         <source>Can not start the simulator! Maybe the piCtory file is corrupt or you have no write permissions for &apos;{0}&apos;.</source>
-        <translation>Kann Simulator nicht starten! Vielleicht ist die piCtory Datei defekt oder es gibt keine Schreibberechtigung für '{0}'.</translation>
+        <translation>Kann Simulator nicht starten! Vielleicht ist die piCtory Datei defekt oder es gibt keine Schreibberechtigung für &apos;{0}&apos;.</translation>
     </message>
     <message>
         <location filename="../revpicommander.py" line="506"/>
@@ -442,7 +477,7 @@ Es sollten alle RevPiModIO Programme vorher beendet werden, da diese ihre IO Wer
 We are trying to activate this service now and reconnect. The settings can be changed at any time via &apos;webstatus&apos;.</source>
         <translation>Vielleicht läuft der RevPiPyLoad Dienst nicht.
 
-Wir versuchen diesen Dienst jetzt zu aktivieren und verbinden uns neu. Die Einstellungen können über 'Webstatus' jederzeit geändert werden.</translation>
+Wir versuchen diesen Dienst jetzt zu aktivieren und verbinden uns neu. Die Einstellungen können über &apos;Webstatus&apos; jederzeit geändert werden.</translation>
     </message>
 </context>
 <context>
@@ -485,7 +520,7 @@ Wir versuchen diesen Dienst jetzt zu aktivieren und verbinden uns neu. Die Einst
     <message>
         <location filename="../revpifiles.py" line="276"/>
         <source>Can not open last directory &apos;{0}&apos;.</source>
-        <translation>Kann letztes Verzeichnis '{0}' nicht öffnen.</translation>
+        <translation>Kann letztes Verzeichnis &apos;{0}&apos; nicht öffnen.</translation>
     </message>
     <message>
         <location filename="../revpifiles.py" line="333"/>
@@ -510,7 +545,7 @@ Wir versuchen diesen Dienst jetzt zu aktivieren und verbinden uns neu. Die Einst
     <message>
         <location filename="../revpifiles.py" line="483"/>
         <source>Can not access the folder &apos;{0}&apos; to read files.</source>
-        <translation>Keine Berechtigung für Zugriff auf Ordner '{0}'.</translation>
+        <translation>Keine Berechtigung für Zugriff auf Ordner &apos;{0}&apos;.</translation>
     </message>
     <message>
         <location filename="../revpifiles.py" line="584"/>
@@ -520,7 +555,7 @@ Wir versuchen diesen Dienst jetzt zu aktivieren und verbinden uns neu. Die Einst
     <message>
         <location filename="../revpifiles.py" line="533"/>
         <source>Error while download file &apos;{0}&apos;.</source>
-        <translation>Fehler beim Herunterladen der Datei '{0}'.</translation>
+        <translation>Fehler beim Herunterladen der Datei &apos;{0}&apos;.</translation>
     </message>
     <message>
         <location filename="../revpifiles.py" line="541"/>
@@ -534,7 +569,7 @@ Wir versuchen diesen Dienst jetzt zu aktivieren und verbinden uns neu. Die Einst
 Select &apos;Yes&apos; to override, &apos;No&apos; to download only missing files.</source>
         <translation>Eine oder mehrere Dateien existieren auf diesem Computer! Sollen bestehende Dateien überschrieben werden?
 
-Wählen Sie 'Ja' zum Überschreiben, 'Nein' um nur fehlende Dateien zu laden.</translation>
+Wählen Sie &apos;Ja&apos; zum Überschreiben, &apos;Nein&apos; um nur fehlende Dateien zu laden.</translation>
     </message>
     <message>
         <location filename="../revpifiles.py" line="573"/>
@@ -549,7 +584,7 @@ Wählen Sie 'Ja' zum Überschreiben, 'Nein' um nur fehlende Dateien zu laden.</t
     <message>
         <location filename="../revpifiles.py" line="584"/>
         <source>Error while delete file &apos;{0}&apos;.</source>
-        <translation>Fehler beim Löschen der Datei '{0}'.</translation>
+        <translation>Fehler beim Löschen der Datei &apos;{0}&apos;.</translation>
     </message>
     <message>
         <location filename="../revpifiles.py" line="135"/>
@@ -574,12 +609,12 @@ Wählen Sie 'Ja' zum Überschreiben, 'Nein' um nur fehlende Dateien zu laden.</t
     <message>
         <location filename="../revpifiles.py" line="179"/>
         <source>Upgrade your Revolution Pi! This function needs at least &apos;revpipyload&apos; 0.11.0</source>
-        <translation>Aktualisiere deinen Revolution Pi! Diese Funktion benötigt mindestens 'revpipyload' 0.11.0</translation>
+        <translation>Aktualisiere deinen Revolution Pi! Diese Funktion benötigt mindestens &apos;revpipyload&apos; 0.11.0</translation>
     </message>
     <message>
         <location filename="../revpifiles.py" line="198"/>
         <source>Upgrade your Revolution Pi! This function needs at least &apos;revpipyload&apos; 0.9.5</source>
-        <translation>Aktualisiere deinen Revolution Pi! Diese Funktion benötigt mindestens 'revpipyload' 0.9.5</translation>
+        <translation>Aktualisiere deinen Revolution Pi! Diese Funktion benötigt mindestens &apos;revpipyload&apos; 0.9.5</translation>
     </message>
     <message>
         <location filename="../revpifiles.py" line="193"/>
@@ -1254,7 +1289,7 @@ Dies ist kein Fehler von RevPi Commander.</translation>
         <source>The base topic is the first part of any mqtt topic, the Revolution Pi will publish. You can use any character includig &apos;/&apos; to structure the messages on your broker.
 
 For example: revpi0000/data</source>
-        <translation>Der Basistopic wird allen MQTT Topics vorangestellt, welche der Revolution Pi veröffentlicht. Es können alle Zeichen inklusive '/' verwendet werden, um die Nachrichten auf dem Broker zu strukturieren.
+        <translation>Der Basistopic wird allen MQTT Topics vorangestellt, welche der Revolution Pi veröffentlicht. Es können alle Zeichen inklusive &apos;/&apos; verwendet werden, um die Nachrichten auf dem Broker zu strukturieren.
 
 Zum Beispiel: revpi0000/data</translation>
     </message>
