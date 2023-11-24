@@ -1,3 +1,28 @@
+revpicommander (0.11.0-1) stable; urgency=medium
+
+  * chore: Recompile UI files with PyQt generator 5.15.7
+  * refactor: Using module based logger and not root logger from proginit
+  * feat: Upgrade proginit to version 1.3.0
+  * build: Upgrade buildsystem with new Makefile and make.bat
+  * feat: Add open-source license viewer to help menu
+  * feat: Remove selector for Python version
+  * style: Change the selection method in developer file lists.
+  * refactor: Remove logging of debug logs from external modules
+  * refactor: Remove info logs of ssh transport handler loop
+  * fix: Signal connection_recovered when connected via XML-RPC native
+  * refactor: Set new tool tips with version information
+  * feat: Select start program in developer dialog
+  * chore: Release 0.11.0rc1
+  * packaging(deb): Create debian release candidate packages
+  * packaging(deb): Create stable debian releases
+  * feat: New context menu entries for DI counters and RO switching cycles
+  * chore: Release 0.11.0rc2
+  * fix: Update proginit to a compatible windows version
+  * build: Wrong values in make.bat file for windows
+  * chore: Release 0.11.0
+
+ -- Sven Sager <akira@narux.de>  Fri, 24 Nov 2023 12:08:34 +0100
+
 revpicommander (0.10.0-3) stable; urgency=medium
 
   * packaging: Remove unused GPL-3+ section from copyright file
