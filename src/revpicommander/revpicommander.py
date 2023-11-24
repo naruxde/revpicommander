@@ -7,10 +7,12 @@ __copyright__ = "Copyright (C) 2018 Sven Sager"
 __license__ = "GPLv2"
 
 import webbrowser
+from logging import getLogger
 from os.path import dirname, join
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
+from revpicommander.oss_licenses import OssLicenses
 from . import __version__
 from . import helper
 from . import proginit as pi
@@ -27,6 +29,8 @@ from .revpiprogram import RevPiProgram
 from .simulator import Simulator
 from .sshauth import SSHAuth
 from .ui.revpicommander_ui import Ui_win_revpicommander
+
+log = getLogger(__name__)
 
 
 class ConnectingPyload(QtCore.QThread):
@@ -87,8 +91,14 @@ class RevPiCommander(QtWidgets.QMainWindow, Ui_win_revpicommander):
 
         self.setWindowFlag(QtCore.Qt.WindowMaximizeButtonHint, False)
 
+        # Load oss licenses dialog, to show licenses, if this is build with app target
+        self.diag_oss_licenses = OssLicenses(pi.open_source_licenses[:-3] + "json", self)
+        self.men_help.addAction(self.diag_oss_licenses.action_start)
+
+        pi.startup_complete()
+
     def closeEvent(self, a0: QtGui.QCloseEvent) -> None:
-        pi.logger.debug("RevPiCommander.closeEvent")
+        log.debug("RevPiCommander.closeEvent")
         helper.cm.pyload_disconnect()
         helper.settings.setValue("revpicommander/geo", self.saveGeometry())
 
@@ -157,7 +167,7 @@ class RevPiCommander(QtWidgets.QMainWindow, Ui_win_revpicommander):
     @QtCore.pyqtSlot()
     def on_cm_connection_disconnected(self):
         """Connection of connection manager was disconnected."""
-        pi.logger.debug("RevPiCommander.on_cm_connection_disconnected")
+        log.debug("RevPiCommander.on_cm_connection_disconnected")
 
         self._set_gui_control_states()
         self.txt_host.setVisible(True)
@@ -167,7 +177,7 @@ class RevPiCommander(QtWidgets.QMainWindow, Ui_win_revpicommander):
     @QtCore.pyqtSlot()
     def on_cm_connection_disconnecting(self):
         """Connection of connection manager will now disconnect."""
-        pi.logger.debug("RevPiCommander.on_cm_connection_disconnecting")
+        log.debug("RevPiCommander.on_cm_connection_disconnecting")
 
         # This will remove the widgets in the button functions
         self.btn_plc_debug.setChecked(False)
@@ -184,7 +194,7 @@ class RevPiCommander(QtWidgets.QMainWindow, Ui_win_revpicommander):
     @QtCore.pyqtSlot()
     def on_cm_connection_established(self):
         """Connection manager established a new connection and loaded values."""
-        pi.logger.debug("RevPiCommander.on_cm_connection_established")
+        log.debug("RevPiCommander.on_cm_connection_established")
 
         self._set_gui_control_states()
         if helper.cm.simulating:
@@ -325,7 +335,7 @@ class RevPiCommander(QtWidgets.QMainWindow, Ui_win_revpicommander):
                 ).format(procimg_file, configrsc_file)
             )
         else:
-            pi.logger.error("Can not start simulator")
+            log.error("Can not start simulator")
             QtWidgets.QMessageBox.critical(
                 self, self.tr("Can not start..."), self.tr(
                     "Can not start the simulator! Maybe the piCtory file is corrupt "

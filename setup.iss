@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "RevPi Commander"
-#define MyAppVersion "0.10.0"
+#define MyAppVersion "0.11.0"
 #define MyAppPublisher "Sven Sager"
 #define MyAppURL "https://revpimodio.org/"
 #define MyAppICO "data\revpicommander.ico"

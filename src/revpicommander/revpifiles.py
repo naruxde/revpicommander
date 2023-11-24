@@ -7,15 +7,17 @@ __license__ = "GPLv2"
 import gzip
 import os
 from enum import IntEnum
+from logging import getLogger
 from xmlrpc.client import Binary
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 from . import helper
-from . import proginit as pi
 from .backgroundworker import BackgroundWorker
 from .helper import WidgetData
 from .ui.files_ui import Ui_win_files
+
+log = getLogger(__name__)
 
 
 class NodeType(IntEnum):
@@ -58,7 +60,7 @@ class UploadFiles(BackgroundWorker):
                         default_value=False
                     )
             except Exception as e:
-                pi.logger.error(e)
+                log.error(e)
                 self.ec = -2
                 return
 
@@ -99,10 +101,10 @@ class RevPiFiles(QtWidgets.QMainWindow, Ui_win_files):
         self.splitter.setSizes(list(map(int, helper.settings.value("files/splitter", [0, 0]))))
 
     def __del__(self):
-        pi.logger.debug("RevPiFiles.__del__")
+        log.debug("RevPiFiles.__del__")
 
     def closeEvent(self, a0: QtGui.QCloseEvent) -> None:
-        pi.logger.debug("RevPiFiles.closeEvent")
+        log.debug("RevPiFiles.closeEvent")
         helper.settings.setValue("files/geo", self.saveGeometry())
         helper.settings.setValue("files/splitter", self.splitter.sizes())
 
@@ -164,22 +166,44 @@ class RevPiFiles(QtWidgets.QMainWindow, Ui_win_files):
         state_local = len(self.tree_files_local.selectedItems()) > 0
         state_revpi = len(self.tree_files_revpi.selectedItems()) > 0
 
+        if "set_plcprogram" in helper.cm.xml_funcs:
+            self.btn_mark_plcprogram.setEnabled(False)
+            self.btn_mark_plcprogram.setToolTip(self.tr(
+                "Set as start file"
+            ))
+            if len(self.tree_files_revpi.selectedItems()) == 1:
+                item = self.tree_files_revpi.selectedItems()[0]
+                self.btn_mark_plcprogram.setEnabled(not item.data(0, WidgetData.is_plc_program))
+        else:
+            self.btn_mark_plcprogram.setEnabled(False)
+            self.btn_mark_plcprogram.setToolTip(self.tr(
+                "Upgrade your Revolution Pi! This function needs at least 'revpipyload' 0.11.0"
+            ))
+
         self.btn_all.setEnabled(state_local)
         self.btn_to_right.setEnabled(state_local)
 
         if "plcdeletefile" not in helper.cm.xml_funcs:
             self.btn_delete_revpi.setEnabled(False)
-            self.btn_delete_revpi.setToolTip(self.tr("The RevPiPyLoad version on the Revolution Pi is to old."))
+            self.btn_delete_revpi.setToolTip(self.tr(
+                "Upgrade your Revolution Pi! This function needs at least 'revpipyload' 0.9.5"
+            ))
         else:
             self.btn_delete_revpi.setEnabled(state_revpi)
+            self.btn_delete_revpi.setToolTip(self.tr(
+                "Deletes selected files immediately on the Revolution Pi"
+            ))
         if "plcdownload_file" not in helper.cm.xml_funcs:
             self.btn_to_left.setEnabled(False)
-            self.btn_to_left.setToolTip(self.tr("The RevPiPyLoad version on the Revolution Pi is to old."))
+            self.btn_to_left.setToolTip(self.tr(
+                "Upgrade your Revolution Pi! This function needs at least 'revpipyload' 0.9.5"
+            ))
         elif not helper.cm.settings.watch_path:
             self.btn_to_left.setEnabled(False)
             self.btn_to_left.setToolTip(self.tr("Choose a local directory first."))
         else:
             self.btn_to_left.setEnabled(state_revpi)
+            self.btn_to_left.setToolTip("")
 
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
     # region #      REGION: Tree management
@@ -197,7 +221,7 @@ class RevPiFiles(QtWidgets.QMainWindow, Ui_win_files):
 
     def _select_children(self, top_item: QtWidgets.QTreeWidgetItem, value: bool):
         """Recursive select children from parent."""
-        pi.logger.debug("RevPiFiles._select_children")
+        log.debug("RevPiFiles._select_children")
 
         for i in range(top_item.childCount()):
             item = top_item.child(i)
@@ -213,7 +237,7 @@ class RevPiFiles(QtWidgets.QMainWindow, Ui_win_files):
         if item is None:
             return
 
-        pi.logger.debug("RevPiFiles.__itemSelectionChanged")
+        log.debug("RevPiFiles.__itemSelectionChanged")
 
         # Block while preselect other entries
         tree_view.blockSignals(True)
@@ -296,7 +320,7 @@ class RevPiFiles(QtWidgets.QMainWindow, Ui_win_files):
 
         :param silent: Do not show message boxes
         """
-        pi.logger.debug("RevPiFiles._load_files_local")
+        log.debug("RevPiFiles._load_files_local")
 
         self.tree_files_counter = 0
         self.tree_files_local.blockSignals(True)
@@ -316,7 +340,7 @@ class RevPiFiles(QtWidgets.QMainWindow, Ui_win_files):
 
     def file_list_local(self):
         """Generate a file list with full path of selected entries."""
-        pi.logger.debug("RevPiFiles.file_list_local")
+        log.debug("RevPiFiles.file_list_local")
         lst = []
         for item in self.tree_files_local.selectedItems():
             if item.type() == NodeType.DIR:
@@ -337,7 +361,7 @@ class RevPiFiles(QtWidgets.QMainWindow, Ui_win_files):
 
         :param silent: Do not show message boxes
         """
-        pi.logger.debug("RevPiFiles._load_files_revpi")
+        log.debug("RevPiFiles._load_files_revpi")
 
         self.tree_files_revpi.blockSignals(True)
         self.tree_files_revpi.clear()
@@ -347,13 +371,13 @@ class RevPiFiles(QtWidgets.QMainWindow, Ui_win_files):
             lst_revpi = None
         else:
             lst_revpi = helper.cm.call_remote_function("get_filelist")
-            # Just load settings once
-            if not self.dc_settings:
-                self.dc_settings = helper.cm.call_remote_function("get_config", default_value={})
-                self.lbl_path_revpi.setText(
-                    self.dc_settings.get("plcworkdir", self.tr("Could not load path of working dir"))
-                )
-                self.lbl_path_revpi.setToolTip(self.lbl_path_revpi.text())
+            self.dc_settings = helper.cm.call_remote_function("get_config", default_value={})
+            self.lbl_path_revpi.setText(
+                self.dc_settings.get("plcworkdir", self.tr("Could not load path of working dir"))
+            )
+            self.lbl_path_revpi.setToolTip(self.lbl_path_revpi.text())
+
+        plc_program = self.dc_settings.get("plcprogram", "")
 
         if lst_revpi is not None:
             lst_revpi.sort()
@@ -399,7 +423,9 @@ class RevPiFiles(QtWidgets.QMainWindow, Ui_win_files):
                 item = QtWidgets.QTreeWidgetItem(NodeType.FILE)
                 item.setText(0, object_name)
                 item.setData(0, WidgetData.file_name, path_file)
+                item.setData(0, WidgetData.is_plc_program, path_file == plc_program)
                 item.setIcon(0, QtGui.QIcon(
+                    ":/file/ico/autostart.ico" if path_file == plc_program else
                     ":/file/ico/file-else.ico" if object_name.find(".py") == -1 else
                     ":/file/ico/file-python.ico"
                 ))
@@ -421,7 +447,7 @@ class RevPiFiles(QtWidgets.QMainWindow, Ui_win_files):
 
     def file_list_revpi(self):
         """Generate a file list with full path of selected entries."""
-        pi.logger.debug("RevPiFiles.file_list_revpi")
+        log.debug("RevPiFiles.file_list_revpi")
         lst = []
         for item in self.tree_files_revpi.selectedItems():
             if item.type() == NodeType.DIR:
@@ -435,13 +461,13 @@ class RevPiFiles(QtWidgets.QMainWindow, Ui_win_files):
 
     @QtCore.pyqtSlot()
     def on_btn_all_clicked(self):
-        pi.logger.debug("RevPiFiles.on_btn_all_clicked")
+        log.debug("RevPiFiles.on_btn_all_clicked")
         self._do_my_job(True)
         self.file_list_revpi()
 
     @QtCore.pyqtSlot()
     def on_btn_select_local_clicked(self):
-        pi.logger.debug("RevPiFiles.on_btn_select_clicked")
+        log.debug("RevPiFiles.on_btn_select_clicked")
 
         diag_folder = QtWidgets.QFileDialog(
             self, self.tr("Select folder..."),
@@ -472,25 +498,25 @@ class RevPiFiles(QtWidgets.QMainWindow, Ui_win_files):
 
     @QtCore.pyqtSlot()
     def on_btn_refresh_local_clicked(self):
-        pi.logger.debug("RevPiFiles.on_btn_refresh_clicked")
+        log.debug("RevPiFiles.on_btn_refresh_clicked")
         self._load_files_local(False)
 
     @QtCore.pyqtSlot()
     def on_btn_refresh_revpi_clicked(self):
-        pi.logger.debug("RevPiFiles.on_btn_refresh_revpi_clicked")
+        log.debug("RevPiFiles.on_btn_refresh_revpi_clicked")
         self._load_files_revpi(False)
 
     @QtCore.pyqtSlot()
     def on_btn_to_right_clicked(self):
         """Upload selected files to revolution pi."""
-        pi.logger.debug("RevPiFiles.on_btn_to_right_clicked")
+        log.debug("RevPiFiles.on_btn_to_right_clicked")
         self._do_my_job(False)
         self._load_files_revpi(True)
 
     @QtCore.pyqtSlot()
     def on_btn_to_left_clicked(self):
         """Download selected file."""
-        pi.logger.debug("RevPiFiles.on_btn_to_left_clicked")
+        log.debug("RevPiFiles.on_btn_to_left_clicked")
 
         override = None
         for item in self.tree_files_revpi.selectedItems():
@@ -524,7 +550,7 @@ class RevPiFiles(QtWidgets.QMainWindow, Ui_win_files):
                     override = rc_diag == QtWidgets.QMessageBox.Yes
 
                 if os.path.exists(file_name) and not override:
-                    pi.logger.debug("Skip existing file '{0}'".format(file_name))
+                    log.debug("Skip existing file '{0}'".format(file_name))
                     continue
 
                 os.makedirs(os.path.dirname(file_name), exist_ok=True)
@@ -537,7 +563,7 @@ class RevPiFiles(QtWidgets.QMainWindow, Ui_win_files):
     @QtCore.pyqtSlot()
     def on_btn_delete_revpi_clicked(self):
         """Remove selected files from working directory on revolution pi."""
-        pi.logger.debug("RevPiFiles.btn_delete_revpi_clicked")
+        log.debug("RevPiFiles.btn_delete_revpi_clicked")
 
         lst_delete = []
         for item in self.tree_files_revpi.selectedItems():
@@ -562,3 +588,23 @@ class RevPiFiles(QtWidgets.QMainWindow, Ui_win_files):
                 )
 
         self._load_files_revpi()
+
+    @QtCore.pyqtSlot()
+    def on_btn_mark_plcprogram_clicked(self):
+        """Mark selected file as plc autostart file."""
+        log.debug("RevPiFiles.on_btn_mark_plcprogram_clicked")
+
+        selected_item = self.tree_files_revpi.selectedItems()[0]
+
+        saved = helper.cm.call_remote_function("set_plcprogram", selected_item.data(0, WidgetData.file_name))
+
+        if saved is None:
+            QtWidgets.QMessageBox.critical(
+                self, self.tr("Error"), self.tr(
+                    "The settings could not be saved on the Revolution Pi!\n"
+                    "Try to save the values one mor time and check the log "
+                    "files of RevPiPyLoad if the error rises again."
+                )
+            )
+
+        self._load_files_revpi(True)

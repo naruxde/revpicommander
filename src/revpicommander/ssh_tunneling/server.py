@@ -43,8 +43,6 @@ class Handler(BaseRequestHandler):
             log.error("Could not create a ssh channel")
             return
 
-        log.info("Starting tunnel exchange loop")
-
         while True:
             r, w, x = select.select([self.request, chan], [], [], 5.0)
             if self.request in r:
@@ -57,8 +55,6 @@ class Handler(BaseRequestHandler):
                 if len(data) == 0:
                     break
                 self.request.send(data)
-
-        log.info("Stopped tunnel exchange loop")
 
         chan.close()
         self.request.close()

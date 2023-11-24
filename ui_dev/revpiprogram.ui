@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>501</height>
+    <width>434</width>
+    <height>509</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -20,17 +20,21 @@
       <string>PLC program</string>
      </property>
      <layout class="QGridLayout" name="gridLayout">
-      <item row="1" column="0" colspan="3">
-       <widget class="QComboBox" name="cbb_plcprogram"/>
-      </item>
-      <item row="3" column="2">
-       <widget class="QRadioButton" name="rbn_pythonversion_3">
+      <item row="2" column="0">
+       <widget class="QLabel" name="lbl_plcarguments">
         <property name="text">
-         <string>Python 3</string>
+         <string>Program arguments:</string>
         </property>
        </widget>
       </item>
-      <item row="4" column="0" colspan="3">
+      <item row="4" column="0" colspan="2">
+       <widget class="QLabel" name="lbl_plcprogram_watchdog">
+        <property name="text">
+         <string>Software watchdog (0=disabled):</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0" colspan="3">
        <widget class="QCheckBox" name="cbx_plcworkdir_set_uid">
         <property name="text">
          <string>Set write permissions for plc program to workdirectory</string>
@@ -44,44 +48,19 @@
         </property>
        </widget>
       </item>
-      <item row="3" column="0">
-       <widget class="QLabel" name="lbl_pythonversion">
-        <property name="text">
-         <string>Python version:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="1">
-       <widget class="QRadioButton" name="rbn_pythonversion_2">
-        <property name="text">
-         <string>Python 2</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="lbl_plcarguments">
-        <property name="text">
-         <string>Program arguments:</string>
-        </property>
-       </widget>
-      </item>
       <item row="2" column="1" colspan="2">
        <widget class="QLineEdit" name="txt_plcarguments"/>
       </item>
-      <item row="5" column="2">
+      <item row="1" column="0" colspan="3">
+       <widget class="QComboBox" name="cbb_plcprogram"/>
+      </item>
+      <item row="4" column="2">
        <widget class="QSpinBox" name="sbx_plcprogram_watchdog">
         <property name="suffix">
          <string> sec.</string>
         </property>
         <property name="maximum">
          <number>600</number>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="0" colspan="2">
-       <widget class="QLabel" name="lbl_plcprogram_watchdog">
-        <property name="text">
-         <string>Software watchdog (0=disabled):</string>
         </property>
        </widget>
       </item>
@@ -205,8 +184,6 @@
  <tabstops>
   <tabstop>cbb_plcprogram</tabstop>
   <tabstop>txt_plcarguments</tabstop>
-  <tabstop>rbn_pythonversion_2</tabstop>
-  <tabstop>rbn_pythonversion_3</tabstop>
   <tabstop>cbx_plcworkdir_set_uid</tabstop>
   <tabstop>cbb_format</tabstop>
   <tabstop>cbx_pictory</tabstop>

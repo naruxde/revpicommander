@@ -12,7 +12,7 @@ from keyring.errors import KeyringError
 
 from .ui.sshauth_ui import Ui_diag_sshauth
 
-log = getLogger()
+log = getLogger(__name__)
 
 
 class SSHAuth(QtWidgets.QDialog, Ui_diag_sshauth):
