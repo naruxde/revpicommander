@@ -2,7 +2,7 @@
 set PACKAGE=revpicommander
 set APP_NAME=RevPi Commander
 
-set PYTHON=venv\\Scripts\\python.exe
+set PYTHON=venv\Scripts\python.exe
 
 if "%1" == "venv" goto venv
 if "%1" == "test" goto test
@@ -24,7 +24,7 @@ goto end
 
 :venv
     python -m venv venv
-    venv\\Scripts\\pip.exe install -r requirements.txt
+    venv\Scripts\pip.exe install -r requirements.txt
     goto end
 
 :test
@@ -41,7 +41,7 @@ goto end
     mkdir dist
     %PYTHON% -m piplicenses ^
         --format=markdown ^
-        --output-file dist/bundled-libraries.md
+        --output-file dist\\bundled-libraries.md
     %PYTHON% -m piplicenses ^
         --with-authors ^
         --with-urls ^
@@ -49,7 +49,7 @@ goto end
         --with-license-file ^
         --no-license-path ^
         --format=json ^
-        --output-file dist/open-source-licenses.json
+        --output-file dist\\open-source-licenses.json
     %PYTHON% -m piplicenses ^
         --with-authors ^
         --with-urls ^
@@ -57,18 +57,18 @@ goto end
         --with-license-file ^
         --no-license-path ^
         --format=plain-vertical ^
-        --output-file dist/open-source-licenses.txt
+        --output-file dist\\open-source-licenses.txt
     %PYTHON% -m PyInstaller -n "%APP_NAME%" ^
-        --add-data="dist/bundled-libraries.md;%PACKAGE%\open-source-licenses" ^
-        --add-data="dist/open-source-licenses.*;%PACKAGE%\open-source-licenses" ^
-        --add-data="src\%PACKAGE%\locale;.\%PACKAGE%\locale" ^
-        --add-data="data\%PACKAGE%.ico;." ^
+        --add-data="dist\\bundled-libraries.md;%PACKAGE%\\open-source-licenses" ^
+        --add-data="dist\\open-source-licenses.*;%PACKAGE%\\open-source-licenses" ^
+        --add-data="src\\%PACKAGE%\\locale;.\\%PACKAGE%\\locale" ^
+        --add-data="data\\%PACKAGE%.ico;." ^
         --icon=data\\%PACKAGE%.ico ^
         --noconfirm ^
         --clean ^
         --onedir ^
         --windowed ^
-        src\\%PACKAGE%\\__main__.py
+        src\%PACKAGE%\__main__.py
     goto end
 
 :distclean
@@ -76,7 +76,7 @@ goto end
 
 :clean
     rmdir /S /Q .pytest_cache
-    rmdir /S /Q build dist src\%PACKAGE%.egg-info
+    rmdir /S /Q build dist src\\%PACKAGE%.egg-info
     del /Q *.spec
 
 :end
