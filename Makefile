@@ -3,10 +3,13 @@ MAKEFLAGS     = --no-print-directory --no-builtin-rules
 .DEFAULT_GOAL = all
 
 # Variables
-PACKAGE = revpicommander
-APP_NAME = RevPi\ Commander
-APP_IDENT = org.revpimodio.revpicommander
+PACKAGE       = revpicommander
+APP_NAME      = RevPi\ Commander
+APP_IDENT     = org.revpimodio.revpicommander
 APPLE_SIG = "Developer ID Application: Sven Sager (U3N5843D9K)"
+
+# Python interpreter to use for venv creation
+SYSTEM_PYTHON = python3
 
 # Set path to create the virtual environment with package name
 ifdef PYTHON3_VENV
@@ -15,39 +18,37 @@ else
 VENV_PATH = venv
 endif
 
-# If virtualenv exists, use it. If not, use PATH to find commands
-SYSTEM_PYTHON  = python3
-PYTHON         = $(or $(wildcard $(VENV_PATH)/bin/python), $(SYSTEM_PYTHON))
-
-APP_VERSION = $(shell "$(PYTHON)" src/$(PACKAGE) --version | cut -d ' ' -f 2)
-
-all: build_ui build_rc test build
-
+# Set targets for "all"-target
+all: build-ui build-rc build
 .PHONY: all
 
-## Environment
-venv-info:
-	@echo Environment for $(APP_NAME) $(APP_VERSION)
-	@echo Using path: "$(VENV_PATH)"
-	exit 0
-
+## Virtual environment creation with SYSTEM_PYTHON
 venv:
 	# Start with empty environment
 	"$(SYSTEM_PYTHON)" -m venv "$(VENV_PATH)"
-	source "$(VENV_PATH)/bin/activate" && \
-		python3 -m pip install --upgrade pip && \
-		python3 -m pip install -r requirements.txt
-	exit 0
+	"$(VENV_PATH)/bin/pip" install --upgrade pip
+	"$(VENV_PATH)/bin/pip" install --upgrade -r requirements.txt
 
 venv-ssp:
 	# Include system installed site-packages and add just missing modules
 	"$(SYSTEM_PYTHON)" -m venv --system-site-packages "$(VENV_PATH)"
-	source "$(VENV_PATH)/bin/activate" && \
-		python3 -m pip install --upgrade pip && \
-		python3 -m pip install -r requirements.txt
-	exit 0
+	"$(VENV_PATH)/bin/pip" install --upgrade pip
+	"$(VENV_PATH)/bin/pip" install --upgrade -r requirements.txt
 
-.PHONY: venv-info venv venv-ssp
+.PHONY: venv venv-ssp
+
+# Choose python interpreter from venv or system
+PYTHON = $(or $(wildcard $(VENV_PATH)/bin/python), $(SYSTEM_PYTHON))
+
+# Read app version from program
+APP_VERSION = $(shell "$(PYTHON)" src/$(PACKAGE) --version | cut -d ' ' -f 2)
+
+# Environment info
+venv-info:
+	@echo Environment for $(APP_NAME) $(APP_VERSION)
+	@echo Using path: "$(VENV_PATH)"
+
+.PHONY: venv-info
 
 ## Compile Qt UI files to python code
 build-ui:
@@ -164,6 +165,8 @@ clean:
 	rm -rf build dist src/*.egg-info
 	# PyInstaller created files
 	rm -rf *.spec
+	# Pycaches
+	find . -type d -name '__pycache__' -exec rm -r {} \+
 
 distclean: clean
 	# Virtual environment
