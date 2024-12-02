@@ -110,6 +110,7 @@ app-licenses:
 
 app: build-ui build-rc app-licenses
 	"$(PYTHON)" -m PyInstaller -n $(APP_NAME) \
+		--collect-submodules=zeroconf \
 		--add-data="src/$(PACKAGE)/locale:./$(PACKAGE)/locale" \
 		--add-data="dist/bundled-libraries.md:$(PACKAGE)/open-source-licenses" \
 		--add-data="dist/open-source-licenses.*:$(PACKAGE)/open-source-licenses" \
@@ -124,6 +125,7 @@ app: build-ui build-rc app-licenses
 
 app-mac: build-ui build-rc app-licenses
 	"$(PYTHON)" -m PyInstaller -n $(APP_NAME) \
+		--collect-submodules=zeroconf \
 		--add-data="src/$(PACKAGE)/locale:./$(PACKAGE)/locale" \
 		--add-data="dist/bundled-libraries.md:$(PACKAGE)/open-source-licenses" \
 		--add-data="dist/open-source-licenses.*:$(PACKAGE)/open-source-licenses" \

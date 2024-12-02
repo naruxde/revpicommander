@@ -59,6 +59,7 @@ goto end
         --format=plain-vertical ^
         --output-file dist\\open-source-licenses.txt
     %PYTHON% -m PyInstaller -n "%APP_NAME%" ^
+        --collect-submodules=zeroconf ^
         --add-data="dist\\bundled-libraries.md;%PACKAGE%\\open-source-licenses" ^
         --add-data="dist\\open-source-licenses.*;%PACKAGE%\\open-source-licenses" ^
         --add-data="src\\%PACKAGE%\\locale;.\\%PACKAGE%\\locale" ^
