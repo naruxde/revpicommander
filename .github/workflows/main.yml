@@ -8,26 +8,26 @@ jobs:
     - name: Install Python dependencies
       uses: py-actions/py-dependency-install@v4
     - name: generate license
-      run: python -m piplicenses ^
-        --format=markdown ^
+      run: python -m piplicenses
+        --format=markdown
         --output-file dist/bundled-libraries.md
     - name: generate license2   
-      run: python -m piplicenses ^
-        --with-authors ^
-        --with-urls ^
-        --with-description ^
-        --with-license-file ^
-        --no-license-path ^
-        --format=json ^
+      run: python -m piplicenses
+        --with-authors
+        --with-urls
+        --with-description
+        --with-license-file
+        --no-license-path
+        --format=json
         --output-file dist/open-source-licenses.json
     - name: generate license3
-      run: python -m piplicenses ^
-        --with-authors ^
-        --with-urls ^
-        --with-description ^
-        --with-license-file ^
-        --no-license-path ^
-        --format=plain-vertical ^
+      run: python -m piplicenses
+        --with-authors
+        --with-urls
+        --with-description
+        --with-license-file
+        --no-license-path
+        --format=plain-vertical
         --output-file dist/open-source-licenses.txt
     - name: generate exe
       uses: JackMcKew/pyinstaller-action-windows@main
