@@ -5,8 +5,31 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
+    - name: generate license
+      run: python -m piplicenses ^
+        --format=markdown ^
+        --output-file dist/bundled-libraries.md
+    - name: generate license2   
+      run: python -m piplicenses ^
+        --with-authors ^
+        --with-urls ^
+        --with-description ^
+        --with-license-file ^
+        --no-license-path ^
+        --format=json ^
+        --output-file dist/open-source-licenses.json
+    - name: generate license3
+      run: python -m piplicenses ^
+        --with-authors ^
+        --with-urls ^
+        --with-description ^
+        --with-license-file ^
+        --no-license-path ^
+        --format=plain-vertical ^
+        --output-file dist/open-source-licenses.txt
     - name: generate exe
       uses: JackMcKew/pyinstaller-action-windows@main
       with:
         spec: RevPi_Commander.spec
         path: .
+
