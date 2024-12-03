@@ -8,5 +8,5 @@ jobs:
     - name: generate exe
       uses: JackMcKew/pyinstaller-action-windows@main
       with:
-        spec: RevPi Commander.spec
+        spec: "RevPi Commander.spec"
         path: .
