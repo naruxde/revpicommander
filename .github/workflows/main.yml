@@ -5,6 +5,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
+    - name: Install Python dependencies
+      uses: py-actions/py-dependency-install@v4
     - name: generate license
       run: python -m piplicenses ^
         --format=markdown ^
