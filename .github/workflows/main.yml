@@ -1,0 +1,43 @@
+name: binary_creation
+on: [pull_request, push]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Install Python dependencies
+      uses: py-actions/py-dependency-install@v4
+    - name: create temp folder
+      run: mkdir dist
+    - name: generate license
+      run: python -m piplicenses
+        --format=markdown
+        --output-file dist/bundled-libraries.md
+    - name: generate license2   
+      run: python -m piplicenses
+        --with-authors
+        --with-urls
+        --with-description
+        --with-license-file
+        --no-license-path
+        --format=json
+        --output-file dist/open-source-licenses.json
+    - name: generate license3
+      run: python -m piplicenses
+        --with-authors
+        --with-urls
+        --with-description
+        --with-license-file
+        --no-license-path
+        --format=plain-vertical
+        --output-file dist/open-source-licenses.txt
+    - name: generate exe
+      uses: JackMcKew/pyinstaller-action-windows@main
+      with:
+        spec: RevPi_Commander.spec
+        path: .
+    - name: upload files
+      uses: actions/upload-artifact@v4
+      with:
+        name: binaries
+        path: dist/
