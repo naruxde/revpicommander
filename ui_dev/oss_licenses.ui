@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Open-Source licenses</string>
+   <string>Open source licenses</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
@@ -87,10 +87,10 @@
   </layout>
   <action name="action_start">
    <property name="text">
-    <string>More licenses...</string>
+    <string>More licenses</string>
    </property>
    <property name="toolTip">
-    <string>Show more open-source software licenses</string>
+    <string>Show more open source software licenses</string>
    </property>
   </action>
  </widget>

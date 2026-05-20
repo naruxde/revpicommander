@@ -84,7 +84,7 @@ class RevPiFiles(QtWidgets.QMainWindow, Ui_win_files):
         self.dc_settings = {}
         self.tree_files_counter = 0
         self.tree_files_counter_max = 10000
-        self.lbl_path_local.setText(helper.cm.settings.watch_path or self.tr("Please select..."))
+        self.lbl_path_local.setText(helper.cm.settings.watch_path or self.tr("Select"))
         self.lbl_path_local.setToolTip(self.lbl_path_local.text())
 
         self.btn_all.setEnabled(False)
@@ -120,13 +120,13 @@ class RevPiFiles(QtWidgets.QMainWindow, Ui_win_files):
         if stop_restart and helper.cm.call_remote_function("plcstop") is None:
             QtWidgets.QMessageBox.critical(
                 self, self.tr("Error"), self.tr(
-                    "Can not stop plc program on Revolution Pi."
+                    "Cannot stop PLC program on RevPi."
                 )
             )
             return
 
         uploader = UploadFiles(self.file_list_local(), self)
-        if uploader.exec_dialog(self.tr("File transfer...")) == QtWidgets.QDialog.Rejected:
+        if uploader.exec_dialog(self.tr("File transfer")) == QtWidgets.QDialog.Rejected:
             return
 
         if uploader.ec == 0:
@@ -134,7 +134,7 @@ class RevPiFiles(QtWidgets.QMainWindow, Ui_win_files):
             if not uploader.plc_program_included:
                 QtWidgets.QMessageBox.information(
                     self, self.tr("Information"), self.tr(
-                        "A PLC program has been uploaded. Please check the "
+                        "A PLC program has been uploaded. Check the "
                         "PLC program settings to see if the correct program "
                         "is specified as the start program."
                     )
@@ -143,7 +143,7 @@ class RevPiFiles(QtWidgets.QMainWindow, Ui_win_files):
         elif uploader.ec == -1:
             QtWidgets.QMessageBox.critical(
                 self, self.tr("Error"), self.tr(
-                    "The Revolution Pi could not process some parts of the "
+                    "RevPi cannot process some parts of the "
                     "transmission."
                 )
             )
@@ -151,13 +151,13 @@ class RevPiFiles(QtWidgets.QMainWindow, Ui_win_files):
         elif uploader.ec == -2:
             QtWidgets.QMessageBox.critical(
                 self, self.tr("Error"),
-                self.tr("Errors occurred during transmission")
+                self.tr("Errors occurred during transmission.")
             )
 
         if stop_restart and helper.cm.call_remote_function("plcstart", default_value=1) != 0:
             QtWidgets.QMessageBox.warning(
                 self, self.tr("Warning"), self.tr(
-                    "Could not start the plc program on Revolution Pi."
+                    "Cannot start the PLC program on RevPi."
                 )
             )
 
@@ -169,7 +169,7 @@ class RevPiFiles(QtWidgets.QMainWindow, Ui_win_files):
         if "set_plcprogram" in helper.cm.xml_funcs:
             self.btn_mark_plcprogram.setEnabled(False)
             self.btn_mark_plcprogram.setToolTip(self.tr(
-                "Set as start file"
+                "Set as start program."
             ))
             if len(self.tree_files_revpi.selectedItems()) == 1:
                 item = self.tree_files_revpi.selectedItems()[0]
@@ -177,7 +177,7 @@ class RevPiFiles(QtWidgets.QMainWindow, Ui_win_files):
         else:
             self.btn_mark_plcprogram.setEnabled(False)
             self.btn_mark_plcprogram.setToolTip(self.tr(
-                "Upgrade your Revolution Pi! This function needs at least 'revpipyload' 0.11.0"
+                "Upgrade your RevPi. This function needs at least 'revpipyload' 0.11.0."
             ))
 
         self.btn_all.setEnabled(state_local)
@@ -186,17 +186,17 @@ class RevPiFiles(QtWidgets.QMainWindow, Ui_win_files):
         if "plcdeletefile" not in helper.cm.xml_funcs:
             self.btn_delete_revpi.setEnabled(False)
             self.btn_delete_revpi.setToolTip(self.tr(
-                "Upgrade your Revolution Pi! This function needs at least 'revpipyload' 0.9.5"
+                "Upgrade your RevPi. This function needs at least 'revpipyload' 0.9.5."
             ))
         else:
             self.btn_delete_revpi.setEnabled(state_revpi)
             self.btn_delete_revpi.setToolTip(self.tr(
-                "Deletes selected files immediately on the Revolution Pi"
+                "Deletes selected files immediately on RevPi."
             ))
         if "plcdownload_file" not in helper.cm.xml_funcs:
             self.btn_to_left.setEnabled(False)
             self.btn_to_left.setToolTip(self.tr(
-                "Upgrade your Revolution Pi! This function needs at least 'revpipyload' 0.9.5"
+                "Upgrade your RevPi. This function needs at least 'revpipyload' 0.9.5."
             ))
         elif not helper.cm.settings.watch_path:
             self.btn_to_left.setEnabled(False)
@@ -275,7 +275,7 @@ class RevPiFiles(QtWidgets.QMainWindow, Ui_win_files):
         if not os.path.exists(base_dir):
             QtWidgets.QMessageBox.critical(
                 self, self.tr("Error"), self.tr(
-                    "Can not open last directory '{0}'."
+                    "Cannot open last directory '{0}'."
                 ).format(base_dir)
             )
             return
@@ -332,7 +332,7 @@ class RevPiFiles(QtWidgets.QMainWindow, Ui_win_files):
         if not silent and self.tree_files_counter > self.tree_files_counter_max:
             QtWidgets.QMessageBox.critical(
                 self, self.tr("Error"), self.tr(
-                    "Stop scanning for files, because we found more than {0} files."
+                    "Stopped scanning for files because more than {0} files were found."
                 ).format(self.tree_files_counter_max)
             )
 
@@ -373,7 +373,7 @@ class RevPiFiles(QtWidgets.QMainWindow, Ui_win_files):
             lst_revpi = helper.cm.call_remote_function("get_filelist")
             self.dc_settings = helper.cm.call_remote_function("get_config", default_value={})
             self.lbl_path_revpi.setText(
-                self.dc_settings.get("plcworkdir", self.tr("Could not load path of working dir"))
+                self.dc_settings.get("plcworkdir", self.tr("Cannot load the working directory path."))
             )
             self.lbl_path_revpi.setToolTip(self.lbl_path_revpi.text())
 
@@ -439,7 +439,7 @@ class RevPiFiles(QtWidgets.QMainWindow, Ui_win_files):
         elif not silent:
             QtWidgets.QMessageBox.critical(
                 self, self.tr("Error"), self.tr(
-                    "Can not load file list from Revolution Pi."
+                    "Cannot load file list from RevPi."
                 )
             )
 
@@ -470,7 +470,7 @@ class RevPiFiles(QtWidgets.QMainWindow, Ui_win_files):
         log.debug("RevPiFiles.on_btn_select_clicked")
 
         diag_folder = QtWidgets.QFileDialog(
-            self, self.tr("Select folder..."),
+            self, self.tr("Select folder"),
             helper.cm.settings.watch_path,
         )
         diag_folder.setFileMode(QtWidgets.QFileDialog.DirectoryOnly)
@@ -482,7 +482,7 @@ class RevPiFiles(QtWidgets.QMainWindow, Ui_win_files):
         if not os.access(selected_dir, os.R_OK):
             QtWidgets.QMessageBox.critical(
                 self, self.tr("Error"), self.tr(
-                    "Can not access the folder '{0}' to read files."
+                    "Cannot access the folder '{0}' to read files."
                 )
             )
             helper.cm.settings.watch_files = []
@@ -531,17 +531,17 @@ class RevPiFiles(QtWidgets.QMainWindow, Ui_win_files):
             rc = rc.data
             if not rc:
                 QtWidgets.QMessageBox.critical(
-                    self, self.tr("Error..."), self.tr(
-                        "Error while download file '{0}'."
+                    self, self.tr("Error"), self.tr(
+                        "Error while downloading file '{0}'."
                     ).format(file_name)
                 )
             else:
                 file_name = os.path.join(helper.cm.settings.watch_path, file_name)
                 if override is None and os.path.exists(file_name):
                     rc_diag = QtWidgets.QMessageBox.question(
-                        self, self.tr("Override files..."), self.tr(
-                            "One or more files does exist on your computer! Do you want to override the existing"
-                            "files?\n\nSelect 'Yes' to override, 'No' to download only missing files."
+                        self, self.tr("Overwrite files"), self.tr(
+                            "One or more files already exist on your computer. Do you want to overwrite the existing "
+                            "files?\n\nSelect 'Yes' to overwrite, 'No' to download only missing files."
                         ),
                         buttons=QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No | QtWidgets.QMessageBox.Cancel
                     )
@@ -571,8 +571,8 @@ class RevPiFiles(QtWidgets.QMainWindow, Ui_win_files):
                 lst_delete.append(item.data(0, WidgetData.file_name))
 
         rc = QtWidgets.QMessageBox.question(
-            self, self.tr("Delete files from Revolution Pi..."), self.tr(
-                "Do you want to delete {0} files from revolution pi?"
+            self, self.tr("Delete files from RevPi"), self.tr(
+                "Do you want to delete {0} files from RevPi?"
             ).format(len(lst_delete))
         )
         if rc != QtWidgets.QMessageBox.Yes:
@@ -582,8 +582,8 @@ class RevPiFiles(QtWidgets.QMainWindow, Ui_win_files):
             rc = helper.cm.call_remote_function("plcdeletefile", file_name, default_value=False)
             if not rc:
                 QtWidgets.QMessageBox.critical(
-                    self, self.tr("Error..."), self.tr(
-                        "Error while delete file '{0}'."
+                    self, self.tr("Error"), self.tr(
+                        "Error while deleting file '{0}'."
                     ).format(file_name)
                 )
 
@@ -601,9 +601,9 @@ class RevPiFiles(QtWidgets.QMainWindow, Ui_win_files):
         if saved is None:
             QtWidgets.QMessageBox.critical(
                 self, self.tr("Error"), self.tr(
-                    "The settings could not be saved on the Revolution Pi!\n"
-                    "Try to save the values one mor time and check the log "
-                    "files of RevPiPyLoad if the error rises again."
+                    "Cannot save settings on RevPi.\n"
+                    "Try saving the values one more time and check the "
+                    "RevPiPyLoad log files if the error occurs again."
                 )
             )
 

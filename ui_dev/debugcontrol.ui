@@ -32,7 +32,7 @@
    <item row="0" column="0">
     <widget class="QGroupBox" name="gb_devices">
      <property name="title">
-      <string>Revolution Pi devices</string>
+      <string>RevPi Devices</string>
      </property>
      <layout class="QVBoxLayout" name="vl_devices"/>
     </widget>
@@ -40,25 +40,25 @@
    <item row="1" column="0">
     <widget class="QCheckBox" name="cbx_stay_on_top">
      <property name="text">
-      <string>Open to stay on top</string>
+      <string>Keep window on top</string>
      </property>
     </widget>
    </item>
    <item row="0" column="1" rowspan="2">
     <widget class="QGroupBox" name="gb_control">
      <property name="title">
-      <string>IO Control</string>
+      <string>I/O Control</string>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout">
       <item>
        <widget class="QPushButton" name="btn_read_io">
         <property name="toolTip">
-         <string>Read all IO values and discard local changes (F4)
+         <string>Read all I/O values and discard local changes (F4).
 
-Hold this button pressed and it will refresh the IOs every 200 ms.</string>
+Hold this button to refresh the I/Os every 200 ms.</string>
         </property>
         <property name="text">
-         <string>Read &amp;all IO values</string>
+         <string>Read &amp;all I/O values</string>
         </property>
         <property name="autoRepeat">
          <bool>true</bool>
@@ -74,12 +74,12 @@ Hold this button pressed and it will refresh the IOs every 200 ms.</string>
       <item>
        <widget class="QPushButton" name="btn_refresh_io">
         <property name="toolTip">
-         <string>Refresh all IO values which are locally not changed (F5)
+         <string>Refresh all I/O values that have not been modified locally (F5).
 
-Hold this button pressed and it will refresh the IOs every 200 ms.</string>
+Hold this button to refresh the I/Os every 200 ms.</string>
         </property>
         <property name="text">
-         <string>&amp;Refresh unchanged IOs</string>
+         <string>&amp;Refresh unchanged I/Os</string>
         </property>
         <property name="autoRepeat">
          <bool>true</bool>
@@ -95,7 +95,7 @@ Hold this button pressed and it will refresh the IOs every 200 ms.</string>
       <item>
        <widget class="QPushButton" name="btn_write_o">
         <property name="toolTip">
-         <string>Write locally changed output values to process image (F6)</string>
+         <string>Write locally modified output values to process image (F6).</string>
         </property>
         <property name="text">
          <string>&amp;Write changed outputs</string>
@@ -112,7 +112,7 @@ Hold this button pressed and it will refresh the IOs every 200 ms.</string>
       <item>
        <widget class="QCheckBox" name="cbx_write">
         <property name="text">
-         <string>and write outputs</string>
+         <string>Write outputs</string>
         </property>
        </widget>
       </item>

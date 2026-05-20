@@ -81,7 +81,7 @@ class MqttManager(QtWidgets.QDialog, Ui_diag_mqtt):
         if self._changesdone():
             ask = QtWidgets.QMessageBox.question(
                 self, self.tr("Question"), self.tr(
-                    "Do you really want to quit? \nUnsaved changes will be lost."
+                    "Quit without saving?\nUnsaved changes will be lost."
                 )
             ) == QtWidgets.QMessageBox.Yes
             if ask:
@@ -94,7 +94,7 @@ class MqttManager(QtWidgets.QDialog, Ui_diag_mqtt):
         if not self._load_settings():
             QtWidgets.QMessageBox.critical(
                 self, self.tr("Error"), self.tr(
-                    "Can not load the MQTT settings dialog. Missing values!"
+                    "Cannot load the MQTT settings dialog. Missing values."
                 )
             )
             return QtWidgets.QDialog.Rejected

@@ -134,7 +134,7 @@ class RevPiPlcList(QtWidgets.QDialog, Ui_diag_connections):
         if self.changes:
             ask = QtWidgets.QMessageBox.question(
                 self, self.tr("Question"), self.tr(
-                    "Do you really want to quit? \nUnsaved changes will be lost."
+                    "Quit without saving?\nUnsaved changes will be lost."
                 )
             ) == QtWidgets.QMessageBox.Yes
 
@@ -303,8 +303,8 @@ class RevPiPlcList(QtWidgets.QDialog, Ui_diag_connections):
             if item_to_remove.childCount():
                 rc = QtWidgets.QMessageBox.question(
                     self, self.tr("Question"), self.tr(
-                        "If you remote this folder, all containing elements will be removed, too. \n\n"
-                        "Do you want to delete folder and all elements?"
+                        "If you remove this folder, all contained items will be removed as well.\n\n"
+                        "Do you want to delete the folder and all contained items?"
                     ),
                 )
                 if rc != QtWidgets.QMessageBox.Yes:

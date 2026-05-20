@@ -44,7 +44,7 @@ class RevPiInfo(QtWidgets.QDialog, Ui_diag_revpiinfo):
         elif helper.cm.connected:
             lst = helper.cm.call_remote_function(
                 "get_filelist",
-                default_value=[self.tr("Can not load file list")]
+                default_value=[self.tr("Cannot load file list.")]
             )
         else:
             lst = [self.tr("Not connected")]

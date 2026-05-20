@@ -26,7 +26,7 @@
       <item row="0" column="0">
        <widget class="QLabel" name="lbl_username">
         <property name="text">
-         <string>SSH username:</string>
+         <string>SSH user name:</string>
         </property>
        </widget>
       </item>
@@ -53,10 +53,10 @@
    <item>
     <widget class="QCheckBox" name="cbx_save_password">
      <property name="toolTip">
-      <string>Username and password will be saved in secured operating systems's password storage.</string>
+      <string>Save user name and password in secure password storage.</string>
      </property>
      <property name="text">
-      <string>Save username and password</string>
+      <string>Save user name and password</string>
      </property>
     </widget>
    </item>
@@ -79,7 +79,7 @@
       </sizepolicy>
      </property>
      <property name="text">
-      <string>Note: The default user for SSH is &quot;pi&quot; which differs from the web configuration. You can find the password on the sticker on the device.</string>
+      <string>Default SSH user is &quot;pi&quot;. The device password is on the RevPi housing sticker.</string>
      </property>
      <property name="wordWrap">
       <bool>true</bool>

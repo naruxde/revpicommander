@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Revolution Pi connections</string>
+   <string>RevPi Connections</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="1" column="0" colspan="2">
@@ -47,7 +47,7 @@
        <item row="2" column="0">
         <widget class="QLabel" name="lbl_port">
          <property name="text">
-          <string>Port (Default {0}):</string>
+          <string>Port (default {0}):</string>
          </property>
         </widget>
        </item>
@@ -86,7 +86,7 @@
           </sizepolicy>
          </property>
          <property name="suffix">
-          <string> sec.</string>
+          <string> s</string>
          </property>
          <property name="minimum">
           <number>5</number>
@@ -99,7 +99,7 @@
        <item row="4" column="0">
         <widget class="QLabel" name="lbl_folder">
          <property name="text">
-          <string>Sub folder:</string>
+          <string>Subfolder:</string>
          </property>
         </widget>
        </item>
@@ -194,7 +194,7 @@
      </property>
      <column>
       <property name="text">
-       <string>Connection name</string>
+       <string>Connection Name</string>
       </property>
      </column>
      <column>

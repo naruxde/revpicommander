@@ -372,7 +372,7 @@ class ConnectionManager(QtCore.QThread):
                 self._clear_settings()
                 self.connect_error.emit(
                     self.tr("Error"), self.tr(
-                        "Could not establish a SSH connection to server:\n\n{0}"
+                        "Cannot connect to SSH server:\n\n{0}"
                     ).format(str(e)),
                     ConnectionFail.SSH_CONNECT,
                     revpi_settings,
@@ -398,11 +398,11 @@ class ConnectionManager(QtCore.QThread):
             if revpi_settings.ssh_use_tunnel:
                 self.connect_error.emit(
                     self.tr("Error"), self.tr(
-                        "Can not connect to RevPiPyLoad service through SSH tunnel!\n\n"
-                        "This could have the following reasons:\n"
-                        "- The RevPiPyLoad service is not running (activate it on your Revolution Pi)\n"
-                        "- The RevPiPyLoad XML-RPC service is NOT bind to localhost\n"
-                        "- The ACL permission is not set for 127.0.0.1!!!"
+                        "Cannot connect to RevPiPyLoad service through SSH tunnel.\n\n"
+                        "Possible reasons:\n"
+                        "- RevPiPyLoad service is not running. Activate service on your RevPi.\n"
+                        "- RevPiPyLoad XML-RPC service is not bound to localhost.\n"
+                        "- ACL permission is not set for 127.0.0.1."
                     ),
                     ConnectionFail.NO_XML_RPC_VIA_TUNNEL,
                     revpi_settings,
@@ -410,14 +410,14 @@ class ConnectionManager(QtCore.QThread):
             else:
                 self.connect_error.emit(
                     self.tr("Error"), self.tr(
-                        "Can not connect to RevPiPyLoad XML-RPC service! \n\n"
-                        "This could have the following reasons:\n"
-                        "- The Revolution Pi is not online\n"
-                        "- The RevPiPyLoad service is not running (activate it on your Revolution Pi)\n"
-                        "- The RevPiPyLoad XML-RPC service is bind to localhost, only\n"
-                        "- The ACL permission is not set for your IP!!!\n\n"
-                        "Use 'Connect via SSH' to use an encrypted connection or run "
-                        "'sudo revpipyload_secure_installation' on Revolution Pi to setup direct remote access!"
+                        "Cannot connect to RevPiPyLoad XML-RPC service.\n\n"
+                        "Possible reasons:\n"
+                        "- RevPi is offline.\n"
+                        "- RevPiPyLoad service is not running. Activate service on your RevPi.\n"
+                        "- RevPiPyLoad XML-RPC service is bound to localhost only.\n"
+                        "- The ACL permission is not set for your IP.\n\n"
+                        "Use 'Connect via SSH' to use encrypted connection or run "
+                        "'sudo revpipyload_secure_installation' on RevPi to set up direct remote access."
                     ),
                     ConnectionFail.NO_XML_RPC,
                     revpi_settings,
@@ -546,10 +546,10 @@ class ConnectionManager(QtCore.QThread):
 
             if self._revpi is not None:
                 sp = None
-                self.status_changed.emit(self.tr("SIMULATING"), "yellow")
+                self.status_changed.emit(self.tr("Simulating"), "#E3DE48")
             elif self._cli is None:
                 sp = None
-                self.status_changed.emit(self.tr("NOT CONNECTED"), "lightblue")
+                self.status_changed.emit(self.tr("Not connected"), "lightblue")
             elif not self._cli_connect.empty():
                 # Get new connection information to create object in this thread
                 item = self._cli_connect.get()
@@ -566,7 +566,7 @@ class ConnectionManager(QtCore.QThread):
                     log.warning(e)
                 except Exception as e:
                     log.warning(e)
-                    self.status_changed.emit(self.tr("SERVER ERROR"), "red")
+                    self.status_changed.emit(self.tr("Server error"), "#CC6666")
                     self._has_error = True
                     self.connection_error_observed.emit("{0} | {1}".format(e, type(e)))
 
@@ -596,19 +596,19 @@ class ConnectionManager(QtCore.QThread):
                         self.connection_recovered.emit()
 
                     if plc_exit_code == -1:
-                        self.status_changed.emit(self.tr("RUNNING"), "green")
+                        self.status_changed.emit(self.tr("Running"), "green")
                     elif plc_exit_code == -2:
-                        self.status_changed.emit(self.tr("PLC FILE NOT FOUND"), "red")
+                        self.status_changed.emit(self.tr("PLC file not found"), "#CC6666")
                     elif plc_exit_code == -3:
-                        self.status_changed.emit(self.tr("NOT RUNNING (NO STATUS)"), "yellow")
+                        self.status_changed.emit(self.tr("Not running (no status)"), "#E3DE48")
                     elif plc_exit_code == -9:
-                        self.status_changed.emit(self.tr("PROGRAM KILLED"), "red")
+                        self.status_changed.emit(self.tr("Program killed"), "#CC6666")
                     elif plc_exit_code == -15:
-                        self.status_changed.emit(self.tr("PROGRAM TERMED"), "red")
+                        self.status_changed.emit(self.tr("Program terminated"), "#CC6666")
                     elif plc_exit_code == 0:
-                        self.status_changed.emit(self.tr("NOT RUNNING"), "yellow")
+                        self.status_changed.emit(self.tr("Not running"), "#E3DE48")
                     else:
-                        self.status_changed.emit(self.tr("FINISHED WITH CODE {0}").format(plc_exit_code), "yellow")
+                        self.status_changed.emit(self.tr("Finished with exit code {0}").format(plc_exit_code), "#E3DE48")
 
             self.msleep(self._cycle_time)
 

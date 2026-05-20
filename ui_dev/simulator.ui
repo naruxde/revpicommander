@@ -11,13 +11,13 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>piControl simulator</string>
+   <string>piControl Simulator</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <widget class="QGroupBox" name="gb_settings">
      <property name="title">
-      <string>Simulator settings</string>
+      <string>Simulator Settings</string>
      </property>
      <layout class="QGridLayout" name="gridLayout">
       <item row="0" column="0">
@@ -30,7 +30,7 @@
       <item row="1" column="0">
        <widget class="QLabel" name="lbl_configrsc">
         <property name="text">
-         <string>piCtory file:</string>
+         <string>PiCtory file:</string>
         </property>
        </widget>
       </item>
@@ -47,7 +47,7 @@
       <item row="1" column="2">
        <widget class="QPushButton" name="btn_configrsc">
         <property name="text">
-         <string>select...</string>
+         <string>Select</string>
         </property>
        </widget>
       </item>
@@ -99,7 +99,7 @@
       <item row="4" column="1" colspan="2">
        <widget class="QRadioButton" name="rb_restart_pictory">
         <property name="text">
-         <string>Restore piCtory default values</string>
+         <string>Restore PiCtory default values</string>
         </property>
         <property name="checked">
          <bool>true</bool>
@@ -109,7 +109,7 @@
       <item row="5" column="1" colspan="2">
        <widget class="QRadioButton" name="rb_restart_zero">
         <property name="text">
-         <string>Reset everything to ZERO</string>
+         <string>Reset all values to NULL</string>
         </property>
        </widget>
       </item>
@@ -119,13 +119,13 @@
    <item>
     <widget class="QGroupBox" name="gb_info">
      <property name="title">
-      <string>RevPiModIO integration</string>
+      <string>RevPiModIO Integration</string>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_2">
       <item>
        <widget class="QLabel" name="lbl_info">
         <property name="text">
-         <string>You can work with this simulator if you call RevPiModIO with this additional parameters:</string>
+         <string>To use this simulator, call RevPiModIO with the following additional parameters:</string>
         </property>
         <property name="wordWrap">
          <bool>true</bool>
@@ -151,7 +151,7 @@
    <item>
     <widget class="QPushButton" name="btn_start_pictory">
      <property name="text">
-      <string>Start with piCtory default values</string>
+      <string>Start with PiCtory default values</string>
      </property>
      <property name="shortcut">
       <string notr="true">Ctrl+1</string>
@@ -171,7 +171,7 @@
    <item>
     <widget class="QPushButton" name="btn_start_nochange">
      <property name="text">
-      <string>Start without changing actual process image</string>
+      <string>Start without changing the current process image</string>
      </property>
      <property name="shortcut">
       <string notr="true">Ctrl+3</string>

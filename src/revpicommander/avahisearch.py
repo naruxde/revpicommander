@@ -167,7 +167,7 @@ class AvahiSearch(QtWidgets.QDialog, Ui_diag_search):
             return None
 
         settings = RevPiSettings()
-        settings.folder = self.tr("Auto discovered")
+        settings.folder = self.tr("Automatically discovered")
         settings.name = item.data(WidgetData.host_name)
         settings.address = item.data(WidgetData.address)
         settings.port = item.data(WidgetData.port)

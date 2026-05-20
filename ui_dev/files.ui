@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>File manager</string>
+   <string>File Manager</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
@@ -28,7 +28,7 @@
         <item>
          <widget class="QGroupBox" name="gb_select_local">
           <property name="title">
-           <string>Local computer</string>
+           <string>Local Computer</string>
           </property>
           <layout class="QGridLayout" name="gridLayout_2" columnstretch="1,0,0">
            <item row="0" column="0">
@@ -168,7 +168,7 @@
         <item>
          <widget class="QGroupBox" name="gb_select_revpi">
           <property name="title">
-           <string>Revolution Pi</string>
+           <string>RevPi</string>
           </property>
           <layout class="QGridLayout" name="gridLayout_3" columnstretch="1,0">
            <item row="1" column="0" colspan="2">
@@ -328,7 +328,7 @@
     <item row="1" column="0">
      <widget class="QPushButton" name="btn_all">
       <property name="text">
-       <string>Stop - Upload - Start</string>
+       <string>Stop, upload, start</string>
       </property>
      </widget>
     </item>
