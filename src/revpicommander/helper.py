@@ -15,7 +15,7 @@ from queue import Queue
 from re import search
 from threading import Lock
 from uuid import uuid4
-from xmlrpc.client import Binary, ServerProxy
+from xmlrpc.client import Binary, ServerProxy, Transport
 
 from PyQt5 import QtCore
 from paramiko.ssh_exception import AuthenticationException
@@ -30,6 +30,21 @@ settings = QtCore.QSettings("revpimodio.org", "revpicommander")
 
 homedir = environ.get("HOME", "") or environ.get("APPDATA", "")
 """Home dir of user."""
+
+
+class UnixStreamTransport(Transport):
+    """Transport for xmlrpc to use unix domain sockets."""
+
+    def __init__(self, socket_path):
+        super().__init__()
+        self._socket_path = socket_path
+
+    def make_connection(self, host):
+        import http.client
+        conn = http.client.HTTPConnection("localhost")
+        conn.sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+        conn.sock.connect(self._socket_path)
+        return conn
 
 
 class ConnectionFail(IntEnum):
@@ -91,6 +106,11 @@ class RevPiSettings:
         if load_index is not None:
             self.load_from_index(load_index)
 
+    @property
+    def is_unix_socket(self) -> bool:
+        """Check if connection is a unix domain socket."""
+        return self.address.startswith("/") or self.address.startswith("./")
+
     def load_from_index(self, settings_index: int) -> None:
         """Load settings from 'connections' index."""
         self._settings.beginReadArray("connections")
@@ -129,8 +149,11 @@ class RevPiSettings:
             pass
 
         # These values must exists
-        if not (self.name and self.address and self.port):
-            raise ValueError("Could not geht all required values from saved settings")
+        if not (self.name and self.address):
+            raise ValueError("Could not get all required values from saved settings")
+
+        if not self.is_unix_socket and not self.port:
+            raise ValueError("Port is required for IP connections")
 
         self._settings.endArray()
 
@@ -379,10 +402,10 @@ class ConnectionManager(QtCore.QThread):
                 )
                 return False
 
-            sp = ServerProxy("http://127.0.0.1:{0}".format(ssh_tunnel_port))
+            sp = create_server_proxy(revpi_settings, ssh_tunnel_port)
 
         else:
-            sp = ServerProxy("http://{0}:{1}".format(revpi_settings.address, revpi_settings.port))
+            sp = create_server_proxy(revpi_settings)
 
         # Load values and test connection to Revolution Pi
         try:
@@ -435,10 +458,7 @@ class ConnectionManager(QtCore.QThread):
         with self._lck_cli:
             self.ssh_tunnel_server = ssh_tunnel_server
             self._cli = sp
-            self._cli_connect.put_nowait((
-                "127.0.0.1" if revpi_settings.ssh_use_tunnel else revpi_settings.address,
-                ssh_tunnel_port if revpi_settings.ssh_use_tunnel else revpi_settings.port
-            ))
+            self._cli_connect.put_nowait((revpi_settings, ssh_tunnel_port))
 
         self.connection_established.emit()
 
@@ -552,8 +572,8 @@ class ConnectionManager(QtCore.QThread):
                 self.status_changed.emit(self.tr("Not connected"), "lightblue")
             elif not self._cli_connect.empty():
                 # Get new connection information to create object in this thread
-                item = self._cli_connect.get()
-                sp = ServerProxy("http://{0}:{1}".format(*item))
+                revpi_settings, ssh_tunnel_port = self._cli_connect.get()
+                sp = create_server_proxy(revpi_settings, ssh_tunnel_port)
                 self._cli_connect.task_done()
 
             if sp:
@@ -582,7 +602,7 @@ class ConnectionManager(QtCore.QThread):
                                 self.settings.ssh_user,
                                 self.ssh_pass
                             )
-                            sp = ServerProxy("http://127.0.0.1:{0}".format(ssh_tunnel_port))
+                            sp = create_server_proxy(self.settings, ssh_tunnel_port)
                             with self._lck_cli:
                                 self.ssh_tunnel_server = ssh_tunnel_server
                                 self._cli = sp
@@ -669,12 +689,8 @@ class ConnectionManager(QtCore.QThread):
 
         Use connection_recovered signal to figure out new parameters.
         """
-        if not self.settings.ssh_use_tunnel and self.settings.address and self.settings.port:
-            return ServerProxy("http://{0}:{1}".format(self.settings.address, self.settings.port))
-        if self.settings.ssh_use_tunnel and self.ssh_tunnel_server and self.ssh_tunnel_server.connected:
-            return ServerProxy("http://127.0.0.1:{0}".format(self.ssh_tunnel_server.local_tunnel_port))
-
-        return None
+        ssh_tunnel_port = self.ssh_tunnel_server.local_tunnel_port if self.ssh_tunnel_server else None
+        return create_server_proxy(self.settings, ssh_tunnel_port)
 
     @property
     def connected(self) -> bool:
@@ -697,6 +713,27 @@ class ConnectionManager(QtCore.QThread):
 
 cm = ConnectionManager()
 """Clobal connection manager instance."""
+
+
+def create_server_proxy(revpi_settings: RevPiSettings, ssh_tunnel_port: int = None) -> ServerProxy:
+    """
+    Create a ServerProxy instance based on the given settings.
+
+    :param revpi_settings: Revolution Pi saved connection settings
+    :param ssh_tunnel_port: Use this port if an SSH tunnel is already established
+    :return: ServerProxy instance
+    """
+    if revpi_settings.is_unix_socket:
+        return ServerProxy("http://localhost", transport=UnixStreamTransport(revpi_settings.address))
+
+    if ssh_tunnel_port:
+        return ServerProxy("http://127.0.0.1:{0}".format(ssh_tunnel_port))
+
+    if revpi_settings.ssh_use_tunnel:
+        # This case is usually handled by passing ssh_tunnel_port after connecting the tunnel
+        return ServerProxy("http://127.0.0.1:{0}".format(revpi_settings.port))
+
+    return ServerProxy("http://{0}:{1}".format(revpi_settings.address, revpi_settings.port))
 
 
 def all_revpi_settings() -> [RevPiSettings]:

@@ -206,6 +206,16 @@ class RevPiPlcList(QtWidgets.QDialog, Ui_diag_connections):
         self.sbx_ssh_port.setEnabled(con_item)
         self.txt_ssh_user.setEnabled(con_item)
 
+        if con_item:
+            address = self.txt_address.text()
+            is_unix = address.startswith("/") or address.startswith("./")
+            if is_unix:
+                self.sbx_port.setEnabled(False)
+                self.cbx_ssh_use_tunnel.setChecked(False)
+                self.cbx_ssh_use_tunnel.setEnabled(False)
+                self.sbx_ssh_port.setEnabled(False)
+                self.txt_ssh_user.setEnabled(False)
+
     def _get_folder_item(self, name: str):
         """Find the folder entry by name."""
         for i in range(self.tre_connections.topLevelItemCount()):
@@ -369,6 +379,7 @@ class RevPiPlcList(QtWidgets.QDialog, Ui_diag_connections):
         settings = self.__current_item.data(0, WidgetData.revpi_settings)  # type: RevPiSettings
         settings.address = text
         self.changes = True
+        self._edit_state()
 
     @QtCore.pyqtSlot(int)
     def on_sbx_port_valueChanged(self, value: int):
