@@ -253,7 +253,6 @@ class RevPiPlcList(QtWidgets.QDialog, Ui_diag_connections):
     def on_tre_connections_currentItemChanged(
             self, current: QtWidgets.QTreeWidgetItem, previous: QtWidgets.QTreeWidgetItem):
 
-        self._edit_state()
         self._load_cbb_folder()
 
         if current and current.type() == NodeType.CON:
@@ -280,6 +279,8 @@ class RevPiPlcList(QtWidgets.QDialog, Ui_diag_connections):
         else:
             self.__current_item = QtWidgets.QTreeWidgetItem()
             self.cbb_folder.setCurrentText(current.text(0) if current else "")
+
+        self._edit_state()
 
     @QtCore.pyqtSlot()
     def on_btn_up_clicked(self):
@@ -328,6 +329,8 @@ class RevPiPlcList(QtWidgets.QDialog, Ui_diag_connections):
 
         elif item_to_remove and item_to_remove.type() == NodeType.CON:
             remove_item(item_to_remove)
+
+        self._edit_state()
 
     @QtCore.pyqtSlot()
     def on_btn_add_clicked(self, settings_preset: RevPiSettings = None):
