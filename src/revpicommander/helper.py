@@ -16,6 +16,7 @@ from re import search
 from threading import Lock
 from uuid import uuid4
 from xmlrpc.client import Binary, ServerProxy, Transport
+from configparser import ConfigParser
 
 from PyQt5 import QtCore
 import asyncssh
@@ -365,10 +366,12 @@ class ConnectionManager(QtCore.QThread):
 
         ssh_tunnel_server = None
         ssh_tunnel_port = 0
+        ssh_tunnel_socket = None
 
         socket.setdefaulttimeout(revpi_settings.timeout)
 
         if revpi_settings.ssh_use_tunnel:
+            # We first connect to find out which target to tunnel
             ssh_tunnel_server = SSHLocalTunnel(
                 revpi_settings.port,
                 revpi_settings.address,
@@ -376,6 +379,37 @@ class ConnectionManager(QtCore.QThread):
             )
             try:
                 ssh_tunnel_port = ssh_tunnel_server.connect_by_credentials(revpi_settings.ssh_user, ssh_pass)
+
+                # Check for Unix socket on remote system
+                try:
+                    stdout, stderr = ssh_tunnel_server.send_cmd("cat /etc/revpipyload/revpipyload.conf")
+                    if stdout:
+                        config = ConfigParser()
+                        config.read_string(stdout)
+                        if config.has_section("XMLRPC"):
+                            bindip = config.get("XMLRPC", "bindip", fallback="").strip()
+                            if bindip == "socket":
+                                ssh_tunnel_socket = "/run/revpipyload/xmlrpc.socket"
+                            elif bindip.startswith("/") or bindip.startswith("./"):
+                                ssh_tunnel_socket = bindip
+
+                        if ssh_tunnel_socket:
+                            log.debug("Using remote unix socket: %s", ssh_tunnel_socket)
+                            # Forward local port 0 (dynamic) to remote unix socket
+                            ssh_tunnel_server.disconnect()
+                            ssh_tunnel_server = SSHLocalTunnel(
+                                ssh_tunnel_socket,
+                                revpi_settings.address,
+                                revpi_settings.ssh_port
+                            )
+                            ssh_tunnel_port = ssh_tunnel_server.connect_by_credentials(
+                                revpi_settings.ssh_user, ssh_pass
+                            )
+                        else:
+                            log.debug("Using remote TCP socket: %s", bindip)
+
+                except Exception as e:
+                    log.warning(f"Could not check remote config for unix socket: {e}")
 
                 if getattr(revpi_settings, "ssh_enable_revpipyload", False):
                     ssh_tunnel_server.send_cmd("sudo systemctl enable --now revpipyload")
@@ -723,7 +757,7 @@ def create_server_proxy(revpi_settings: RevPiSettings, ssh_tunnel_port: int = No
     :param ssh_tunnel_port: Use this port if an SSH tunnel is already established
     :return: ServerProxy instance
     """
-    if revpi_settings.is_unix_socket:
+    if not ssh_tunnel_port and revpi_settings.is_unix_socket:
         return ServerProxy("http://localhost", transport=UnixStreamTransport(revpi_settings.address))
 
     if ssh_tunnel_port:

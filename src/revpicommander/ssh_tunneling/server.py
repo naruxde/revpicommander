@@ -18,15 +18,15 @@ log = getLogger("ssh_tunneling")
 
 class SSHLocalTunnel:
 
-    def __init__(self, remote_tunnel_port: int, ssh_host: str, ssh_port: int = 22):
+    def __init__(self, remote_target: Union[int, str], ssh_host: str, ssh_port: int = 22):
         """
-        Connect to a ssh remote host and tunnel a port to your host.
+        Connect to a ssh remote host and tunnel a port or unix socket to your host.
 
-        :param remote_tunnel_port: Port on the remote host to tunnel through ssh
+        :param remote_target: Port or unix socket path on the remote host to tunnel through ssh
         :param ssh_host: ssh remote host address
         :param ssh_port: ssh remote host port
         """
-        self._remote_tunnel_port = remote_tunnel_port
+        self._remote_target = remote_target
         self._ssh_host = ssh_host
         self._ssh_port = ssh_port
 
@@ -72,10 +72,15 @@ class SSHLocalTunnel:
                 config=None,  # Do not parse local config
             ) as conn:
                 self._conn = conn
-                # Forward local port 0 (dynamic) to remote 127.0.0.1:remote_tunnel_port
-                self._server = await conn.forward_local_port(
-                    '127.0.0.1', 0, '127.0.0.1', self._remote_tunnel_port
-                )
+                # Forward local port 0 (dynamic) to remote target (port or unix socket)
+                if isinstance(self._remote_target, int):
+                    self._server = await conn.forward_local_port(
+                        '127.0.0.1', 0, '127.0.0.1', self._remote_target
+                    )
+                else:
+                    self._server = await conn.forward_local_port_to_path(
+                        '127.0.0.1', 0, self._remote_target
+                    )
                 self._local_tunnel_port = self._server.get_port()
 
                 self._started.set()
