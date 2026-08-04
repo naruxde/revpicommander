@@ -19,7 +19,7 @@ setup(
     install_requires=[
         "keyring",
         "PyQt5",
-        "paramiko",
+        "asyncssh",
         "revpimodio2",
         "zeroconf"
     ],

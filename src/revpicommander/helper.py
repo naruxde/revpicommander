@@ -18,7 +18,7 @@ from uuid import uuid4
 from xmlrpc.client import Binary, ServerProxy, Transport
 
 from PyQt5 import QtCore
-from paramiko.ssh_exception import AuthenticationException
+import asyncssh
 
 from . import proginit as pi
 from .ssh_tunneling.server import SSHLocalTunnel
@@ -380,7 +380,7 @@ class ConnectionManager(QtCore.QThread):
                 if getattr(revpi_settings, "ssh_enable_revpipyload", False):
                     ssh_tunnel_server.send_cmd("sudo systemctl enable --now revpipyload")
 
-            except AuthenticationException:
+            except asyncssh.PermissionDenied:
                 self.connect_error.emit(
                     self.tr("Error"), self.tr(
                         "The combination of username and password was rejected from the SSH server.\n\n"
