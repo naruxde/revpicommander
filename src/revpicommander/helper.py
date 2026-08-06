@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """Helper functions for this application."""
 __author__ = "Sven Sager"
-__copyright__ = "Copyright (C) 2023 Sven Sager"
+__copyright__ = "Copyright (C) 2023-2026 Sven Sager"
 __license__ = "GPLv2"
 
 import pickle
@@ -206,7 +206,8 @@ class RevPiSettings:
         self._settings.setValue("port", self.port)
         self._settings.setValue("timeout", self.timeout)
 
-        self._settings.setValue("ssh_use_tunnel", self.ssh_use_tunnel)
+        # Disable SSH tunnel if unix socket is used. SSH will check the type on the remove system
+        self._settings.setValue("ssh_use_tunnel", self.ssh_use_tunnel and not self.is_unix_socket)
         self._settings.setValue("ssh_port", self.ssh_port)
         self._settings.setValue("ssh_user", self.ssh_user)
         self._settings.setValue("ssh_saved_password", self.ssh_saved_password)
