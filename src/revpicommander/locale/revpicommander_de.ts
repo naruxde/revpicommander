@@ -81,12 +81,12 @@ Nicht gespeicherte Änderungen gehen verloren.</translation>
 <context>
     <name>ConnectionManager</name>
     <message>
-        <location filename="../helper.py" line="411"/>
+        <location filename="../helper.py" line="472"/>
         <source>Error</source>
         <translation>Fehler</translation>
     </message>
     <message>
-        <location filename="../helper.py" line="361"/>
+        <location filename="../helper.py" line="422"/>
         <source>The combination of username and password was rejected from the SSH server.
 
 Try again.</source>
@@ -95,7 +95,7 @@ Try again.</source>
 Erneut versuchen.</translation>
     </message>
     <message>
-        <location filename="../helper.py" line="373"/>
+        <location filename="../helper.py" line="434"/>
         <source>Cannot connect to SSH server:
 
 {0}</source>
@@ -104,7 +104,7 @@ Erneut versuchen.</translation>
 {0}</translation>
     </message>
     <message>
-        <location filename="../helper.py" line="399"/>
+        <location filename="../helper.py" line="460"/>
         <source>Cannot connect to RevPiPyLoad service through SSH tunnel.
 
 Possible reasons:
@@ -119,7 +119,7 @@ Mögliche Ursachen:
 - Für 127.0.0.1 ist keine ACL-Berechtigung gesetzt.</translation>
     </message>
     <message>
-        <location filename="../helper.py" line="411"/>
+        <location filename="../helper.py" line="472"/>
         <source>Cannot connect to RevPiPyLoad XML-RPC service.
 
 Possible reasons:
@@ -140,52 +140,52 @@ Mögliche Ursachen:
 Für eine verschlüsselte Verbindung &apos;Über SSH verbinden&apos; verwenden oder auf dem RevPi &apos;sudo revpipyload_secure_installation&apos; ausführen, um den direkten Fernzugriff einzurichten.</translation>
     </message>
     <message>
-        <location filename="../helper.py" line="549"/>
+        <location filename="../helper.py" line="607"/>
         <source>Simulating</source>
         <translation>Simulation läuft</translation>
     </message>
     <message>
-        <location filename="../helper.py" line="552"/>
+        <location filename="../helper.py" line="610"/>
         <source>Not connected</source>
         <translation>Nicht verbunden</translation>
     </message>
     <message>
-        <location filename="../helper.py" line="569"/>
+        <location filename="../helper.py" line="627"/>
         <source>Server error</source>
         <translation>Serverfehler</translation>
     </message>
     <message>
-        <location filename="../helper.py" line="599"/>
+        <location filename="../helper.py" line="657"/>
         <source>Running</source>
         <translation>Läuft</translation>
     </message>
     <message>
-        <location filename="../helper.py" line="601"/>
+        <location filename="../helper.py" line="659"/>
         <source>PLC file not found</source>
         <translation>PLC-Datei nicht gefunden</translation>
     </message>
     <message>
-        <location filename="../helper.py" line="603"/>
+        <location filename="../helper.py" line="661"/>
         <source>Not running (no status)</source>
         <translation>Nicht aktiv (kein Status)</translation>
     </message>
     <message>
-        <location filename="../helper.py" line="605"/>
+        <location filename="../helper.py" line="663"/>
         <source>Program killed</source>
         <translation>Programm zwangsweise beendet</translation>
     </message>
     <message>
-        <location filename="../helper.py" line="607"/>
+        <location filename="../helper.py" line="665"/>
         <source>Program terminated</source>
         <translation>Programm beendet</translation>
     </message>
     <message>
-        <location filename="../helper.py" line="609"/>
+        <location filename="../helper.py" line="667"/>
         <source>Not running</source>
         <translation>Nicht gestartet</translation>
     </message>
     <message>
-        <location filename="../helper.py" line="611"/>
+        <location filename="../helper.py" line="669"/>
         <source>Finished with exit code {0}</source>
         <translation>Beendet mit Exit-Code {0}</translation>
     </message>
@@ -734,18 +734,18 @@ Nicht gespeicherte Änderungen gehen verloren.</translation>
 <context>
     <name>RevPiPlcList</name>
     <message>
-        <location filename="../revpiplclist.py" line="304"/>
+        <location filename="../revpiplclist.py" line="318"/>
         <source>Question</source>
         <translation>Frage</translation>
     </message>
     <message>
-        <location filename="../revpiplclist.py" line="135"/>
+        <location filename="../revpiplclist.py" line="138"/>
         <source>Quit without saving?
 Unsaved changes will be lost.</source>
         <translation>Ohne Speichern schließen? Nicht gespeicherte Änderungen gehen verloren.</translation>
     </message>
     <message>
-        <location filename="../revpiplclist.py" line="304"/>
+        <location filename="../revpiplclist.py" line="318"/>
         <source>If you remove this folder, all contained items will be removed as well.
 
 Do you want to delete the folder and all contained items?</source>
@@ -754,7 +754,7 @@ Do you want to delete the folder and all contained items?</source>
 Ordner und alle enthaltenen Elemente löschen?</translation>
     </message>
     <message>
-        <location filename="../revpiplclist.py" line="344"/>
+        <location filename="../revpiplclist.py" line="360"/>
         <source>New folder</source>
         <translation>Neuer Ordner</translation>
     </message>
@@ -1127,7 +1127,7 @@ Dies ist kein Fehler von RevPi Commander.</translation>
 <context>
     <name>diag_connections</name>
     <message>
-        <location filename="../../../ui_dev/revpiplclist.ui" line="202"/>
+        <location filename="../../../ui_dev/revpiplclist.ui" line="212"/>
         <source>Address</source>
         <translation>Adresse</translation>
     </message>
@@ -1139,7 +1139,7 @@ Dies ist kein Fehler von RevPi Commander.</translation>
     <message>
         <location filename="../../../ui_dev/revpiplclist.ui" line="40"/>
         <source>Address (DNS/IP):</source>
-        <translation>Adresse (DNS/IP):</translation>
+        <translation type="obsolete">Adresse (DNS/IP):</translation>
     </message>
     <message>
         <location filename="../../../ui_dev/revpiplclist.ui" line="76"/>
@@ -1172,29 +1172,44 @@ Dies ist kein Fehler von RevPi Commander.</translation>
         <translation>Unterordner:</translation>
     </message>
     <message>
-        <location filename="../../../ui_dev/revpiplclist.ui" line="125"/>
+        <location filename="../../../ui_dev/revpiplclist.ui" line="135"/>
         <source>Over SSH</source>
         <translation>Über SSH</translation>
     </message>
     <message>
-        <location filename="../../../ui_dev/revpiplclist.ui" line="131"/>
+        <location filename="../../../ui_dev/revpiplclist.ui" line="141"/>
         <source>Connect over SSH tunnel:</source>
         <translation>Über SSH-Tunnel verbinden:</translation>
     </message>
     <message>
-        <location filename="../../../ui_dev/revpiplclist.ui" line="148"/>
+        <location filename="../../../ui_dev/revpiplclist.ui" line="158"/>
         <source>SSH port:</source>
         <translation>SSH-Port:</translation>
     </message>
     <message>
-        <location filename="../../../ui_dev/revpiplclist.ui" line="165"/>
+        <location filename="../../../ui_dev/revpiplclist.ui" line="175"/>
         <source>SSH user name:</source>
         <translation>SSH-Benutzername:</translation>
     </message>
     <message>
-        <location filename="../../../ui_dev/revpiplclist.ui" line="197"/>
+        <location filename="../../../ui_dev/revpiplclist.ui" line="207"/>
         <source>Connection Name</source>
         <translation>Verbindungsname</translation>
+    </message>
+    <message>
+        <location filename="../../../ui_dev/revpiplclist.ui" line="40"/>
+        <source>Address (DNS/IP/Socket):</source>
+        <translation>Adresse (DNS/IP/Socket):</translation>
+    </message>
+    <message>
+        <location filename="../../../ui_dev/revpiplclist.ui" line="124"/>
+        <source>Use default local socket</source>
+        <translation type="obsolete">Lokalen Standardsocket benutzen:</translation>
+    </message>
+    <message>
+        <location filename="../../../ui_dev/revpiplclist.ui" line="124"/>
+        <source>Use default local socket:</source>
+        <translation>Lokalen Standardsocket benutzen:</translation>
     </message>
 </context>
 <context>
