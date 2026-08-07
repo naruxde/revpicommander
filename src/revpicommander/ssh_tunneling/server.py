@@ -187,13 +187,13 @@ class SSHLocalTunnel:
         except Exception:
             return True
 
-    def send_cmd(self, cmd: str, timeout: float = None) -> Union[Tuple[str, str], Tuple[None, None]]:
+    def send_cmd(self, cmd: str, timeout: float = None) -> Union[Tuple[str, str, int], Tuple[None, None, None]]:
         """
         Send simple command to ssh host.
 
         :param cmd: Shell command to execute on remote host
         :param timeout: Timeout for execution
-        :return: Tuple with stdout and stderr
+        :return: Tuple with stdout, stderr, exit status
         """
         if not self.connected:
             raise RuntimeError("Not connected")
@@ -201,15 +201,19 @@ class SSHLocalTunnel:
         # Running async command from sync context
         async def _exec():
             result = await self._conn.run(cmd, timeout=timeout)
-            return result.stdout, result.stderr
+            return result.stdout, result.stderr, result.exit_status
 
         try:
             future = asyncio.run_coroutine_threadsafe(_exec(), self._loop)
-            stdout, stderr = future.result(timeout=timeout)
-            return stdout, stderr
+            stdout, stderr, exit_status = future.result(timeout=timeout)
+            if type(stdout) is bytes:
+                stdout = stdout.decode(errors="ignore")
+            if type(stderr) is bytes:
+                stderr = stderr.decode(errors="ignore")
+            return stdout, stderr, exit_status
         except Exception as e:
             log.error(e)
-            return None, None
+            return None, None, None
 
     @property
     def connected(self):

@@ -383,7 +383,7 @@ class ConnectionManager(QtCore.QThread):
 
                 # Check for Unix socket on remote system
                 try:
-                    stdout, stderr = ssh_tunnel_server.send_cmd("cat /etc/revpipyload/revpipyload.conf")
+                    stdout, stderr, exit_code = ssh_tunnel_server.send_cmd("cat /etc/revpipyload/revpipyload.conf")
                     if stdout:
                         config = ConfigParser()
                         config.read_string(stdout)
