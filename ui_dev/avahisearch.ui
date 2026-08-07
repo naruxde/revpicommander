@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Search Revolution Pi devices</string>
+   <string>RevPi device search</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0" colspan="2">
@@ -19,7 +19,7 @@
      <item>
       <widget class="QLabel" name="lbl_search">
        <property name="text">
-        <string>Searching for Revolution Pi devices in your network...</string>
+        <string>Searching for RevPi devices on the network</string>
        </property>
       </widget>
      </item>
@@ -85,7 +85,7 @@
      </attribute>
      <column>
       <property name="text">
-       <string>Zero-conf name</string>
+       <string>ZeroConf name</string>
       </property>
      </column>
      <column>
@@ -98,7 +98,7 @@
    <item row="2" column="0">
     <widget class="QPushButton" name="btn_connect">
      <property name="text">
-      <string>&amp;Connect to Revolution Pi</string>
+      <string>&amp;Connect to RevPi</string>
      </property>
     </widget>
    </item>
@@ -132,7 +132,7 @@
   </action>
   <action name="act_open_pictory">
    <property name="text">
-    <string>Open piCtory</string>
+    <string>Open PiCtory</string>
    </property>
   </action>
   <action name="act_connect_ssh">
@@ -140,7 +140,7 @@
     <string>Connect via SSH (recommended)</string>
    </property>
    <property name="toolTip">
-    <string>Establish a connection via encrypted SSH tunnel</string>
+    <string>Connect via an encrypted SSH tunnel.</string>
    </property>
   </action>
   <action name="act_connect_xmlrpc">
@@ -148,7 +148,7 @@
     <string>Connect via XML-RPC</string>
    </property>
    <property name="toolTip">
-    <string>You have to configure your Revolution Pi to accept this connections</string>
+    <string>Enable these connections on RevPi.</string>
    </property>
   </action>
   <action name="act_connect">
@@ -156,7 +156,7 @@
     <string>Connect</string>
    </property>
    <property name="toolTip">
-    <string>Connect to Revoluton Pi</string>
+    <string>Connect to RevPi</string>
    </property>
   </action>
  </widget>

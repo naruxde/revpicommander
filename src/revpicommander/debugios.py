@@ -266,12 +266,12 @@ class DebugIos(QtWidgets.QMainWindow, Ui_win_debugios):
             switching_cycles = helper.cm.call_remote_function(
                 "ps_switching_cycles",
                 sender.objectName(),
-                default_value=self.tr("Can not display"),
+                default_value=self.tr("Cannot display"),
             )
             if type(switching_cycles) is not list:
                 switching_cycles = [switching_cycles]
             for i in range(len(switching_cycles)):
-                relais_counter = self.tr(" Relais {0}").format(i + 1)
+                relais_counter = self.tr(" Relay {0}").format(i + 1)
                 if len(switching_cycles) == 1:
                     relais_counter = ""
                 men.addAction(
@@ -284,29 +284,29 @@ class DebugIos(QtWidgets.QMainWindow, Ui_win_debugios):
 
         if sender.property("byte_length") > 4:
             # Textbox needs format buttons
-            act_as_text = QtWidgets.QAction(self.tr("as text"))
+            act_as_text = QtWidgets.QAction(self.tr("As text"))
             men.addAction(act_as_text)
-            act_as_number = QtWidgets.QAction(self.tr("as number"))
+            act_as_number = QtWidgets.QAction(self.tr("As number"))
             men.addAction(act_as_number)
             men.addSeparator()
         else:
             act_as_text = None
             act_as_number = None
 
-        act_signed = QtWidgets.QAction(self.tr("signed"), men)
+        act_signed = QtWidgets.QAction(self.tr("Signed"), men)
         act_signed.setCheckable(True)
         act_signed.setChecked(sender.property("signed") or False)
         if sender.property("bit_address") == -1:
             men.addAction(act_signed)
 
-        act_byteorder = QtWidgets.QAction(self.tr("big_endian"), men)
+        act_byteorder = QtWidgets.QAction(self.tr("Big-endian"), men)
         act_byteorder.setCheckable(True)
         act_byteorder.setChecked(sender.property("big_endian") or False)
         if sender.property("bit_address") == -1:
             men.addAction(act_byteorder)
 
         if sender.property("byte_length") > 2:
-            act_wordorder = QtWidgets.QAction(self.tr("switch wordorder"))
+            act_wordorder = QtWidgets.QAction(self.tr("Swap word order"))
             act_wordorder.setCheckable(True)
             act_wordorder.setChecked(sender.property("word_order") == "big")
             men.addAction(act_wordorder)
@@ -338,7 +338,7 @@ class DebugIos(QtWidgets.QMainWindow, Ui_win_debugios):
                 helper.cm.call_remote_function("ps_reset_counter", sender.objectName(), raise_exception=True)
             except Exception as e:
                 log.error(e)
-                QtWidgets.QMessageBox.critical(self, self.tr("Error"), self.tr("Could not reset the counter value"))
+                QtWidgets.QMessageBox.critical(self, self.tr("Error"), self.tr("Cannot reset counter value."))
 
         if sender.property("frm"):
             sender.setProperty("frm", "{0}{1}".format(
@@ -451,8 +451,8 @@ class DebugIos(QtWidgets.QMainWindow, Ui_win_debugios):
                 except UnicodeDecodeError:
                     child.setProperty("struct_type", "number")
                     QtWidgets.QMessageBox.warning(
-                        self, self.tr("Can not use format text"), self.tr(
-                            "Can not convert bytes {0} to a text for IO '{1}'. Switch to number format instead!"
+                        self, self.tr("Cannot use text format."), self.tr(
+                            "Cannot convert bytes {0} to text for I/O '{1}'. Switch to number format instead."
                         ).format(value, io_name)
                     )
             if child.property("struct_type") == "number":

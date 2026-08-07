@@ -135,7 +135,7 @@ class DebugControl(QtWidgets.QWidget, Ui_wid_debugcontrol):
         self.cbx_refresh.setChecked(False)
         for win in self.dict_windows.values():  # type: DebugIos
             win.stat_bar.showMessage(
-                self.tr("Driver reset for piControl detected."),
+                self.tr("piControl driver reset detected"),
                 10000
             )
         self.reload_devices()
@@ -175,7 +175,7 @@ class DebugControl(QtWidgets.QWidget, Ui_wid_debugcontrol):
                 for win in self.dict_windows.values():  # type: DebugIos
                     win.stat_bar.setStyleSheet("background-color: red;")
                     win.stat_bar.showMessage(self.tr(
-                        "Error while getting values from Revolution Pi."
+                        "Error while getting values from RevPi"
                     ), 5000)
 
             return
@@ -229,9 +229,9 @@ class DebugControl(QtWidgets.QWidget, Ui_wid_debugcontrol):
                     win.set_value(io[0], value_procimg)
 
                 if self.cbx_refresh.isChecked():
-                    win.stat_bar.showMessage(self.tr("Auto update values..."), 1000)
+                    win.stat_bar.showMessage(self.tr("Updating values"), 1000)
                 else:
-                    win.stat_bar.showMessage(self.tr("Values updated..."), 2000)
+                    win.stat_bar.showMessage(self.tr("Values updated"), 2000)
 
                 if self.driver_reset_detected:
                     # Show values, which we can recover to empty process image
@@ -269,7 +269,7 @@ class DebugControl(QtWidgets.QWidget, Ui_wid_debugcontrol):
                 # Create error message
                 device_name = self.dict_devices[lst_result[0]]
                 str_errmsg += self.tr(
-                    "Error set value of device '{0}' Output '{1}': {2}\n"
+                    "Error setting value for device '{0}', output '{1}': {2}\n"
                 ).format(device_name, lst_result[1], lst_result[3])
             else:
                 self.dict_windows[lst_result[0]].reset_change_value_colors(lst_result[1])

@@ -17,7 +17,7 @@
    <item>
     <widget class="QLabel" name="lbl_status">
      <property name="text">
-      <string notr="true">Status message...</string>
+      <string notr="true">Status message</string>
      </property>
     </widget>
    </item>

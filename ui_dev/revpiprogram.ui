@@ -11,33 +11,33 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>PLC program</string>
+   <string>PLC Program</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <widget class="QGroupBox" name="gb_plc">
      <property name="title">
-      <string>PLC program</string>
+      <string>PLC Program</string>
      </property>
      <layout class="QGridLayout" name="gridLayout">
       <item row="2" column="0">
        <widget class="QLabel" name="lbl_plcarguments">
         <property name="text">
-         <string>Program arguments:</string>
+         <string>Arguments:</string>
         </property>
        </widget>
       </item>
       <item row="4" column="0" colspan="2">
        <widget class="QLabel" name="lbl_plcprogram_watchdog">
         <property name="text">
-         <string>Software watchdog (0=disabled):</string>
+         <string>Software watchdog (0 = disabled):</string>
         </property>
        </widget>
       </item>
       <item row="3" column="0" colspan="3">
        <widget class="QCheckBox" name="cbx_plcworkdir_set_uid">
         <property name="text">
-         <string>Set write permissions for plc program to workdirectory</string>
+         <string>Set write permissions for PLC program working directory</string>
         </property>
        </widget>
       </item>
@@ -57,7 +57,7 @@
       <item row="4" column="2">
        <widget class="QSpinBox" name="sbx_plcprogram_watchdog">
         <property name="suffix">
-         <string> sec.</string>
+         <string> s</string>
         </property>
         <property name="maximum">
          <number>600</number>
@@ -70,7 +70,7 @@
    <item>
     <widget class="QGroupBox" name="cb_transfair">
      <property name="title">
-      <string>Transfair PLC program</string>
+      <string>Transfer PLC program</string>
      </property>
      <layout class="QGridLayout" name="gridLayout_2">
       <item row="0" column="1">
@@ -104,21 +104,21 @@
       <item row="0" column="0">
        <widget class="QLabel" name="lbl_format">
         <property name="text">
-         <string>Transfair format:</string>
+         <string>Transfer format:</string>
         </property>
        </widget>
       </item>
       <item row="1" column="0" colspan="2">
        <widget class="QCheckBox" name="cbx_pictory">
         <property name="text">
-         <string>Including piCtory configuration</string>
+         <string>Include PiCtory configuration</string>
         </property>
        </widget>
       </item>
       <item row="2" column="0" colspan="2">
        <widget class="QCheckBox" name="cbx_clear">
         <property name="text">
-         <string>Remove all files on Revolution Pi before upload</string>
+         <string>Remove all files on RevPi before upload</string>
         </property>
        </widget>
       </item>
@@ -128,7 +128,7 @@
    <item>
     <widget class="QGroupBox" name="gb_control">
      <property name="title">
-      <string>Control files</string>
+      <string>Control Files</string>
      </property>
      <layout class="QGridLayout" name="gridLayout_3">
       <item row="1" column="1">
@@ -155,14 +155,14 @@
       <item row="0" column="0">
        <widget class="QLabel" name="lbl_pictory">
         <property name="text">
-         <string>piCtory configuraiton</string>
+         <string>PiCtory configuration</string>
         </property>
        </widget>
       </item>
       <item row="1" column="0">
        <widget class="QLabel" name="lbl_procimg">
         <property name="text">
-         <string>Process image from piControl0</string>
+         <string>Process image from piControl</string>
         </property>
        </widget>
       </item>

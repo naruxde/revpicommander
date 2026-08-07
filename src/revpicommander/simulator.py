@@ -77,9 +77,9 @@ class Simulator(QtWidgets.QDialog, Ui_diag_simulator):
     @QtCore.pyqtSlot()
     def on_btn_configrsc_clicked(self) -> None:
         diag_open = QtWidgets.QFileDialog(
-            self, self.tr("Select downloaded piCtory file..."),
+            self, self.tr("Select downloaded PiCtory file"),
             helper.settings.value("simulator/last_dir", ".", str),
-            self.tr("piCtory file (*.rsc);;All files (*.*)")
+            self.tr("PiCtory file (*.rsc);;All files (*.*)")
         )
         diag_open.setAcceptMode(QtWidgets.QFileDialog.AcceptOpen)
         diag_open.setFileMode(QtWidgets.QFileDialog.ExistingFile)

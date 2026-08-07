@@ -17,20 +17,20 @@
    <item>
     <widget class="QGroupBox" name="gb_plc">
      <property name="title">
-      <string>Start / Stop behavior of PLC program</string>
+      <string>PLC Start/Stop Behavior</string>
      </property>
      <layout class="QGridLayout" name="gridLayout">
       <item row="6" column="0">
        <widget class="QLabel" name="lbl_replace_io">
         <property name="text">
-         <string>Replace IO file:</string>
+         <string>Replace I/O file:</string>
         </property>
        </widget>
       </item>
       <item row="5" column="1" colspan="2">
        <widget class="QCheckBox" name="cbx_zeroonerror">
         <property name="text">
-         <string>... after exception and errors</string>
+         <string>after exceptions or errors</string>
         </property>
        </widget>
       </item>
@@ -50,7 +50,7 @@
         </item>
         <item>
          <property name="text">
-          <string>Restart after piCtory changed</string>
+          <string>Restart after PiCtory changes</string>
          </property>
         </item>
         <item>
@@ -70,7 +70,7 @@
       <item row="3" column="0" colspan="3">
        <widget class="QLabel" name="lbl_plc_zero">
         <property name="text">
-         <string>Set process image to NULL if program terminates...</string>
+         <string>Set process image to NULL if the program terminates</string>
         </property>
        </widget>
       </item>
@@ -78,7 +78,7 @@
        <widget class="QComboBox" name="cbb_replace_io">
         <item>
          <property name="text">
-          <string>Do not use replace io file</string>
+          <string>Do not replace I/O file</string>
          </property>
         </item>
         <item>
@@ -93,7 +93,7 @@
         </item>
         <item>
          <property name="text">
-          <string>Give own path and filename</string>
+          <string>Use custom path and file name</string>
          </property>
         </item>
        </widget>
@@ -101,7 +101,7 @@
       <item row="4" column="1" colspan="2">
        <widget class="QCheckBox" name="cbx_zeroonexit">
         <property name="text">
-         <string>... sucessfully without error</string>
+         <string>without errors</string>
         </property>
        </widget>
       </item>
@@ -135,7 +135,7 @@
       <item row="9" column="0" colspan="3">
        <widget class="QLabel" name="lbl_lbl_reset_driver_action">
         <property name="text">
-         <string>PLC program behavior after piCtory driver reset clicked</string>
+         <string>PLC program behavior after PiCtory driver reset</string>
         </property>
        </widget>
       </item>
@@ -145,7 +145,7 @@
    <item>
     <widget class="QGroupBox" name="gb_server">
      <property name="title">
-      <string>RevPiPyLoad server services</string>
+      <string>RevPiPyLoad Server Services</string>
      </property>
      <layout class="QGridLayout" name="gridLayout_2">
       <item row="0" column="1">
@@ -165,7 +165,7 @@
       <item row="0" column="0">
        <widget class="QCheckBox" name="cbx_plcserver">
         <property name="text">
-         <string>Start RevPi piControl server</string>
+         <string>Start piControl server</string>
         </property>
        </widget>
       </item>
@@ -182,7 +182,7 @@
       <item row="1" column="0">
        <widget class="QLabel" name="lbl_lbl_server_status">
         <property name="text">
-         <string>piControl server is:</string>
+         <string>piControl server:</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -202,7 +202,7 @@
       <item row="3" column="0">
        <widget class="QLabel" name="lbl_lbl_mqtt_status">
         <property name="text">
-         <string>MQTT publish service is:</string>
+         <string>MQTT publish service:</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -226,7 +226,7 @@
       <item row="4" column="0">
        <widget class="QCheckBox" name="cbx_xmlrpc">
         <property name="text">
-         <string>Activate XML-RPC for RevPiCommander</string>
+         <string>Activate XML-RPC for RevPi Commander</string>
         </property>
        </widget>
       </item>

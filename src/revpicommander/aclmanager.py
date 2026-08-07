@@ -57,10 +57,10 @@ class AclManager(QtWidgets.QDialog, Ui_diag_aclmanager):
                 self.__mrk_message_shown += 1
                 QtWidgets.QMessageBox.critical(
                     self, self.tr("Error"), self.tr(
-                        "There are errors in the ACL list!\nCheck the ALC levels of the "
-                        "red lines in the table. The ACL levels or ip addresses are "
-                        "invalid. If you save this dialog again, we will remove the "
-                        "wrong entries automatically."
+                        "ACL list contains errors.\nCheck rows highlighted in red. "
+                        "The ACL levels or IP addresses are invalid. "
+                        "If you save this dialog, invalid entries will be "
+                        "removed automatically."
                     )
                 )
                 return True
@@ -97,7 +97,7 @@ class AclManager(QtWidgets.QDialog, Ui_diag_aclmanager):
         if self._changes_done():
             ask = QtWidgets.QMessageBox.question(
                 self, self.tr("Question"), self.tr(
-                    "Do you really want to quit? \nUnsaved changes will be lost"
+                    "Quit without saving?\nUnsaved changes will be lost."
                 )
             ) == QtWidgets.QMessageBox.Yes
 
@@ -126,7 +126,7 @@ class AclManager(QtWidgets.QDialog, Ui_diag_aclmanager):
         while self.tb_acls.rowCount() > 0:
             self.tb_acls.removeRow(0)
         self.cbb_level.clear()
-        self.cbb_level.addItem(self.tr("Select..."), -1)
+        self.cbb_level.addItem(self.tr("Select"), -1)
         self.lbl_level_info.clear()
 
         self.__re_ipacl = compile(
@@ -186,9 +186,9 @@ class AclManager(QtWidgets.QDialog, Ui_diag_aclmanager):
             has_error = False
             tool_tip = ""
         else:
-            brush = QtGui.QBrush(QtGui.QColor("red"))
+            brush = QtGui.QBrush(QtGui.QColor("#CC6666"))
             has_error = True
-            tool_tip = self.tr("This entry has an invalid ACL level or wrong IP format!")
+            tool_tip = self.tr("Invalid ACL level or IP address format.")
 
         for row in range(self.tb_acls.rowCount()):
             item_0 = self.tb_acls.item(row, 0)
@@ -370,8 +370,8 @@ class AclManager(QtWidgets.QDialog, Ui_diag_aclmanager):
         else:
             QtWidgets.QMessageBox.critical(
                 self, self.tr("Error"), self.tr(
-                    "Can not save new ACL entry! Check format of ip address "
-                    "and acl level is in value list."
+                    "Cannot save ACL entry. Check IP address format "
+                    "and ACL level."
                 )
             )
 

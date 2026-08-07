@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Program information</string>
+   <string>Program Information</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0" colspan="3">
@@ -24,7 +24,7 @@
       </font>
      </property>
      <property name="text">
-      <string>RevPi Python PLC - Commander</string>
+      <string>RevPi Commander (Python/PLC)</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>
@@ -114,8 +114,7 @@
      </property>
      <property name="text">
       <string>RevPiModIO, RevPiPyLoad and RevPiPyControl are community driven projects. They are all free and open source software.
-All of them comes with ABSOLUTELY NO WARRANTY, to the extent permitted by
-applicable law.
+All of them come with ABSOLUTELY NO WARRANTY, to the extent permitted by applicable law.
 
 (c) Sven Sager, License: GPLv2</string>
      </property>
@@ -140,7 +139,7 @@ applicable law.
    <item row="6" column="0" colspan="2">
     <widget class="QLabel" name="lbl_link">
      <property name="text">
-      <string notr="true">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;https://revpimodio.org/&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;https://revpimodio.org/&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      <string notr="true">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;https://revpimodio2.readthedocs.io/en/latest/&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;https://revpimodio2.readthedocs.io/en/latest/&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
      <property name="openExternalLinks">
       <bool>true</bool>

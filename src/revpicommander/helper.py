@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """Helper functions for this application."""
 __author__ = "Sven Sager"
-__copyright__ = "Copyright (C) 2023 Sven Sager"
+__copyright__ = "Copyright (C) 2023-2026 Sven Sager"
 __license__ = "GPLv2"
 
 import pickle
@@ -15,10 +15,11 @@ from queue import Queue
 from re import search
 from threading import Lock
 from uuid import uuid4
-from xmlrpc.client import Binary, ServerProxy
+from xmlrpc.client import Binary, ServerProxy, Transport
+from configparser import ConfigParser
 
 from PyQt5 import QtCore
-from paramiko.ssh_exception import AuthenticationException
+import asyncssh
 
 from . import proginit as pi
 from .ssh_tunneling.server import SSHLocalTunnel
@@ -30,6 +31,21 @@ settings = QtCore.QSettings("revpimodio.org", "revpicommander")
 
 homedir = environ.get("HOME", "") or environ.get("APPDATA", "")
 """Home dir of user."""
+
+
+class UnixStreamTransport(Transport):
+    """Transport for xmlrpc to use unix domain sockets."""
+
+    def __init__(self, socket_path):
+        super().__init__()
+        self._socket_path = socket_path
+
+    def make_connection(self, host):
+        import http.client
+        conn = http.client.HTTPConnection("localhost")
+        conn.sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+        conn.sock.connect(self._socket_path)
+        return conn
 
 
 class ConnectionFail(IntEnum):
@@ -91,6 +107,11 @@ class RevPiSettings:
         if load_index is not None:
             self.load_from_index(load_index)
 
+    @property
+    def is_unix_socket(self) -> bool:
+        """Check if connection is a unix domain socket."""
+        return self.address.startswith("/") or self.address.startswith("./")
+
     def load_from_index(self, settings_index: int) -> None:
         """Load settings from 'connections' index."""
         self._settings.beginReadArray("connections")
@@ -129,8 +150,11 @@ class RevPiSettings:
             pass
 
         # These values must exists
-        if not (self.name and self.address and self.port):
-            raise ValueError("Could not geht all required values from saved settings")
+        if not (self.name and self.address):
+            raise ValueError("Could not get all required values from saved settings")
+
+        if not self.is_unix_socket and not self.port:
+            raise ValueError("Port is required for IP connections")
 
         self._settings.endArray()
 
@@ -182,7 +206,8 @@ class RevPiSettings:
         self._settings.setValue("port", self.port)
         self._settings.setValue("timeout", self.timeout)
 
-        self._settings.setValue("ssh_use_tunnel", self.ssh_use_tunnel)
+        # Disable SSH tunnel if unix socket is used. SSH will check the type on the remove system
+        self._settings.setValue("ssh_use_tunnel", self.ssh_use_tunnel and not self.is_unix_socket)
         self._settings.setValue("ssh_port", self.ssh_port)
         self._settings.setValue("ssh_user", self.ssh_user)
         self._settings.setValue("ssh_saved_password", self.ssh_saved_password)
@@ -342,10 +367,12 @@ class ConnectionManager(QtCore.QThread):
 
         ssh_tunnel_server = None
         ssh_tunnel_port = 0
+        ssh_tunnel_socket = None
 
         socket.setdefaulttimeout(revpi_settings.timeout)
 
         if revpi_settings.ssh_use_tunnel:
+            # We first connect to find out which target to tunnel
             ssh_tunnel_server = SSHLocalTunnel(
                 revpi_settings.port,
                 revpi_settings.address,
@@ -354,10 +381,68 @@ class ConnectionManager(QtCore.QThread):
             try:
                 ssh_tunnel_port = ssh_tunnel_server.connect_by_credentials(revpi_settings.ssh_user, ssh_pass)
 
-                if getattr(revpi_settings, "ssh_enable_revpipyload", False):
-                    ssh_tunnel_server.send_cmd("sudo systemctl enable --now revpipyload")
+                # Check for Unix socket on remote system
+                try:
+                    stdout, stderr, exit_code = ssh_tunnel_server.send_cmd("cat /etc/revpipyload/revpipyload.conf")
+                    if stdout:
+                        config = ConfigParser()
+                        config.read_string(stdout)
+                        if config.has_section("XMLRPC"):
+                            bindip = config.get("XMLRPC", "bindip", fallback="").strip()
+                            if bindip == "socket":
+                                ssh_tunnel_socket = "/run/revpipyload/xmlrpc.socket"
+                            elif bindip.startswith("/") or bindip.startswith("./"):
+                                ssh_tunnel_socket = bindip
 
-            except AuthenticationException:
+                        if ssh_tunnel_socket:
+                            log.debug("Using remote unix socket: %s", ssh_tunnel_socket)
+                            # Forward local port 0 (dynamic) to remote unix socket
+                            ssh_tunnel_server.disconnect()
+                            ssh_tunnel_server = SSHLocalTunnel(
+                                ssh_tunnel_socket,
+                                revpi_settings.address,
+                                revpi_settings.ssh_port
+                            )
+                            ssh_tunnel_port = ssh_tunnel_server.connect_by_credentials(
+                                revpi_settings.ssh_user, ssh_pass
+                            )
+                        else:
+                            log.debug("Using remote TCP socket: %s", bindip)
+
+                except Exception as e:
+                    log.warning(f"Could not check remote config for unix socket: {e}")
+
+                if getattr(revpi_settings, "ssh_enable_revpipyload", False):
+                    cmd_activate_pyload = "systemctl enable --now revpipyload"
+
+                    # Test sudo requires password authentication
+                    _, _, exit_code = ssh_tunnel_server.send_cmd("sudo -n true")
+                    if exit_code == 0:
+                        # No password required
+                        ssh_tunnel_server.send_cmd(f"sudo {cmd_activate_pyload}")
+                    else:
+                        # Execute command with sudo password
+                        _, _, exit_code = ssh_tunnel_server.send_cmd(
+                            f"sudo -S {cmd_activate_pyload}",
+                            stdin=ssh_pass,
+                        )
+                        if exit_code != 0:
+                            log.error(
+                                "Sudo authentification failed for user %s",
+                                revpi_settings.ssh_user,
+                            )
+                            self.connect_error.emit(
+                                self.tr("Error"), self.tr(
+                                    "Can not activate RevPiPyLoad on remote RevPi.\n"
+                                    f"Sudo authentification failed for user {revpi_settings.ssh_user}. "
+                                    "Please activate RevPiPyLoad manually via Cockpit or CLI."
+                                ),
+                                ConnectionFail.NO_XML_RPC_VIA_TUNNEL,
+                                revpi_settings,
+                            )
+                            return False
+
+            except asyncssh.PermissionDenied:
                 self.connect_error.emit(
                     self.tr("Error"), self.tr(
                         "The combination of username and password was rejected from the SSH server.\n\n"
@@ -372,17 +457,17 @@ class ConnectionManager(QtCore.QThread):
                 self._clear_settings()
                 self.connect_error.emit(
                     self.tr("Error"), self.tr(
-                        "Could not establish a SSH connection to server:\n\n{0}"
+                        "Cannot connect to SSH server:\n\n{0}"
                     ).format(str(e)),
                     ConnectionFail.SSH_CONNECT,
                     revpi_settings,
                 )
                 return False
 
-            sp = ServerProxy("http://127.0.0.1:{0}".format(ssh_tunnel_port))
+            sp = create_server_proxy(revpi_settings, ssh_tunnel_port)
 
         else:
-            sp = ServerProxy("http://{0}:{1}".format(revpi_settings.address, revpi_settings.port))
+            sp = create_server_proxy(revpi_settings)
 
         # Load values and test connection to Revolution Pi
         try:
@@ -398,11 +483,11 @@ class ConnectionManager(QtCore.QThread):
             if revpi_settings.ssh_use_tunnel:
                 self.connect_error.emit(
                     self.tr("Error"), self.tr(
-                        "Can not connect to RevPiPyLoad service through SSH tunnel!\n\n"
-                        "This could have the following reasons:\n"
-                        "- The RevPiPyLoad service is not running (activate it on your Revolution Pi)\n"
-                        "- The RevPiPyLoad XML-RPC service is NOT bind to localhost\n"
-                        "- The ACL permission is not set for 127.0.0.1!!!"
+                        "Cannot connect to RevPiPyLoad service through SSH tunnel.\n\n"
+                        "Possible reasons:\n"
+                        "- RevPiPyLoad service is not running. Activate service on your RevPi.\n"
+                        "- RevPiPyLoad XML-RPC service is not bound to localhost.\n"
+                        "- ACL permission is not set for 127.0.0.1."
                     ),
                     ConnectionFail.NO_XML_RPC_VIA_TUNNEL,
                     revpi_settings,
@@ -410,14 +495,14 @@ class ConnectionManager(QtCore.QThread):
             else:
                 self.connect_error.emit(
                     self.tr("Error"), self.tr(
-                        "Can not connect to RevPiPyLoad XML-RPC service! \n\n"
-                        "This could have the following reasons:\n"
-                        "- The Revolution Pi is not online\n"
-                        "- The RevPiPyLoad service is not running (activate it on your Revolution Pi)\n"
-                        "- The RevPiPyLoad XML-RPC service is bind to localhost, only\n"
-                        "- The ACL permission is not set for your IP!!!\n\n"
-                        "Use 'Connect via SSH' to use an encrypted connection or run "
-                        "'sudo revpipyload_secure_installation' on Revolution Pi to setup direct remote access!"
+                        "Cannot connect to RevPiPyLoad XML-RPC service.\n\n"
+                        "Possible reasons:\n"
+                        "- RevPi is offline.\n"
+                        "- RevPiPyLoad service is not running. Activate service on your RevPi.\n"
+                        "- RevPiPyLoad XML-RPC service is bound to localhost only.\n"
+                        "- The ACL permission is not set for your IP.\n\n"
+                        "Use 'Connect via SSH' to use encrypted connection or run "
+                        "'sudo revpipyload_secure_installation' on RevPi to set up direct remote access."
                     ),
                     ConnectionFail.NO_XML_RPC,
                     revpi_settings,
@@ -435,10 +520,7 @@ class ConnectionManager(QtCore.QThread):
         with self._lck_cli:
             self.ssh_tunnel_server = ssh_tunnel_server
             self._cli = sp
-            self._cli_connect.put_nowait((
-                "127.0.0.1" if revpi_settings.ssh_use_tunnel else revpi_settings.address,
-                ssh_tunnel_port if revpi_settings.ssh_use_tunnel else revpi_settings.port
-            ))
+            self._cli_connect.put_nowait((revpi_settings, ssh_tunnel_port))
 
         self.connection_established.emit()
 
@@ -546,14 +628,14 @@ class ConnectionManager(QtCore.QThread):
 
             if self._revpi is not None:
                 sp = None
-                self.status_changed.emit(self.tr("SIMULATING"), "yellow")
+                self.status_changed.emit(self.tr("Simulating"), "#E3DE48")
             elif self._cli is None:
                 sp = None
-                self.status_changed.emit(self.tr("NOT CONNECTED"), "lightblue")
+                self.status_changed.emit(self.tr("Not connected"), "lightblue")
             elif not self._cli_connect.empty():
                 # Get new connection information to create object in this thread
-                item = self._cli_connect.get()
-                sp = ServerProxy("http://{0}:{1}".format(*item))
+                revpi_settings, ssh_tunnel_port = self._cli_connect.get()
+                sp = create_server_proxy(revpi_settings, ssh_tunnel_port)
                 self._cli_connect.task_done()
 
             if sp:
@@ -566,7 +648,7 @@ class ConnectionManager(QtCore.QThread):
                     log.warning(e)
                 except Exception as e:
                     log.warning(e)
-                    self.status_changed.emit(self.tr("SERVER ERROR"), "red")
+                    self.status_changed.emit(self.tr("Server error"), "#CC6666")
                     self._has_error = True
                     self.connection_error_observed.emit("{0} | {1}".format(e, type(e)))
 
@@ -582,7 +664,7 @@ class ConnectionManager(QtCore.QThread):
                                 self.settings.ssh_user,
                                 self.ssh_pass
                             )
-                            sp = ServerProxy("http://127.0.0.1:{0}".format(ssh_tunnel_port))
+                            sp = create_server_proxy(self.settings, ssh_tunnel_port)
                             with self._lck_cli:
                                 self.ssh_tunnel_server = ssh_tunnel_server
                                 self._cli = sp
@@ -596,19 +678,19 @@ class ConnectionManager(QtCore.QThread):
                         self.connection_recovered.emit()
 
                     if plc_exit_code == -1:
-                        self.status_changed.emit(self.tr("RUNNING"), "green")
+                        self.status_changed.emit(self.tr("Running"), "green")
                     elif plc_exit_code == -2:
-                        self.status_changed.emit(self.tr("PLC FILE NOT FOUND"), "red")
+                        self.status_changed.emit(self.tr("PLC file not found"), "#CC6666")
                     elif plc_exit_code == -3:
-                        self.status_changed.emit(self.tr("NOT RUNNING (NO STATUS)"), "yellow")
+                        self.status_changed.emit(self.tr("Not running (no status)"), "#E3DE48")
                     elif plc_exit_code == -9:
-                        self.status_changed.emit(self.tr("PROGRAM KILLED"), "red")
+                        self.status_changed.emit(self.tr("Program killed"), "#CC6666")
                     elif plc_exit_code == -15:
-                        self.status_changed.emit(self.tr("PROGRAM TERMED"), "red")
+                        self.status_changed.emit(self.tr("Program terminated"), "#CC6666")
                     elif plc_exit_code == 0:
-                        self.status_changed.emit(self.tr("NOT RUNNING"), "yellow")
+                        self.status_changed.emit(self.tr("Not running"), "#E3DE48")
                     else:
-                        self.status_changed.emit(self.tr("FINISHED WITH CODE {0}").format(plc_exit_code), "yellow")
+                        self.status_changed.emit(self.tr("Finished with exit code {0}").format(plc_exit_code), "#E3DE48")
 
             self.msleep(self._cycle_time)
 
@@ -669,12 +751,8 @@ class ConnectionManager(QtCore.QThread):
 
         Use connection_recovered signal to figure out new parameters.
         """
-        if not self.settings.ssh_use_tunnel and self.settings.address and self.settings.port:
-            return ServerProxy("http://{0}:{1}".format(self.settings.address, self.settings.port))
-        if self.settings.ssh_use_tunnel and self.ssh_tunnel_server and self.ssh_tunnel_server.connected:
-            return ServerProxy("http://127.0.0.1:{0}".format(self.ssh_tunnel_server.local_tunnel_port))
-
-        return None
+        ssh_tunnel_port = self.ssh_tunnel_server.local_tunnel_port if self.ssh_tunnel_server else None
+        return create_server_proxy(self.settings, ssh_tunnel_port)
 
     @property
     def connected(self) -> bool:
@@ -697,6 +775,27 @@ class ConnectionManager(QtCore.QThread):
 
 cm = ConnectionManager()
 """Clobal connection manager instance."""
+
+
+def create_server_proxy(revpi_settings: RevPiSettings, ssh_tunnel_port: int = None) -> ServerProxy:
+    """
+    Create a ServerProxy instance based on the given settings.
+
+    :param revpi_settings: Revolution Pi saved connection settings
+    :param ssh_tunnel_port: Use this port if an SSH tunnel is already established
+    :return: ServerProxy instance
+    """
+    if not ssh_tunnel_port and revpi_settings.is_unix_socket:
+        return ServerProxy("http://localhost", transport=UnixStreamTransport(revpi_settings.address))
+
+    if ssh_tunnel_port:
+        return ServerProxy("http://127.0.0.1:{0}".format(ssh_tunnel_port))
+
+    if revpi_settings.ssh_use_tunnel:
+        # This case is usually handled by passing ssh_tunnel_port after connecting the tunnel
+        return ServerProxy("http://127.0.0.1:{0}".format(revpi_settings.port))
+
+    return ServerProxy("http://{0}:{1}".format(revpi_settings.address, revpi_settings.port))
 
 
 def all_revpi_settings() -> [RevPiSettings]:

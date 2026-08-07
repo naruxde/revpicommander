@@ -105,7 +105,7 @@ class RevPiProgram(QtWidgets.QDialog, Ui_diag_program):
         if self.cbb_plcprogram.currentText() == "":
             QtWidgets.QMessageBox.critical(
                 self, self.tr("Error"), self.tr(
-                    "You have to select a start program, before uploading the "
+                    "You must select a start program before uploading the "
                     "settings."
                 )
             )
@@ -113,9 +113,9 @@ class RevPiProgram(QtWidgets.QDialog, Ui_diag_program):
 
         ask = QtWidgets.QMessageBox.question(
             self, self.tr("Question"), self.tr(
-                "The settings will be set on the Revolution Pi now.\n\n"
-                "If you made changes on the 'PCL Program' section, your plc "
-                "program will restart now!"
+                "Saving settings on RevPi.\n\n"
+                "If you made changes in the 'PLC Program' section, your PLC "
+                "program will be restarted."
             )
         ) == QtWidgets.QMessageBox.Yes
 
@@ -137,9 +137,9 @@ class RevPiProgram(QtWidgets.QDialog, Ui_diag_program):
         else:
             QtWidgets.QMessageBox.critical(
                 self, self.tr("Error"), self.tr(
-                    "The settings could not be saved on the Revolution Pi!\n"
-                    "Try to save the values one mor time and check the log "
-                    "files of RevPiPyLoad if the error rises again."
+                    "Cannot save settings on RevPi.\n"
+                    "Try saving the values one more time and check the "
+                    "RevPiPyLoad log files if the error occurs again."
                 )
             )
 
@@ -147,7 +147,7 @@ class RevPiProgram(QtWidgets.QDialog, Ui_diag_program):
         if self._changesdone():
             ask = QtWidgets.QMessageBox.question(
                 self, self.tr("Question"), self.tr(
-                    "Do you really want to quit? \nUnsaved changes will be lost."
+                    "Quit without saving?\nUnsaved changes will be lost."
                 )
             ) == QtWidgets.QMessageBox.Yes
 
@@ -186,10 +186,10 @@ class RevPiProgram(QtWidgets.QDialog, Ui_diag_program):
         fh.close()
 
         ask = QtWidgets.QMessageBox.question(
-            self, self.tr("Reset driver..."), self.tr(
-                "Reset piControl driver after successful uploading new piCtory "
+            self, self.tr("Reset driver"), self.tr(
+                "Reset piControl driver after successfully uploading the new PiCtory "
                 "configuration?\nThe process image will be interrupted for a "
-                "short time!"
+                "short time."
             ), QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No | QtWidgets.QMessageBox.Cancel
         )
         if ask == QtWidgets.QMessageBox.Cancel:
@@ -202,8 +202,8 @@ class RevPiProgram(QtWidgets.QDialog, Ui_diag_program):
         if ec is None:
             QtWidgets.QMessageBox.critical(
                 self, self.tr("Error"), self.tr(
-                    "Got an network error while send data to Revolution Pi.\n"
-                    "Please try again."
+                    "Network error while sending data to RevPi.\n"
+                    "Try again."
                 )
             )
         elif ec == 0:
@@ -211,7 +211,7 @@ class RevPiProgram(QtWidgets.QDialog, Ui_diag_program):
             if ask == QtWidgets.QMessageBox.Yes:
                 QtWidgets.QMessageBox.information(
                     self, self.tr("Success"), self.tr(
-                        "The transfer of the piCtory configuration "
+                        "The transfer of the PiCtory configuration "
                         "and the reset of piControl have been "
                         "successfully executed."
                     ),
@@ -219,47 +219,47 @@ class RevPiProgram(QtWidgets.QDialog, Ui_diag_program):
             else:
                 QtWidgets.QMessageBox.information(
                     self, self.tr("Success"), self.tr(
-                        "The piCtory configuration was successfully transferred."
+                        "The PiCtory configuration was successfully transferred."
                     )
                 )
 
         elif ec == -1:
             QtWidgets.QMessageBox.critical(
                 self, self.tr("Error"), self.tr(
-                    "Can not process the transferred file."
+                    "Cannot process the transferred file."
                 )
             )
         elif ec == -2:
             QtWidgets.QMessageBox.critical(
                 self, self.tr("Error"), self.tr(
-                    "Can not find main elements in piCtory file."
+                    "Cannot find main elements in PiCtory file."
                 )
             )
         elif ec == -4:
             QtWidgets.QMessageBox.critical(
                 self, self.tr("Error"), self.tr(
-                    "Contained devices could not be found on Revolution "
-                    "Pi. The configuration may be from a newer piCtory version!"
+                    "Cannot find contained devices on RevPi.\n"
+                    "The configuration may be from a newer PiCtory version."
                 )
             )
         elif ec == -5:
             QtWidgets.QMessageBox.critical(
                 self, self.tr("Error"), self.tr(
-                    "Could not load RAP catalog on Revolution Pi."
+                    "Cannot load RAP catalog on RevPi."
                 )
             )
         elif ec < 0:
             QtWidgets.QMessageBox.critical(
                 self, self.tr("Error"), self.tr(
-                    "The piCtory configuration could not be "
-                    "written on the Revolution Pi."
+                    "Cannot write PiCtory configuration "
+                    "on RevPi."
                 )
             )
         elif ec > 0:
             QtWidgets.QMessageBox.warning(
                 self, self.tr("Warning"), self.tr(
-                    "The piCtroy configuration has been saved successfully.\n"
-                    "An error occurred on piControl reset!"
+                    "The PiCtory configuration has been saved successfully.\n"
+                    "An error occurred on piControl reset."
                 )
             )
 
@@ -321,7 +321,7 @@ class RevPiProgram(QtWidgets.QDialog, Ui_diag_program):
         if self.cbb_format.currentIndex() == 0:
             # Save files as zip archive
             diag_save = QtWidgets.QFileDialog(
-                self, self.tr("Save ZIP archive..."),
+                self, self.tr("Save ZIP archive"),
                 helper.cm.settings.last_zip_file or "{0}.zip".format(helper.cm.settings.name),
                 self.tr("ZIP archive (*.zip);;All files (*.*)")
             )
@@ -339,7 +339,7 @@ class RevPiProgram(QtWidgets.QDialog, Ui_diag_program):
         elif self.cbb_format.currentIndex() == 1:
             # Save files as TarGz archive
             diag_save = QtWidgets.QFileDialog(
-                self, self.tr("Save TGZ archive..."),
+                self, self.tr("Save TGZ archive"),
                 helper.cm.settings.last_tar_file or "{0}.tgz".format(helper.cm.settings.name),
                 self.tr("TGZ archive (*.tgz);;All files (*.*)")
             )
@@ -367,7 +367,7 @@ class RevPiProgram(QtWidgets.QDialog, Ui_diag_program):
         if plcfile is None:
             QtWidgets.QMessageBox.critical(
                 self, self.tr("Error"), self.tr(
-                    "Could not load PLC program from Revolution Pi."
+                    "Cannot load PLC program from RevPi."
                 )
             )
 
@@ -380,8 +380,8 @@ class RevPiProgram(QtWidgets.QDialog, Ui_diag_program):
                 log.error(e)
                 QtWidgets.QMessageBox.critical(
                     self, self.tr("Error"), self.tr(
-                        "Coud not save the archive or extract the files!\n"
-                        "Please retry.")
+                        "Cannot save the archive or extract the files.\n"
+                        "Try again.")
                 )
             else:
                 QtWidgets.QMessageBox.information(
@@ -411,7 +411,7 @@ class RevPiProgram(QtWidgets.QDialog, Ui_diag_program):
         if self.cbb_format.currentIndex() == 0:
             # Upload zip archive content
             diag_open = QtWidgets.QFileDialog(
-                self, self.tr("Upload content of ZIP archive..."),
+                self, self.tr("Upload content of ZIP archive"),
                 helper.cm.settings.last_file_upload,
                 self.tr("ZIP archive (*.zip);;All files (*.*)")
             )
@@ -437,7 +437,7 @@ class RevPiProgram(QtWidgets.QDialog, Ui_diag_program):
             else:
                 QtWidgets.QMessageBox.critical(
                     self, self.tr("Error"), self.tr(
-                        "The selected file ist not a ZIP archive."
+                        "The selected file is not a ZIP archive."
                     )
                 )
                 return
@@ -445,7 +445,7 @@ class RevPiProgram(QtWidgets.QDialog, Ui_diag_program):
         elif self.cbb_format.currentIndex() == 1:
             # Upload TarGz content
             diag_open = QtWidgets.QFileDialog(
-                self, self.tr("Upload content of TAR archive..."),
+                self, self.tr("Upload content of TAR archive"),
                 helper.cm.settings.last_file_upload,
                 self.tr("TAR archive (*.tgz);;All files (*.*)")
             )
@@ -471,7 +471,7 @@ class RevPiProgram(QtWidgets.QDialog, Ui_diag_program):
             else:
                 QtWidgets.QMessageBox.critical(
                     self, self.tr("Error"), self.tr(
-                        "The selected file ist not a TAR archive."
+                        "The selected file is not a TAR archive."
                     )
                 )
                 return
@@ -479,8 +479,8 @@ class RevPiProgram(QtWidgets.QDialog, Ui_diag_program):
         # No files selected
         if len(lst_files) == 0:
             QtWidgets.QMessageBox.warning(
-                self, self.tr("No files to upload..."), self.tr(
-                    "Found no files to upload in given location or archive."
+                self, self.tr("No files to upload"), self.tr(
+                    "No files found in the selected location or archive."
                 )
             )
             remove_temp()
@@ -491,8 +491,8 @@ class RevPiProgram(QtWidgets.QDialog, Ui_diag_program):
         if self.cbx_clear.isChecked() and not clean_revpi:
             QtWidgets.QMessageBox.critical(
                 self, self.tr("Error"), self.tr(
-                    "There was an error deleting the files on the Revolution Pi.\n"
-                    "Upload aborted! Please try again."
+                    "Cannot delete files on RevPi.\n"
+                    "Upload aborted. Try again."
                 )
             )
             remove_temp()
@@ -545,10 +545,10 @@ class RevPiProgram(QtWidgets.QDialog, Ui_diag_program):
             if plc_program_not_in_upload:
                 QtWidgets.QMessageBox.warning(
                     self, self.tr("Information"), self.tr(
-                        "Could not find the selected PLC start program in "
-                        "uploaded files.\nThis is not an error, if the file "
-                        "was already on the Revolution Pi. Check PLC start "
-                        "program field"
+                    "Cannot find the selected PLC start program in "
+                        "the uploaded files.\nThis is not an error if the file "
+                        "already exists on RevPi. Check the PLC start program "
+                        "field."
                     )
                 )
 
@@ -558,14 +558,14 @@ class RevPiProgram(QtWidgets.QDialog, Ui_diag_program):
                 else:
                     QtWidgets.QMessageBox.critical(
                         self, self.tr("Error"), self.tr(
-                            "There is no piCtory configuration in this archive."
+                            "There is no PiCtory configuration in this archive."
                         )
                     )
 
         elif ec == -1:
             QtWidgets.QMessageBox.critical(
                 self, self.tr("Error"), self.tr(
-                    "The Revolution Pi could not process some parts of the transmission."
+                    "RevPi cannot process some parts of the transmission."
                 )
             )
 
@@ -590,12 +590,12 @@ class RevPiProgram(QtWidgets.QDialog, Ui_diag_program):
             return
 
         diag_save = QtWidgets.QFileDialog(
-            self, self.tr("Save piCtory file..."),
+            self, self.tr("Save PiCtory file"),
             os.path.join(
                 helper.cm.settings.last_dir_pictory,
                 "{0}.rsc".format(helper.cm.settings.name)
             ),
-            self.tr("piCtory file (*.rsc);;All files (*.*)")
+            self.tr("PiCtory file (*.rsc);;All files (*.*)")
         )
         diag_save.setAcceptMode(QtWidgets.QFileDialog.AcceptSave)
         diag_save.setDefaultSuffix("rsc")
@@ -610,7 +610,7 @@ class RevPiProgram(QtWidgets.QDialog, Ui_diag_program):
         if bin_buffer is None:
             QtWidgets.QMessageBox.critical(
                 self, self.tr("Error"), self.tr(
-                    "Could not load piCtory file from Revolution Pi."
+                    "Cannot load PiCtory file from RevPi."
                 )
             )
         else:
@@ -620,7 +620,7 @@ class RevPiProgram(QtWidgets.QDialog, Ui_diag_program):
 
             QtWidgets.QMessageBox.information(
                 self, self.tr("Success"), self.tr(
-                    "piCtory configuration successfully loaded and saved to:\n{0}."
+                    "PiCtory configuration saved to:\n{0}."
                 ).format(filename)
             )
 
@@ -630,9 +630,9 @@ class RevPiProgram(QtWidgets.QDialog, Ui_diag_program):
             return
 
         diag_open = QtWidgets.QFileDialog(
-            self, self.tr("Upload piCtory file..."),
+            self, self.tr("Upload PiCtory file"),
             helper.cm.settings.last_pictory_file or "{0}.rsc".format(helper.cm.settings.name),
-            self.tr("piCtory file (*.rsc);;All files (*.*)")
+            self.tr("PiCtory file (*.rsc);;All files (*.*)")
         )
         diag_open.setAcceptMode(QtWidgets.QFileDialog.AcceptOpen)
         diag_open.setFileMode(QtWidgets.QFileDialog.ExistingFile)
@@ -652,7 +652,7 @@ class RevPiProgram(QtWidgets.QDialog, Ui_diag_program):
 
         diag_save = QtWidgets.QFileDialog(
             self,
-            self.tr("Save piControl file..."),
+            self.tr("Save piControl file"),
             os.path.join(
                 helper.cm.settings.last_dir_picontrol,
                 "{0}.img".format(helper.cm.settings.name)
@@ -673,7 +673,7 @@ class RevPiProgram(QtWidgets.QDialog, Ui_diag_program):
         if bin_buffer is None:
             QtWidgets.QMessageBox.critical(
                 self, self.tr("Error"), self.tr(
-                    "Could not load process image from Revolution Pi."
+                    "Cannot load process image from RevPi."
                 )
             )
         else:
@@ -683,7 +683,7 @@ class RevPiProgram(QtWidgets.QDialog, Ui_diag_program):
 
             QtWidgets.QMessageBox.information(
                 self, self.tr("Success"), self.tr(
-                    "Process image successfully loaded and saved to:\n{0}."
+                    "Process image saved to:\n{0}."
                 ).format(filename)
             )
 

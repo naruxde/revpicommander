@@ -187,7 +187,7 @@ class RevPiOption(QtWidgets.QDialog, Ui_diag_options):
 
         ask = QtWidgets.QMessageBox.question(
             self, self.tr("Question"), self.tr(
-                "The settings will be set on the Revolution Pi now.\n\n"
+                "Applying settings on RevPi.\n\n"
                 "ACL changes and service settings are applied immediately."
             )
         ) == QtWidgets.QMessageBox.Yes
@@ -234,9 +234,9 @@ class RevPiOption(QtWidgets.QDialog, Ui_diag_options):
         else:
             QtWidgets.QMessageBox.critical(
                 self, self.tr("Error"), self.tr(
-                    "The settings could not be saved on the Revolution Pi!\n"
-                    "Try to save the values one mor time and check the log "
-                    "files of RevPiPyLoad if the error rises again."
+                    "Cannot save settings on RevPi\n"
+                    "Try saving the values one more time and check the "
+                    "RevPiPyLoad log files if the error occurs again."
                 )
             )
 
@@ -244,7 +244,7 @@ class RevPiOption(QtWidgets.QDialog, Ui_diag_options):
         if self._changesdone():
             ask = QtWidgets.QMessageBox.question(
                 self, self.tr("Question"), self.tr(
-                    "Do you really want to quit? \nUnsaved changes will be lost."
+                    "Quit without saving?\nUnsaved changes will be lost."
                 )
             ) == QtWidgets.QMessageBox.Yes
 
@@ -273,7 +273,7 @@ class RevPiOption(QtWidgets.QDialog, Ui_diag_options):
             default_value=False
         )
         self.lbl_server_status.setText(
-            self.tr("running") if running else self.tr("stopped")
+            self.tr("Running") if running else self.tr("Stopped")
         )
         self.lbl_server_status.setStyleSheet(
             "color: green" if running else "color: red"
@@ -292,7 +292,7 @@ class RevPiOption(QtWidgets.QDialog, Ui_diag_options):
             self.cbx_mqtt.setToolTip("")
             self.btn_mqtt.setVisible(True)
             self.lbl_mqtt_status.setText(
-                self.tr("running") if running else self.tr("stopped")
+                self.tr("Running") if running else self.tr("Stopped")
             )
             self.lbl_mqtt_status.setStyleSheet(
                 "color: green" if running else "color: red"
@@ -323,8 +323,8 @@ class RevPiOption(QtWidgets.QDialog, Ui_diag_options):
     def on_btn_aclplcserver_clicked(self):
         """Start ACL manager to edit ACL entries."""
         self.diag_aclmanager.setup_acl_manager(self.acl_plcserver, {
-            0: self.tr("read only"),
-            1: self.tr("read and write"),
+            0: self.tr("Read-only"),
+            1: self.tr("Read/write"),
         })
         self.diag_aclmanager.read_only = helper.cm.xml_mode < 4
         if self.diag_aclmanager.exec() == QtWidgets.QDialog.Accepted:
@@ -345,8 +345,8 @@ class RevPiOption(QtWidgets.QDialog, Ui_diag_options):
             self.mrk_xml_ask = QtWidgets.QMessageBox.question(
                 self, self.tr("Question"), self.tr(
                     "Are you sure you want to deactivate the XML-RPC server? "
-                    "You will NOT be able to access the Revolution Pi with "
-                    "this program after saving the options!"
+                    "RevPi will no longer be accessible from "
+                    "this program after saving settings."
                 )
             ) == QtWidgets.QMessageBox.No
             if self.mrk_xml_ask:
@@ -355,11 +355,11 @@ class RevPiOption(QtWidgets.QDialog, Ui_diag_options):
     @QtCore.pyqtSlot()
     def on_btn_aclxmlrpc_clicked(self):
         self.diag_aclmanager.setup_acl_manager(self.acl_xmlrpc, {
-            0: self.tr("Start/Stop PLC program and read logs"),
-            1: self.tr("+ read IOs in watch mode"),
-            2: self.tr("+ read properties and download PLC program"),
-            3: self.tr("+ upload PLC program"),
-            4: self.tr("+ set properties")
+            0: self.tr("Start/stop PLC program and read log files"),
+            1: self.tr("+ Read I/Os in watch mode"),
+            2: self.tr("+ Read properties and download PLC program"),
+            3: self.tr("+ Upload PLC program"),
+            4: self.tr("+ Set properties")
         })
         self.diag_aclmanager.read_only = helper.cm.xml_mode < 4
         if self.diag_aclmanager.exec() == QtWidgets.QDialog.Accepted:

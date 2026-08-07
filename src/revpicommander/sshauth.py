@@ -49,11 +49,11 @@ class SSHAuth(QtWidgets.QDialog, Ui_diag_sshauth):
                 log.error(e)
                 self._in_keyring = False
                 QtWidgets.QMessageBox.warning(
-                    self, self.tr("Could not save password"), self.tr(
-                        "Could not save password to operating systems password save.\n\n"
-                        "Maybe your operating system does not support saving passwords. "
+                    self, self.tr("Cannot save password"), self.tr(
+                        "Cannot save password to operating system's password store.\n\n"
+                        "The operating system may not support saving passwords. "
                         "This could be due to missing libraries or programs.\n\n"
-                        "This is not an error of RevPi Commander."
+                        "This is not a RevPi Commander error."
                     )
                 )
             else:

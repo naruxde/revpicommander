@@ -129,7 +129,8 @@ class RevPiCommander(QtWidgets.QMainWindow, Ui_win_revpicommander):
     # region #      REGION: Connection management
 
     @QtCore.pyqtSlot(str, str, ConnectionFail, RevPiSettings)
-    def on_cm_connect_error(self, title: str, text: str, fail_code: ConnectionFail, revpi_settings: RevPiSettings):
+    def on_cm_connect_error(self, title: str, text: str, fail_code: ConnectionFail,
+                            revpi_settings: RevPiSettings):
         """
         Slot to get information of pyload_connect connection errors.
 
@@ -138,13 +139,14 @@ class RevPiCommander(QtWidgets.QMainWindow, Ui_win_revpicommander):
         :param fail_code: Type of error
         :param revpi_settings: Settings of the revpi with the error
         """
-        if fail_code is ConnectionFail.NO_XML_RPC_VIA_TUNNEL:
+        if (fail_code is ConnectionFail.NO_XML_RPC_VIA_TUNNEL
+                and not getattr(revpi_settings, "ssh_enable_revpipyload", False)):
             # If RevPiPyLoad is not running, we can try to activate it via ssh
             QtWidgets.QMessageBox.information(
                 self, self.tr("Information"), self.tr(
-                    "Can not connect to RevPiPyLoad service through SSH tunnel!\n\n"
-                    "We are trying to activate this service now and reconnect. The settings can be "
-                    "changed at any time via 'webstatus'."
+                    "Cannot connect to the RevPiPyLoad service through the SSH tunnel.\n\n"
+                    "Service activation and reconnection in progress. The settings can be "
+                    "changed at any time via Cockpit."
                 ),
             )
             revpi_settings.ssh_enable_revpipyload = True
@@ -259,9 +261,9 @@ class RevPiCommander(QtWidgets.QMainWindow, Ui_win_revpicommander):
 
         diag_connecting = BackgroundWaiter(
             revpi_settings.timeout,
-            self.tr("Establish a connection to the Revolution Pi..."),
+            self.tr("Connecting to RevPi"),
             self,
-            self.tr("Revolution Pi connected!"),
+            self.tr("Connected to RevPi"),
         )
         helper.cm.connection_established.connect(diag_connecting.requestInterruption)
 
@@ -294,7 +296,7 @@ class RevPiCommander(QtWidgets.QMainWindow, Ui_win_revpicommander):
         th_connecting.finished.connect(diag_connecting.requestInterruption)
         th_connecting.start()
 
-        diag_connecting.exec_dialog(self.tr("Connecting..."), False)
+        diag_connecting.exec_dialog(self.tr("Connecting"), False)
 
     @QtCore.pyqtSlot()
     def on_act_connections_triggered(self):
@@ -328,18 +330,18 @@ class RevPiCommander(QtWidgets.QMainWindow, Ui_win_revpicommander):
 
         if helper.cm.pyload_simulate(configrsc_file, procimg_file, diag.clean_procimg):
             QtWidgets.QMessageBox.information(
-                self, self.tr("Simulator started..."), self.tr(
-                    "The simulator is running!\n\nYou can work with this simulator if your call "
-                    "RevPiModIO with this additional parameters:\nprocimg={0}\nconfigrsc={1}\n\n"
-                    "You can copy that from header textbox."
+                self, self.tr("Simulator started"), self.tr(
+                    "Simulator is running.\n\nUse the additional "
+                    "RevPiModIO parameters:\nprocimg={0}\nconfigrsc={1}\n\n"
+                    "from the header text box."
                 ).format(procimg_file, configrsc_file)
             )
         else:
             log.error("Can not start simulator")
             QtWidgets.QMessageBox.critical(
-                self, self.tr("Can not start..."), self.tr(
-                    "Can not start the simulator! Maybe the piCtory file is corrupt "
-                    "or you have no write permissions for '{0}'."
+                self, self.tr("Cannot start"), self.tr(
+                    "Cannot start the simulator. The PiCtory file might be invalid "
+                    "or you do not have write permissions for '{0}'."
                 ).format(procimg_file)
             )
 
@@ -354,8 +356,8 @@ class RevPiCommander(QtWidgets.QMainWindow, Ui_win_revpicommander):
         if "load_plclog" not in helper.cm.xml_funcs:
             QtWidgets.QMessageBox.warning(
                 self, self.tr("Warning"), self.tr(
-                    "This version of Logviewer ist not supported in version {0} "
-                    "of RevPiPyLoad on your RevPi! You need at least version 0.4.1."
+                    "This version of Log Viewer is not supported in version {0} "
+                    "of RevPiPyLoad on your RevPi. At least version 0.4.1 is required."
                 ).format(helper.cm.call_remote_function("version", default_value="-"))
             )
             return None
@@ -375,7 +377,7 @@ class RevPiCommander(QtWidgets.QMainWindow, Ui_win_revpicommander):
             QtWidgets.QMessageBox.warning(
                 self, self.tr("Warning"), self.tr(
                     "XML-RPC access mode in the RevPiPyLoad "
-                    "configuration is too small to access this dialog!"
+                    "configuration is too low to access this dialog."
                 )
             )
             return
@@ -384,9 +386,9 @@ class RevPiCommander(QtWidgets.QMainWindow, Ui_win_revpicommander):
         if helper.cm.pyload_version < (0, 6, 0):
             QtWidgets.QMessageBox.critical(
                 self, self.tr("Error"), self.tr(
-                    "The Version of RevPiPyLoad on your Revolution Pi ({0}) is to old. "
-                    "This Version of RevPiCommander require at least version 0.6.0 "
-                    "of RevPiPyLoad. Please update your Revolution Pi!"
+                    "The version of RevPiPyLoad on your RevPi ({0}) is too old. "
+                    "This version of RevPi Commander requires at least version 0.6.0 "
+                    "of RevPiPyLoad. Update your RevPi."
                 )
             )
             return
@@ -405,7 +407,7 @@ class RevPiCommander(QtWidgets.QMainWindow, Ui_win_revpicommander):
             QtWidgets.QMessageBox.warning(
                 self, self.tr("Warning"), self.tr(
                     "XML-RPC access mode in the RevPiPyLoad "
-                    "configuration is too small to access this dialog!"
+                    "configuration is too low to access this dialog."
                 )
             )
             return
@@ -414,7 +416,7 @@ class RevPiCommander(QtWidgets.QMainWindow, Ui_win_revpicommander):
 
     @QtCore.pyqtSlot()
     def on_act_developer_triggered(self):
-        """Extent developer mode to main window."""
+        """Extend developer mode to main window."""
         if not helper.cm.connected:
             return
 
@@ -437,10 +439,10 @@ class RevPiCommander(QtWidgets.QMainWindow, Ui_win_revpicommander):
 
         ask = QtWidgets.QMessageBox.question(
             self, self.tr("Question"), self.tr(
-                "Are you sure to reset piControl?\n"
-                "The pictory configuration will be reloaded. During that time "
-                "the process image will be interrupted and could rise errors "
-                "on running control programs!"
+                "Are you sure you want to reset piControl?\n"
+                "The PiCtory configuration will be reloaded. During that time, "
+                "the process image will be interrupted and could cause errors "
+                "on running control programs."
             )
         )
         if ask != QtWidgets.QMessageBox.Yes:
@@ -450,14 +452,14 @@ class RevPiCommander(QtWidgets.QMainWindow, Ui_win_revpicommander):
         if ec == 0:
             QtWidgets.QMessageBox.information(
                 self, self.tr("Success"), self.tr(
-                    "piControl reset executed successfully"
+                    "piControl reset completed successfully."
                 )
             )
 
         else:
             QtWidgets.QMessageBox.critical(
                 self, self.tr("Error"), self.tr(
-                    "piControl reset could not be executed successfully"
+                    "piControl reset could not be completed."
                 )
             )
 
@@ -474,7 +476,7 @@ class RevPiCommander(QtWidgets.QMainWindow, Ui_win_revpicommander):
     @QtCore.pyqtSlot()
     def on_act_webpage_triggered(self):
         """Open project page in default browser of operating system."""
-        webbrowser.open("https://revpimodio.org")
+        webbrowser.open("https://revpimodio2.readthedocs.io/en/latest/")
 
     @QtCore.pyqtSlot()
     def on_act_info_triggered(self):
@@ -504,13 +506,13 @@ class RevPiCommander(QtWidgets.QMainWindow, Ui_win_revpicommander):
         """Restart plc program on revolution pi."""
         if helper.cm.simulating:
             rc = QtWidgets.QMessageBox.question(
-                self, self.tr("Reset to piCtory defaults..."), self.tr(
+                self, self.tr("Reset to PiCtory defaults"), self.tr(
                     "Do you want to reset your process image to {0} values?\n"
                     "You have to stop other RevPiModIO programs before doing that, "
                     "because they could reset the outputs."
                 ).format(
                     self.tr("zero") if helper.settings.value("simulator/restart_zero", False, bool)
-                    else self.tr("piCtory default"))
+                    else self.tr("PiCtory defaults"))
             ) == QtWidgets.QMessageBox.Yes
             if rc:
                 # Set piCtory default values in process image
@@ -531,10 +533,10 @@ class RevPiCommander(QtWidgets.QMainWindow, Ui_win_revpicommander):
         elif "psstart" not in helper.cm.xml_funcs:
             QtWidgets.QMessageBox.warning(
                 self, self.tr("Warning"), self.tr(
-                    "The watch mode ist not supported in version {0} "
-                    "of RevPiPyLoad on your RevPi! You need at least version "
-                    "0.5.3! Maybe the python3-revpimodio2 module is not "
-                    "installed on your RevPi at least version 2.0.0."
+                    "The watch mode is not supported in version {0} "
+                    "of RevPiPyLoad on your RevPi. At least version 0.5.3 "
+                    "is required. The python3-revpimodio2 module may be missing "
+                    "or older than version 2.0.0."
                 ).format(helper.cm.call_remote_function("version", "-"))
             )
             self.btn_plc_debug.setChecked(False)
@@ -543,8 +545,8 @@ class RevPiCommander(QtWidgets.QMainWindow, Ui_win_revpicommander):
         elif helper.cm.xml_mode < 1 and not helper.cm.simulating:
             QtWidgets.QMessageBox.critical(
                 self, self.tr("Error"), self.tr(
-                    "Can not load this function, because your ACL level is to low!\n"
-                    "You need at least level 1 to read or level 3 to write."
+                    "Cannot load this function, because your ACL level is too low.\n"
+                    "At least level 1 to read or level 3 to write is required."
                 )
             )
             self.btn_plc_debug.setChecked(False)
@@ -558,9 +560,8 @@ class RevPiCommander(QtWidgets.QMainWindow, Ui_win_revpicommander):
                 debugcontrol.deleteLater()
                 QtWidgets.QMessageBox.critical(
                     self, self.tr("Error"), self.tr(
-                        "Can not load piCtory configuration. \n"
-                        "Did you create a hardware configuration? "
-                        "Please check this in piCtory!"
+                        "Cannot load PiCtory configuration.\n"
+                        "Check hardware configuration in PiCtory."
                     )
                 )
                 self.btn_plc_debug.setChecked(False)

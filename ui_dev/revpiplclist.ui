@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Revolution Pi connections</string>
+   <string>RevPi Connections</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="1" column="0" colspan="2">
@@ -37,21 +37,21 @@
        <item row="1" column="0">
         <widget class="QLabel" name="lbl_address">
          <property name="text">
-          <string>Address (DNS/IP):</string>
+          <string>Address (DNS/IP/Socket):</string>
          </property>
         </widget>
        </item>
        <item row="1" column="1">
         <widget class="QLineEdit" name="txt_address"/>
        </item>
-       <item row="2" column="0">
+       <item row="3" column="0">
         <widget class="QLabel" name="lbl_port">
          <property name="text">
-          <string>Port (Default {0}):</string>
+          <string>Port (default {0}):</string>
          </property>
         </widget>
        </item>
-       <item row="2" column="1">
+       <item row="3" column="1">
         <widget class="QSpinBox" name="sbx_port">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
@@ -70,14 +70,14 @@
          </property>
         </widget>
        </item>
-       <item row="3" column="0">
+       <item row="4" column="0">
         <widget class="QLabel" name="lbl_timeout">
          <property name="text">
           <string>Connection timeout:</string>
          </property>
         </widget>
        </item>
-       <item row="3" column="1">
+       <item row="4" column="1">
         <widget class="QSpinBox" name="sbx_timeout">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
@@ -86,7 +86,7 @@
           </sizepolicy>
          </property>
          <property name="suffix">
-          <string> sec.</string>
+          <string> s</string>
          </property>
          <property name="minimum">
           <number>5</number>
@@ -96,14 +96,14 @@
          </property>
         </widget>
        </item>
-       <item row="4" column="0">
+       <item row="5" column="0">
         <widget class="QLabel" name="lbl_folder">
          <property name="text">
-          <string>Sub folder:</string>
+          <string>Subfolder:</string>
          </property>
         </widget>
        </item>
-       <item row="4" column="1">
+       <item row="5" column="1">
         <widget class="QComboBox" name="cbb_folder">
          <property name="editable">
           <bool>true</bool>
@@ -117,6 +117,16 @@
           </property>
          </item>
         </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="QLabel" name="lbl_local_socket">
+         <property name="text">
+          <string>Use default local socket:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="QCheckBox" name="cbx_local_socket"/>
        </item>
       </layout>
      </widget>
@@ -194,7 +204,7 @@
      </property>
      <column>
       <property name="text">
-       <string>Connection name</string>
+       <string>Connection Name</string>
       </property>
      </column>
      <column>

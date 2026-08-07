@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """Saved connections of Revolution Pi devices."""
 __author__ = "Sven Sager"
-__copyright__ = "Copyright (C) 2023 Sven Sager"
+__copyright__ = "Copyright (C) 2023-2026 Sven Sager"
 __license__ = "GPLv2"
 
 from enum import IntEnum
@@ -16,6 +16,7 @@ from . import proginit as pi
 from .helper import RevPiSettings, WidgetData
 from .ui.revpiplclist_ui import Ui_diag_connections
 
+DEFAULT_SOCKET_ADDRESS = "/run/revpipyload/xmlrpc.socket"
 log = getLogger(__name__)
 
 
@@ -39,6 +40,8 @@ class RevPiPlcList(QtWidgets.QDialog, Ui_diag_connections):
         self.tre_connections.setColumnWidth(0, 250)
         self.lbl_port.setText(self.lbl_port.text().format(self.__default_port))
         self.sbx_port.setValue(self.__default_port)
+
+        self._mrk_address = ""
 
         # Dirty workaround to remove default button to prevent action on ENTER key, while user edit texts
         self.__btn_dummy = QtWidgets.QPushButton(self)
@@ -134,7 +137,7 @@ class RevPiPlcList(QtWidgets.QDialog, Ui_diag_connections):
         if self.changes:
             ask = QtWidgets.QMessageBox.question(
                 self, self.tr("Question"), self.tr(
-                    "Do you really want to quit? \nUnsaved changes will be lost."
+                    "Quit without saving?\nUnsaved changes will be lost."
                 )
             ) == QtWidgets.QMessageBox.Yes
 
@@ -189,12 +192,21 @@ class RevPiPlcList(QtWidgets.QDialog, Ui_diag_connections):
                 up_ok = index > 0
                 down_ok = index < self.tre_connections.topLevelItemCount() - 1
 
+        address = self.txt_address.text()
+        is_unix_socket = address.startswith("/") or address.startswith("./")
+        is_unix_default = address.lower() == DEFAULT_SOCKET_ADDRESS
+
+        # Value isn't saved in settings, resulting of address value
+        with QtCore.QSignalBlocker(self.cbx_local_socket):
+            self.cbx_local_socket.setChecked(is_unix_default)
+
         self.btn_up.setEnabled(up_ok)
         self.btn_down.setEnabled(down_ok)
         self.btn_delete.setEnabled(con_item or dir_item)
         self.txt_name.setEnabled(con_item)
-        self.txt_address.setEnabled(con_item)
-        self.sbx_port.setEnabled(con_item)
+        self.txt_address.setEnabled(con_item and not is_unix_default)
+        self.cbx_local_socket.setEnabled(con_item)
+        self.sbx_port.setEnabled(con_item and not is_unix_socket)
         self.sbx_timeout.setEnabled(con_item)
         self.cbb_folder.setEnabled(con_item or dir_item)
         self.cbb_folder.setEditable(dir_item)
@@ -202,9 +214,9 @@ class RevPiPlcList(QtWidgets.QDialog, Ui_diag_connections):
             # Disable auto complete, this would override a new typed name with existing one
             self.cbb_folder.setCompleter(None)
 
-        self.cbx_ssh_use_tunnel.setEnabled(con_item)
-        self.sbx_ssh_port.setEnabled(con_item)
-        self.txt_ssh_user.setEnabled(con_item)
+        self.cbx_ssh_use_tunnel.setEnabled(con_item and not is_unix_socket)
+        self.sbx_ssh_port.setEnabled(con_item and not is_unix_socket)
+        self.txt_ssh_user.setEnabled(con_item and not is_unix_socket)
 
     def _get_folder_item(self, name: str):
         """Find the folder entry by name."""
@@ -243,7 +255,6 @@ class RevPiPlcList(QtWidgets.QDialog, Ui_diag_connections):
     def on_tre_connections_currentItemChanged(
             self, current: QtWidgets.QTreeWidgetItem, previous: QtWidgets.QTreeWidgetItem):
 
-        self._edit_state()
         self._load_cbb_folder()
 
         if current and current.type() == NodeType.CON:
@@ -270,6 +281,9 @@ class RevPiPlcList(QtWidgets.QDialog, Ui_diag_connections):
         else:
             self.__current_item = QtWidgets.QTreeWidgetItem()
             self.cbb_folder.setCurrentText(current.text(0) if current else "")
+
+        self._mrk_address = ""
+        self._edit_state()
 
     @QtCore.pyqtSlot()
     def on_btn_up_clicked(self):
@@ -303,8 +317,8 @@ class RevPiPlcList(QtWidgets.QDialog, Ui_diag_connections):
             if item_to_remove.childCount():
                 rc = QtWidgets.QMessageBox.question(
                     self, self.tr("Question"), self.tr(
-                        "If you remote this folder, all containing elements will be removed, too. \n\n"
-                        "Do you want to delete folder and all elements?"
+                        "If you remove this folder, all contained items will be removed as well.\n\n"
+                        "Do you want to delete the folder and all contained items?"
                     ),
                 )
                 if rc != QtWidgets.QMessageBox.Yes:
@@ -318,6 +332,8 @@ class RevPiPlcList(QtWidgets.QDialog, Ui_diag_connections):
 
         elif item_to_remove and item_to_remove.type() == NodeType.CON:
             remove_item(item_to_remove)
+
+        self._edit_state()
 
     @QtCore.pyqtSlot()
     def on_btn_add_clicked(self, settings_preset: RevPiSettings = None):
@@ -369,6 +385,7 @@ class RevPiPlcList(QtWidgets.QDialog, Ui_diag_connections):
         settings = self.__current_item.data(0, WidgetData.revpi_settings)  # type: RevPiSettings
         settings.address = text
         self.changes = True
+        self._edit_state()
 
     @QtCore.pyqtSlot(int)
     def on_sbx_port_valueChanged(self, value: int):
@@ -385,6 +402,21 @@ class RevPiPlcList(QtWidgets.QDialog, Ui_diag_connections):
         settings = self.__current_item.data(0, WidgetData.revpi_settings)  # type: RevPiSettings
         settings.timeout = value
         self.changes = True
+
+    @QtCore.pyqtSlot(int)
+    def on_cbx_local_socket_stateChanged(self, check_state: int):
+        if self.__current_item.type() != NodeType.CON:
+            return
+
+        if check_state == QtCore.Qt.CheckState.Checked:
+            # Backup fields to restore the text if unchecked
+            self._mrk_address = self.txt_address.text()
+            self.txt_address.setText(DEFAULT_SOCKET_ADDRESS)
+            self.on_txt_address_textEdited(self.txt_address.text())
+        else:
+            # Restore old address if it is not the default to unlock the address field
+            self.txt_address.setText("" if self._mrk_address == DEFAULT_SOCKET_ADDRESS else self._mrk_address)
+            self.on_txt_address_textEdited(self.txt_address.text())
 
     @QtCore.pyqtSlot(int)
     def on_cbx_ssh_use_tunnel_stateChanged(self, check_state: int):

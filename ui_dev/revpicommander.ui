@@ -210,7 +210,7 @@
   </action>
   <action name="act_search">
    <property name="text">
-    <string>&amp;Search Revolution Pi...</string>
+    <string>&amp;Search RevPi...</string>
    </property>
    <property name="shortcut">
     <string notr="true">Ctrl+F</string>
@@ -223,12 +223,12 @@
   </action>
   <action name="act_webpage">
    <property name="text">
-    <string>Visit &amp;webpage...</string>
+    <string>Visit &amp;website</string>
    </property>
   </action>
   <action name="act_info">
    <property name="text">
-    <string>&amp;Info...</string>
+    <string>&amp;Info</string>
    </property>
   </action>
   <action name="act_logs">
@@ -265,7 +265,7 @@
   </action>
   <action name="act_pictory">
    <property name="text">
-    <string>piCtory configuraiton...</string>
+    <string>PiCtory configuration</string>
    </property>
   </action>
   <action name="act_disconnect">
@@ -278,7 +278,7 @@
   </action>
   <action name="act_reset">
    <property name="text">
-    <string>Reset driver...</string>
+    <string>Reset driver</string>
    </property>
   </action>
   <action name="act_simulator">

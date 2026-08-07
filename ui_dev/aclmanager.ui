@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>IP access control list</string>
+   <string>IP Access Control List</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
@@ -51,7 +51,7 @@
         </attribute>
         <column>
          <property name="text">
-          <string>IP Address</string>
+          <string>IP address</string>
          </property>
         </column>
         <column>
@@ -97,7 +97,7 @@
    <item>
     <widget class="QGroupBox" name="gb_edit">
      <property name="title">
-      <string>Add / Edit access entry</string>
+      <string>Add/Edit Access Entry</string>
      </property>
      <layout class="QGridLayout" name="gridLayout_2">
       <item row="1" column="0">

@@ -100,8 +100,8 @@ def reconfigure_logger():
         def filter(self, record: logging.LogRecord) -> bool:
             remove_record = False
 
-            # Remove paramiko ssh module
-            remove_record = remove_record or record.name.startswith("paramiko")
+            # Remove asyncssh module
+            remove_record = remove_record or record.name.startswith("asyncssh")
 
             return not remove_record
 

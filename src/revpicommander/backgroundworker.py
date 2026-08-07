@@ -20,7 +20,7 @@ class BackgroundWorker(QtCore.QThread):
 
     def __init__(self, parent=None, interruption_text: str = None):
         super().__init__(parent)
-        self._interruption_text = interruption_text or self.tr("User requested cancellation...")
+        self._interruption_text = interruption_text or self.tr("Cancellation requested")
 
     def check_cancel(self) -> bool:
         """

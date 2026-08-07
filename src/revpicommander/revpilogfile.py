@@ -207,7 +207,7 @@ class RevPiLogfile(QtWidgets.QMainWindow, Ui_win_revpilogfile):
 
         if not success:
             textwidget.clear()
-            textwidget.setPlainText(self.tr("Can not access log file on the RevPi"))
+            textwidget.setPlainText(self.tr("Cannot access log file on RevPi."))
         elif text != "":
             # Function will add \n automatically
             textwidget.appendPlainText(text.strip("\n"))
