@@ -81,12 +81,12 @@ Nicht gespeicherte Änderungen gehen verloren.</translation>
 <context>
     <name>ConnectionManager</name>
     <message>
-        <location filename="../helper.py" line="472"/>
+        <location filename="../helper.py" line="496"/>
         <source>Error</source>
         <translation>Fehler</translation>
     </message>
     <message>
-        <location filename="../helper.py" line="422"/>
+        <location filename="../helper.py" line="446"/>
         <source>The combination of username and password was rejected from the SSH server.
 
 Try again.</source>
@@ -95,7 +95,7 @@ Try again.</source>
 Erneut versuchen.</translation>
     </message>
     <message>
-        <location filename="../helper.py" line="434"/>
+        <location filename="../helper.py" line="458"/>
         <source>Cannot connect to SSH server:
 
 {0}</source>
@@ -104,7 +104,7 @@ Erneut versuchen.</translation>
 {0}</translation>
     </message>
     <message>
-        <location filename="../helper.py" line="460"/>
+        <location filename="../helper.py" line="484"/>
         <source>Cannot connect to RevPiPyLoad service through SSH tunnel.
 
 Possible reasons:
@@ -119,7 +119,7 @@ Mögliche Ursachen:
 - Für 127.0.0.1 ist keine ACL-Berechtigung gesetzt.</translation>
     </message>
     <message>
-        <location filename="../helper.py" line="472"/>
+        <location filename="../helper.py" line="496"/>
         <source>Cannot connect to RevPiPyLoad XML-RPC service.
 
 Possible reasons:
@@ -140,54 +140,61 @@ Mögliche Ursachen:
 Für eine verschlüsselte Verbindung &apos;Über SSH verbinden&apos; verwenden oder auf dem RevPi &apos;sudo revpipyload_secure_installation&apos; ausführen, um den direkten Fernzugriff einzurichten.</translation>
     </message>
     <message>
-        <location filename="../helper.py" line="607"/>
+        <location filename="../helper.py" line="631"/>
         <source>Simulating</source>
         <translation>Simulation läuft</translation>
     </message>
     <message>
-        <location filename="../helper.py" line="610"/>
+        <location filename="../helper.py" line="634"/>
         <source>Not connected</source>
         <translation>Nicht verbunden</translation>
     </message>
     <message>
-        <location filename="../helper.py" line="627"/>
+        <location filename="../helper.py" line="651"/>
         <source>Server error</source>
         <translation>Serverfehler</translation>
     </message>
     <message>
-        <location filename="../helper.py" line="657"/>
+        <location filename="../helper.py" line="681"/>
         <source>Running</source>
         <translation>Läuft</translation>
     </message>
     <message>
-        <location filename="../helper.py" line="659"/>
+        <location filename="../helper.py" line="683"/>
         <source>PLC file not found</source>
         <translation>PLC-Datei nicht gefunden</translation>
     </message>
     <message>
-        <location filename="../helper.py" line="661"/>
+        <location filename="../helper.py" line="685"/>
         <source>Not running (no status)</source>
         <translation>Nicht aktiv (kein Status)</translation>
     </message>
     <message>
-        <location filename="../helper.py" line="663"/>
+        <location filename="../helper.py" line="687"/>
         <source>Program killed</source>
         <translation>Programm zwangsweise beendet</translation>
     </message>
     <message>
-        <location filename="../helper.py" line="665"/>
+        <location filename="../helper.py" line="689"/>
         <source>Program terminated</source>
         <translation>Programm beendet</translation>
     </message>
     <message>
-        <location filename="../helper.py" line="667"/>
+        <location filename="../helper.py" line="691"/>
         <source>Not running</source>
         <translation>Nicht gestartet</translation>
     </message>
     <message>
-        <location filename="../helper.py" line="669"/>
+        <location filename="../helper.py" line="693"/>
         <source>Finished with exit code {0}</source>
         <translation>Beendet mit Exit-Code {0}</translation>
+    </message>
+    <message>
+        <location filename="../helper.py" line="434"/>
+        <source>Can not activate RevPiPyLoad on remote RevPi.
+Sudo authentification failed for user {revpi_settings.ssh_user}. Please activate RevPiPyLoad manually via Cockpit or CLI.</source>
+        <translation>RevPiPyLoad kann auf dem verbundenen RevPi nicht aktiviert werden.
+Die Sudo-Authentifizierung für den Benutzer {revpi_settings.ssh_user} ist fehlgeschlagen. Bitte aktivieren Sie RevPiPyLoad manuell über Cockpit oder die CLI.</translation>
     </message>
 </context>
 <context>
@@ -321,59 +328,59 @@ Nicht gespeicherte Änderungen gehen verloren.</translation>
 <context>
     <name>RevPiCommander</name>
     <message>
-        <location filename="../revpicommander.py" line="532"/>
+        <location filename="../revpicommander.py" line="534"/>
         <source>Warning</source>
         <translation>Warnung</translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="559"/>
+        <location filename="../revpicommander.py" line="561"/>
         <source>Error</source>
         <translation>Fehler</translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="438"/>
+        <location filename="../revpicommander.py" line="440"/>
         <source>Question</source>
         <translation>Frage</translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="451"/>
+        <location filename="../revpicommander.py" line="453"/>
         <source>Success</source>
         <translation>Erfolg</translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="260"/>
+        <location filename="../revpicommander.py" line="262"/>
         <source>Connecting to RevPi</source>
         <translation>Verbindung zum RevPi wird hergestellt</translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="260"/>
+        <location filename="../revpicommander.py" line="262"/>
         <source>Connected to RevPi</source>
         <translation>Mit dem RevPi verbunden</translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="297"/>
+        <location filename="../revpicommander.py" line="299"/>
         <source>Connecting</source>
         <translation>Verbinden</translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="143"/>
+        <location filename="../revpicommander.py" line="145"/>
         <source>Cannot connect to the RevPiPyLoad service through the SSH tunnel.
 
 Service activation and reconnection in progress. The settings can be changed at any time via Cockpit.</source>
         <translation>Kann keine Verbindung zum RevPiPyLoad-Dienst über den SSH-Tunnel hergestellt werden. Dienstaktivierung und Wiederanbindung in Arbeit. Die Einstellungen können jederzeit über Cockpit geändert werden.</translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="330"/>
+        <location filename="../revpicommander.py" line="332"/>
         <source>Simulator started</source>
         <translation>Simulator gestartet</translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="339"/>
+        <location filename="../revpicommander.py" line="341"/>
         <source>Cannot start</source>
         <translation>Kann nicht starten</translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="330"/>
+        <location filename="../revpicommander.py" line="332"/>
         <source>Simulator is running.
 
 Use the additional RevPiModIO parameters:
@@ -390,85 +397,85 @@ configrsc={1}
 aus dem Textfeld in der Kopfzeile verwenden.</translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="339"/>
+        <location filename="../revpicommander.py" line="341"/>
         <source>Cannot start the simulator. The PiCtory file might be invalid or you do not have write permissions for &apos;{0}&apos;.</source>
         <translation>Simulator kann nicht gestartet werden. Die PiCtory Datei ist möglicherweise ungültig oder für „{0}“ fehlen Schreibrechte.</translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="355"/>
+        <location filename="../revpicommander.py" line="357"/>
         <source>This version of Log Viewer is not supported in version {0} of RevPiPyLoad on your RevPi. At least version 0.4.1 is required.</source>
         <translation>Diese Version des Log Viewers wird von RevPiPyLoad {0} auf dem RevPi nicht unterstützt. Mindestens Version 0.4.1 ist erforderlich.</translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="405"/>
+        <location filename="../revpicommander.py" line="407"/>
         <source>XML-RPC access mode in the RevPiPyLoad configuration is too low to access this dialog.</source>
         <translation>Der XML-RPC-Zugriffsmodus in der RevPiPyLoad Konfiguration ist zu niedrig, um auf diesen Dialog zuzugreifen.</translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="385"/>
+        <location filename="../revpicommander.py" line="387"/>
         <source>The version of RevPiPyLoad on your RevPi ({0}) is too old. This version of RevPi Commander requires at least version 0.6.0 of RevPiPyLoad. Update your RevPi.</source>
         <translation>Die Version von RevPiPyLoad auf dem RevPi ({0}) ist zu alt. Für diese Version von RevPi Commander wird mindestens RevPiPyLoad 0.6.0 benötigt. RevPi aktualisieren.</translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="438"/>
+        <location filename="../revpicommander.py" line="440"/>
         <source>Are you sure you want to reset piControl?
 The PiCtory configuration will be reloaded. During that time, the process image will be interrupted and could cause errors on running control programs.</source>
         <translation>piControl wirklich zurücksetzen?
 Die PiCtory-Konfiguration wird neu geladen. Das Prozessabbild wird dabei kurzzeitig unterbrochen und kann Fehler in laufenden Steuerungsprogrammen verursachen.</translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="451"/>
+        <location filename="../revpicommander.py" line="453"/>
         <source>piControl reset completed successfully.</source>
         <translation>piControl wurde erfolgreich zurückgesetzt.</translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="458"/>
+        <location filename="../revpicommander.py" line="460"/>
         <source>piControl reset could not be completed.</source>
         <translation>piControl konnte nicht zurückgesetzt werden.</translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="506"/>
+        <location filename="../revpicommander.py" line="508"/>
         <source>Reset to PiCtory defaults</source>
         <translation>Auf PiCtory Standardwerte zurücksetzen</translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="532"/>
+        <location filename="../revpicommander.py" line="534"/>
         <source>The watch mode is not supported in version {0} of RevPiPyLoad on your RevPi. At least version 0.5.3 is required. The python3-revpimodio2 module may be missing or older than version 2.0.0.</source>
         <translation>Der Watch-Modus wird von RevPiPyLoad {0} auf dem RevPi nicht unterstützt. Mindestens Version 0.5.3 ist erforderlich. Das Modul python3-revpimodio2 fehlt möglicherweise oder ist älter als Version 2.0.0.</translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="544"/>
+        <location filename="../revpicommander.py" line="546"/>
         <source>Cannot load this function, because your ACL level is too low.
 At least level 1 to read or level 3 to write is required.</source>
         <translation>Diese Funktion kann nicht verwendet werden, da die ACL-Stufe zu niedrig ist.
 Zum Lesen ist mindestens Stufe 1, zum Schreiben mindestens Stufe 3 erforderlich.</translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="506"/>
+        <location filename="../revpicommander.py" line="508"/>
         <source>Do you want to reset your process image to {0} values?
 You have to stop other RevPiModIO programs before doing that, because they could reset the outputs.</source>
         <translation>Prozessabbild auf die Werte aus {0} zurücksetzen?
 Vorher müssen alle anderen RevPiModIO-Programme beendet werden, da diese die Ausgänge zurücksetzen könnten.</translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="506"/>
+        <location filename="../revpicommander.py" line="508"/>
         <source>zero</source>
         <translation>null</translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="506"/>
+        <location filename="../revpicommander.py" line="508"/>
         <source>PiCtory defaults</source>
         <translation>PiCtory Standardwerte</translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="559"/>
+        <location filename="../revpicommander.py" line="561"/>
         <source>Cannot load PiCtory configuration.
 Check hardware configuration in PiCtory.</source>
         <translation>PiCtory Konfiguration kann nicht geladen werden.
 Hardwarekonfiguration in PiCtory prüfen.</translation>
     </message>
     <message>
-        <location filename="../revpicommander.py" line="143"/>
+        <location filename="../revpicommander.py" line="145"/>
         <source>Information</source>
         <translation>Information</translation>
     </message>
