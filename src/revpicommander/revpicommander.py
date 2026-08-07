@@ -129,7 +129,8 @@ class RevPiCommander(QtWidgets.QMainWindow, Ui_win_revpicommander):
     # region #      REGION: Connection management
 
     @QtCore.pyqtSlot(str, str, ConnectionFail, RevPiSettings)
-    def on_cm_connect_error(self, title: str, text: str, fail_code: ConnectionFail, revpi_settings: RevPiSettings):
+    def on_cm_connect_error(self, title: str, text: str, fail_code: ConnectionFail,
+                            revpi_settings: RevPiSettings):
         """
         Slot to get information of pyload_connect connection errors.
 
@@ -138,7 +139,8 @@ class RevPiCommander(QtWidgets.QMainWindow, Ui_win_revpicommander):
         :param fail_code: Type of error
         :param revpi_settings: Settings of the revpi with the error
         """
-        if fail_code is ConnectionFail.NO_XML_RPC_VIA_TUNNEL:
+        if (fail_code is ConnectionFail.NO_XML_RPC_VIA_TUNNEL
+                and not getattr(revpi_settings, "ssh_enable_revpipyload", False)):
             # If RevPiPyLoad is not running, we can try to activate it via ssh
             QtWidgets.QMessageBox.information(
                 self, self.tr("Information"), self.tr(
