@@ -413,7 +413,34 @@ class ConnectionManager(QtCore.QThread):
                     log.warning(f"Could not check remote config for unix socket: {e}")
 
                 if getattr(revpi_settings, "ssh_enable_revpipyload", False):
-                    ssh_tunnel_server.send_cmd("sudo systemctl enable --now revpipyload")
+                    cmd_activate_pyload = "systemctl enable --now revpipyload"
+
+                    # Test sudo requires password authentication
+                    _, _, exit_code = ssh_tunnel_server.send_cmd("sudo -n true")
+                    if exit_code == 0:
+                        # No password required
+                        ssh_tunnel_server.send_cmd(f"sudo {cmd_activate_pyload}")
+                    else:
+                        # Execute command with sudo password
+                        _, _, exit_code = ssh_tunnel_server.send_cmd(
+                            f"sudo -S {cmd_activate_pyload}",
+                            stdin=ssh_pass,
+                        )
+                        if exit_code != 0:
+                            log.error(
+                                "Sudo authentification failed for user %s",
+                                revpi_settings.ssh_user,
+                            )
+                            self.connect_error.emit(
+                                self.tr("Error"), self.tr(
+                                    "Can not activate RevPiPyLoad on remote RevPi.\n"
+                                    f"Sudo authentification failed for user {revpi_settings.ssh_user}. "
+                                    "Please activate RevPiPyLoad manually via Cockpit or CLI."
+                                ),
+                                ConnectionFail.NO_XML_RPC_VIA_TUNNEL,
+                                revpi_settings,
+                            )
+                            return False
 
             except asyncssh.PermissionDenied:
                 self.connect_error.emit(
