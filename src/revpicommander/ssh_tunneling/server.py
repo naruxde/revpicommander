@@ -187,12 +187,13 @@ class SSHLocalTunnel:
         except Exception:
             return True
 
-    def send_cmd(self, cmd: str, timeout: float = None) -> Union[Tuple[str, str, int], Tuple[None, None, None]]:
+    def send_cmd(self, cmd: str, timeout: float = None, stdin: str = None) -> Union[Tuple[str, str, int], Tuple[None, None, None]]:
         """
         Send simple command to ssh host.
 
         :param cmd: Shell command to execute on remote host
         :param timeout: Timeout for execution
+        :param stdin: Send this string to stdin
         :return: Tuple with stdout, stderr, exit status
         """
         if not self.connected:
@@ -200,7 +201,7 @@ class SSHLocalTunnel:
 
         # Running async command from sync context
         async def _exec():
-            result = await self._conn.run(cmd, timeout=timeout)
+            result = await self._conn.run(cmd, timeout=timeout, input=stdin)
             return result.stdout, result.stderr, result.exit_status
 
         try:
