@@ -1,3 +1,31 @@
+revpicommander (0.12.0-1) stable; urgency=medium
+
+  [ Sven Sager ]
+  * build: Let target venv run combined with other targets
+  * build: Use right backslashes in make.bat file for Windows
+  * build(app): Collect complete zeroconf module with PyInstaller
+
+  [ Eva-Maria Zanger ]
+  * refactor: Improve GUI text and translations
+
+  [ Sven Sager ]
+  * chore: Update Jetbrains IDE settings
+  * feat: Option to use unix sockets for xml-rpc
+  * fix: State management in connection manager
+  * refactor: Replace `paramiko` with `asyncssh` for SSH connections
+  * feat: Enhance SSH tunnel handling with Unix socket support
+  * feat: Add support for default local socket in connection settings
+  * feat(i18n): Update translations for revpiplclist.ui
+  * fix: Endlessloop during revpipyload activation on remote host
+  * refactor: Include exit status in `send_cmd` and improve decoding logic
+  * feat(ssh): Add ability to send stdin input to `send_cmd`
+  * fix: Handle sudo authentication failure during RevPiPyLoad activation
+  * feat(i18n): Update German translation files and add new error messages
+  * chore: Release 0.12.0
+  * fix(deb): Add lib change from paramiko to asyncssh
+
+ -- Sven Sager <akira@narux.de>  Fri, 07 Aug 2026 08:46:32 +0200
+
 revpicommander (0.11.0-1) stable; urgency=medium
 
   * chore: Recompile UI files with PyQt generator 5.15.7
