@@ -162,7 +162,7 @@ Für eine verschlüsselte Verbindung &apos;Über SSH verbinden&apos; verwenden o
     <message>
         <location filename="../helper.py" line="683"/>
         <source>PLC file not found</source>
-        <translation>PLC-Datei nicht gefunden</translation>
+        <translation>SPS-Datei nicht gefunden</translation>
     </message>
     <message>
         <location filename="../helper.py" line="685"/>
